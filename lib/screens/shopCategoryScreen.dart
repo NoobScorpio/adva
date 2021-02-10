@@ -1,4 +1,6 @@
+import 'package:adva/screens/filterScreen.dart';
 import 'package:adva/screens/productContainer.dart';
+import 'package:adva/screens/productDetailScreen.dart';
 import 'package:adva/utils/appbarContainer.dart';
 import 'package:adva/utils/categoriesListView.dart';
 import 'package:adva/utils/constants.dart';
@@ -31,26 +33,35 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                      width: screenWidth * 0.24,
-                      height: screenHeight * 0.05,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 0.1, color: Colors.black)),
-                      child: Row(
-                        children: [
-                          Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                  left: screenWidth * 0.04,
-                                  right: screenWidth * 0.02),
-                              child: Text(
-                                'Filter',
-                                style: TextStyle(fontSize: 15),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FilterScreen()));
+                      },
+                      child: Container(
+                        width: screenWidth * 0.24,
+                        height: screenHeight * 0.05,
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(width: 0.1, color: Colors.black)),
+                        child: Row(
+                          children: [
+                            Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: screenWidth * 0.04,
+                                    right: screenWidth * 0.02),
+                                child: Text(
+                                  'Filter',
+                                  style: TextStyle(fontSize: 15),
+                                ),
                               ),
                             ),
-                          ),
-                          Image.asset('assets/images/filter.png'),
-                        ],
+                            Image.asset('assets/images/filter.png'),
+                          ],
+                        ),
                       ),
                     ),
                     Padding(
@@ -192,8 +203,37 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
               if (box)
                 Padding(
                   padding: EdgeInsets.only(
-                      left: screenWidth * 0.042,
-                      right: screenWidth * 0.042,
+                      left: screenWidth * 0.065,
+                      right: screenWidth * 0.065,
+                      top: screenHeight * 0.01,
+                      bottom: screenHeight * 0.017),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProductDetailScreen()));
+                        },
+                        child: ProductContainer(
+                          screenHeight: screenHeight,
+                          image: 'assets/images/product1.png',
+                        ),
+                      ),
+                      ProductContainer(
+                        screenHeight: screenHeight,
+                        image: 'assets/images/product2.png',
+                      ),
+                    ],
+                  ),
+                ),
+              if (box)
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: screenWidth * 0.065,
+                      right: screenWidth * 0.065,
                       top: screenHeight * 0.01,
                       bottom: screenHeight * 0.017),
                   child: Row(
@@ -213,29 +253,8 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
               if (box)
                 Padding(
                   padding: EdgeInsets.only(
-                      left: screenWidth * 0.042,
-                      right: screenWidth * 0.042,
-                      top: screenHeight * 0.01,
-                      bottom: screenHeight * 0.017),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ProductContainer(
-                        screenHeight: screenHeight,
-                        image: 'assets/images/product1.png',
-                      ),
-                      ProductContainer(
-                        screenHeight: screenHeight,
-                        image: 'assets/images/product2.png',
-                      ),
-                    ],
-                  ),
-                ),
-              if (box)
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenWidth * 0.042,
-                      right: screenWidth * 0.042,
+                      left: screenWidth * 0.065,
+                      right: screenWidth * 0.065,
                       top: screenHeight * 0.01,
                       bottom: screenHeight * 0.017),
                   child: Row(

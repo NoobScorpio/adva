@@ -52,7 +52,7 @@ class ProductContainer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 10, left: 12, right: 12),
                 child: Text(
-                  'Lorem ipsum dolor sit amet, consectetur sadipiscing elit, sed',
+                  'Lorem ipsum dolor sit amet, consectetur sadipiscing elit,',
                   // max
                   style: TextStyle(
                     fontSize: 15,
@@ -61,7 +61,7 @@ class ProductContainer extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                    top: 9, left: 12, right: 19, bottom: 11),
+                    top: 9, left: 12, right: 15, bottom: 11),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
