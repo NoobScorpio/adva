@@ -1,3 +1,4 @@
+import 'package:adva/screens/changePasswordScreen.dart';
 import 'package:adva/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -50,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           Container(
-            height: 400,
+            height: 500,
             width: double.maxFinite,
             child: Card(
               child: Column(
@@ -94,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               bottom: 2,
                               right: 2,
                               child: CircleAvatar(
-                                radius: 26,
+                                radius: 27,
                                 backgroundColor: primaryColor,
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -126,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Divider(),
                   Padding(
-                    // padding: const EdgeInsets.only(8.0),
+                    padding: const EdgeInsets.all(15.0),
                     child: Text(
                       'First Name',
                       style: TextStyle(
@@ -135,16 +136,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
                       'John',
                       style: boldTextStyle,
                     ),
-                  )
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      'Last Name',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      'Doe',
+                      style: boldTextStyle,
+                    ),
+                  ),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Text(
+                      'Receiver Communication in',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(
+                      'English',
+                      style: boldTextStyle,
+                    ),
+                  ),
                 ],
               ),
             ),
-          )
+          ),
+          Padding(
+            padding: const EdgeInsets.all(25.0),
+            child: Container(
+                width: 160,
+                height: 40,
+                color: primaryColor,
+                child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: RaisedButton(
+                      color: Colors.white,
+                      child: Text(
+                        'Change Password',
+                        style: TextStyle(color: primaryColor),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChangePasswordScreen()));
+                      }),
+                )),
+          ),
         ],
       ),
     );

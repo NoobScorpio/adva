@@ -1,4 +1,4 @@
-import 'package:adva/screens/accountScreen.dart';
+import 'package:adva/screens/userScreen.dart';
 import 'package:adva/screens/bottomNavBar.dart';
 import 'package:adva/utils/constants.dart';
 import 'package:adva/utils/primaryButton.dart';
@@ -97,7 +97,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
           GestureDetector(
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AccountScreen()));
+                  MaterialPageRoute(builder: (context) => UserScreen()));
             },
             child: Text(
               'Create New Account',

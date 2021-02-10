@@ -1,4 +1,4 @@
-import 'package:adva/screens/accountScreen.dart';
+import 'package:adva/screens/userScreen.dart';
 import 'package:adva/screens/cartScreen.dart';
 import 'package:adva/screens/categoriesScreen.dart';
 import 'package:adva/screens/galleryTabScreen.dart';
@@ -21,7 +21,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     CategoriesScreen(),
     CartScreeen(),
     GalleryScreen(),
-    AccountScreen(),
+    UserScreen(),
   ];
 
   void _onItemTapped(int index) {
