@@ -41,7 +41,7 @@ class _AddCartState extends State<AddCart> {
           ),
         ),
       ),
-      body: Column(
+      body: ListView(
         children: [
           SizedBox(
             height: screenHeight * 0.02,
@@ -49,7 +49,7 @@ class _AddCartState extends State<AddCart> {
           Container(
             color: Colors.white,
             width: screenWidth,
-            height: screenHeight * 0.16,
+            // height: screenHeight * 0.16,
             child: Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.03,
@@ -65,7 +65,7 @@ class _AddCartState extends State<AddCart> {
                     padding: EdgeInsets.only(
                         top: screenHeight * 0.017, bottom: screenHeight * 0.01),
                     child: Container(
-                      height: screenHeight * 0.07,
+                      height: screenHeight * 0.08,
                       decoration: BoxDecoration(border: Border.all(width: 0.5)),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -104,7 +104,7 @@ class _AddCartState extends State<AddCart> {
           Container(
             color: Colors.white,
             width: screenWidth,
-            height: screenHeight * 0.315,
+            // height: screenHeight * 0.315,
             child: Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: screenWidth * 0.03,

@@ -6,8 +6,10 @@ const cartTextColor = Color(0xFFB3B3B3);
 const cartContainerColor = Color(0xFFF6F6F6);
 const checkoutButtonColor = Color(0xFF4369D3);
 const commentBGColor = Color(0xFFF8F8F8);
-const boldTextStyle = TextStyle(fontSize: 15, fontWeight: FontWeight.normal);
-const normalTextStyle = TextStyle(fontSize: 12);
+const secondaryColor = Color(0xFFF1BD8E);
+const boldTextStyle =
+    TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black);
+const normalTextStyle = TextStyle(fontSize: 12, color: Colors.black);
 const List<String> categoryListStrings = [
   'Fashion',
   'Lenses',

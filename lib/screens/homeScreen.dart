@@ -196,19 +196,13 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: screenHeight * 0.01,
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PostViewScreen()));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Featured products',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
-                ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Featured products',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
               ),
             ),
           ),

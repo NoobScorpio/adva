@@ -1,7 +1,7 @@
 import 'package:adva/screens/accountScreen.dart';
 import 'package:adva/screens/cartScreen.dart';
 import 'package:adva/screens/categoriesScreen.dart';
-import 'package:adva/screens/galleryScreen.dart';
+import 'package:adva/screens/galleryTabScreen.dart';
 import 'package:adva/screens/homeScreen.dart';
 import 'package:adva/utils/constants.dart';
 import 'package:flutter/material.dart';
