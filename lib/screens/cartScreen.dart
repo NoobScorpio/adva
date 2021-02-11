@@ -3,12 +3,12 @@ import 'package:adva/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class CartScreeen extends StatefulWidget {
+class CartScreen extends StatefulWidget {
   @override
-  _CartScreeenState createState() => _CartScreeenState();
+  _CartScreenState createState() => _CartScreenState();
 }
 
-class _CartScreeenState extends State<CartScreeen> {
+class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -256,22 +256,13 @@ class ProductCartContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Slidable(
-      actionPane: SlidableDrawerActionPane(),
-      actionExtentRatio: 0.2,
-      secondaryActions: [
-        IconSlideAction(
-          caption: 'Delete',
-          color: Color(0xFFFF4747),
-          icon: Icons.delete,
-          onTap: () {},
-        )
-      ],
-      child: Container(
-        height: screenHeight * 0.2,
-        child: Card(
-          elevation: 4,
-          child: ListView(
+    return Container(
+      // height: screenHeight * 0.2,
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

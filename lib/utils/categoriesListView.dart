@@ -23,7 +23,7 @@ class CategoriesListView extends StatelessWidget {
               right: screenWidth * 0.05)
           : padding,
       child: Container(
-        height: screenHeight * 0.055,
+        height: screenHeight * 0.06,
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: [

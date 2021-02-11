@@ -19,7 +19,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   static List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     CategoriesScreen(),
-    CartScreeen(),
+    CartScreen(),
     GalleryScreen(),
     UserScreen(),
   ];
@@ -42,25 +42,130 @@ class _BottomNavBarState extends State<BottomNavBar> {
         showUnselectedLabels: false,
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              activeIcon: Image.asset('assets/bottomNav/homeActive.png'),
-              label: 'Home',
-              icon: Image.asset('assets/bottomNav/home.png')),
+            activeIcon: Column(
+              children: [
+                Icon(
+                  Icons.home_filled,
+                  color: primaryColor,
+                ),
+                Text(
+                  'Home',
+                  style: TextStyle(color: primaryColor),
+                )
+              ],
+            ),
+            label: 'Home',
+            icon: Column(
+              children: [
+                Icon(
+                  Icons.home_filled,
+                ),
+                Text(
+                  'Home',
+                  style: TextStyle(color: Colors.grey),
+                )
+              ],
+            ),
+          ),
           BottomNavigationBarItem(
-              activeIcon: Image.asset('assets/bottomNav/categoriesActive.png'),
-              label: 'Categories',
-              icon: Image.asset('assets/bottomNav/categories.png')),
+            activeIcon: Column(
+              children: [
+                Icon(
+                  Icons.category_rounded,
+                  color: primaryColor,
+                ),
+                Text(
+                  'Categories',
+                  style: TextStyle(color: primaryColor),
+                )
+              ],
+            ),
+            label: 'Category',
+            icon: Column(
+              children: [
+                Icon(
+                  Icons.category_rounded,
+                ),
+                Text(
+                  'Category',
+                  style: TextStyle(color: Colors.grey),
+                )
+              ],
+            ),
+          ),
           BottomNavigationBarItem(
-              activeIcon: Image.asset('assets/bottomNav/cartActive.png'),
-              label: 'Cart',
-              icon: Image.asset('assets/bottomNav/cart.png')),
+            activeIcon: CircleAvatar(
+              backgroundColor: primaryColor,
+              radius: 25,
+              child: Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+            label: 'Cart',
+            icon: CircleAvatar(
+              backgroundColor: primaryColor,
+              radius: 25,
+              child: Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          ),
           BottomNavigationBarItem(
-              activeIcon: Image.asset('assets/bottomNav/galleryActive.png'),
-              label: 'Gallery',
-              icon: Image.asset('assets/bottomNav/gallery.png')),
+            activeIcon: Column(
+              children: [
+                Icon(
+                  Icons.photo_library_rounded,
+                  color: primaryColor,
+                ),
+                Text(
+                  'Gallery',
+                  style: TextStyle(color: primaryColor),
+                )
+              ],
+            ),
+            label: 'Gallery',
+            icon: Column(
+              children: [
+                Icon(
+                  Icons.photo_library_rounded,
+                ),
+                Text(
+                  'Gallery',
+                  style: TextStyle(color: Colors.grey),
+                )
+              ],
+            ),
+          ),
           BottomNavigationBarItem(
-              activeIcon: Image.asset('assets/bottomNav/accountActive.png'),
-              label: 'Account',
-              icon: Image.asset('assets/bottomNav/account.png')),
+            activeIcon: Column(
+              children: [
+                Icon(
+                  Icons.person,
+                  color: primaryColor,
+                ),
+                Text(
+                  'Account',
+                  style: TextStyle(color: primaryColor),
+                )
+              ],
+            ),
+            label: 'Account',
+            icon: Column(
+              children: [
+                Icon(
+                  Icons.person,
+                ),
+                Text(
+                  'Account',
+                  style: TextStyle(color: Colors.grey),
+                )
+              ],
+            ),
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: primaryColor,

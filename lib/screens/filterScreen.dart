@@ -39,7 +39,11 @@ class _FilterScreenState extends State<FilterScreen> {
                           fontWeight: FontWeight.w400,
                           fontSize: 18),
                     ),
-                    Image.asset('assets/images/cancel.png')
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Icon(Icons.clear))
                   ],
                 ),
               ),

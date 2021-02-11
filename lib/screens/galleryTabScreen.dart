@@ -17,20 +17,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
       child: Scaffold(
         appBar: AppBar(
-          // actions: [
-          //   Padding(
-          //     padding: const EdgeInsets.all(8.0),
-          //     child: Column(
-          //       children: [
-          //         Icon(
-          //           Icons.photo,
-          //           color: primaryColor,
-          //         ),
-          //         Text('Add Image', style: TextStyle(color: primaryColor))
-          //       ],
-          //     ),
-          //   )
-          // ],
           backgroundColor: Colors.white,
           title: Text(
             'Gallery',

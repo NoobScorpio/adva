@@ -1,6 +1,7 @@
 import 'package:adva/screens/filterScreen.dart';
 import 'package:adva/screens/productContainer.dart';
 import 'package:adva/screens/productDetailScreen.dart';
+import 'package:adva/screens/productViewScreen.dart';
 import 'package:adva/utils/appbarContainer.dart';
 import 'package:adva/utils/categoriesListView.dart';
 import 'package:adva/utils/constants.dart';
@@ -59,7 +60,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                 ),
                               ),
                             ),
-                            Image.asset('assets/images/filter.png'),
+                            Icon(Icons.filter_list_outlined),
                           ],
                         ),
                       ),
@@ -84,7 +85,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                 style: TextStyle(fontSize: 15),
                               ),
                             ),
-                            Image.asset('assets/images/sortby.png'),
+                            Icon(Icons.sort)
                           ],
                         ),
                       ),
@@ -94,182 +95,168 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                       height: screenHeight * 0.05,
                       decoration: BoxDecoration(
                           border: Border.all(width: 0.1, color: Colors.black)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset('assets/images/options.png'),
-                        ],
-                      ),
+                      child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              box = !box;
+                            });
+                          },
+                          child: Icon(Icons.list)),
                     ),
                   ],
                 ),
               ),
+              //SHOP BY BRAND AND CATEGORY
               Padding(
                 padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
-                child: GeneralContainer(
-                  screenHeight: screenHeight * 0.26,
-                  screenWidth: screenWidth,
-                  column: Padding(
+                child: Container(
+                  // screenHeight: screenHeight * 0.26,
+                  width: screenWidth,
+                  child: Padding(
                     padding: EdgeInsets.only(
                         top: screenHeight * 0.01, left: screenWidth * 0.03),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Shop by brand',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                            SizedBox(height: screenHeight * 0.015),
-                            Container(
-                              height: screenHeight * 0.07,
-                              width: screenWidth,
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  Row(
-                                    children: [
-                                      ShopSlideContainer(
-                                        img: 'assets/images/beautybar.png',
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 14),
-                                        child: ShopSlideContainer(
-                                          img: 'assets/images/melia.png',
-                                        ),
-                                      ),
-                                      ShopSlideContainer(
-                                        img: 'assets/images/beautybar.png',
-                                      ),
-                                      SizedBox(
-                                        width: 14,
-                                      ),
-                                      ShopSlideContainer(
-                                        img: 'assets/images/melia.png',
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 14),
-                                        child: ShopSlideContainer(
-                                          img: 'assets/images/beautybar.png',
-                                        ),
-                                      ),
-                                      ShopSlideContainer(
-                                        img: 'assets/images/melia.png',
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 14),
-                                        child: ShopSlideContainer(
-                                          img: 'assets/images/beautybar.png',
-                                        ),
-                                      ),
-                                      ShopSlideContainer(
-                                        img: 'assets/images/melia.png',
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                        Text(
+                          'Shop by brand',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: screenHeight * 0.015),
+                        Container(
+                          height: screenHeight * 0.08,
+                          width: screenWidth,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              ShopSlideContainer(
+                                img: 'assets/images/beautybar.png',
                               ),
-                            ),
-                            Divider(
-                              thickness: 0.5,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: screenHeight * 0.017,
-                                  bottom: screenHeight * 0.01),
-                              child: Text(
-                                'Shop by category',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 14.5),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 14),
+                                child: ShopSlideContainer(
+                                  img: 'assets/images/melia.png',
+                                ),
                               ),
-                            ),
-                            CategoriesListView(
-                              screenWidth: screenWidth,
-                              screenHeight: screenHeight,
-                              padding:
-                                  EdgeInsets.only(left: screenWidth * 0.005),
-                            ),
-                          ],
-                        )
+                              ShopSlideContainer(
+                                img: 'assets/images/beautybar.png',
+                              ),
+                              SizedBox(
+                                width: 14,
+                              ),
+                              ShopSlideContainer(
+                                img: 'assets/images/melia.png',
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 14),
+                                child: ShopSlideContainer(
+                                  img: 'assets/images/beautybar.png',
+                                ),
+                              ),
+                              ShopSlideContainer(
+                                img: 'assets/images/melia.png',
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 14),
+                                child: ShopSlideContainer(
+                                  img: 'assets/images/beautybar.png',
+                                ),
+                              ),
+                              ShopSlideContainer(
+                                img: 'assets/images/melia.png',
+                              ),
+                            ],
+                          ),
+                        ),
+                        Divider(
+                          thickness: 0.5,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: screenHeight * 0.017,
+                              bottom: screenHeight * 0.01),
+                          child: Text(
+                            'Shop by category',
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 14.5),
+                          ),
+                        ),
+                        CategoriesListView(
+                          screenWidth: screenWidth,
+                          screenHeight: screenHeight,
+                          padding: EdgeInsets.only(
+                            left: screenWidth * 0.005,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
+              //PRODUCTS
               if (box)
                 Padding(
                   padding: EdgeInsets.only(
-                      left: screenWidth * 0.065,
-                      right: screenWidth * 0.065,
+                      left: screenWidth * 0.042,
+                      right: screenWidth * 0.042,
                       top: screenHeight * 0.01,
                       bottom: screenHeight * 0.017),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProductViewScreen()));
+                          },
+                          child: ProductContainer(
+                            box: true,
+                            screenHeight: screenHeight,
+                            image: 'assets/images/product1.png',
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: ProductContainer(
+                          box: true,
+                          screenHeight: screenHeight,
+                          image: 'assets/images/product2.png',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (!box)
+                Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ProductDetailScreen()));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => ProductViewScreen()));
                         },
                         child: ProductContainer(
+                          box: false,
                           screenHeight: screenHeight,
                           image: 'assets/images/product1.png',
                         ),
                       ),
-                      ProductContainer(
-                        screenHeight: screenHeight,
-                        image: 'assets/images/product2.png',
-                      ),
-                    ],
-                  ),
-                ),
-              if (box)
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenWidth * 0.065,
-                      right: screenWidth * 0.065,
-                      top: screenHeight * 0.01,
-                      bottom: screenHeight * 0.017),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ProductContainer(
-                        screenHeight: screenHeight,
-                        image: 'assets/images/product1.png',
-                      ),
-                      ProductContainer(
-                        screenHeight: screenHeight,
-                        image: 'assets/images/product2.png',
-                      ),
-                    ],
-                  ),
-                ),
-              if (box)
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenWidth * 0.065,
-                      right: screenWidth * 0.065,
-                      top: screenHeight * 0.01,
-                      bottom: screenHeight * 0.017),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ProductContainer(
-                        screenHeight: screenHeight,
-                        image: 'assets/images/product1.png',
-                      ),
-                      ProductContainer(
-                        screenHeight: screenHeight,
-                        image: 'assets/images/product2.png',
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
             ],
           ),
@@ -296,7 +283,7 @@ class ShopSlideContainer extends StatelessWidget {
       child: FittedBox(
         child: Image.asset(
           img,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
         ),
       ),
     );
