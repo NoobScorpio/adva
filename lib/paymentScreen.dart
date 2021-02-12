@@ -1,12 +1,11 @@
 import 'dart:ui';
 
-import 'package:adva/screens/addCardScreen.dart';
-import 'package:adva/screens/orderDetailsScreen.dart';
-import 'package:adva/utils/constants.dart';
-import 'package:adva/utils/myButton.dart';
-import 'package:adva/utils/paymentColumn.dart';
-import 'package:adva/utils/roundDoneContainer.dart';
-import 'package:adva/utils/tFContainer.dart';
+import 'package:adva/ui/screens/addCardScreen.dart';
+import 'package:adva/ui/screens/orderDetailsScreen.dart';
+import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/myButton.dart';
+import 'package:adva/ui/utils/paymentColumn.dart';
+import 'package:adva/ui/utils/tFContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

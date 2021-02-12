@@ -1,7 +1,5 @@
-import 'package:adva/screens/homeScreen.dart';
-import 'package:adva/screens/loginScreen.dart';
-import 'package:adva/screens/bottomNavBar.dart';
-import 'package:adva/utils/constants.dart';
+import 'package:adva/ui/screens/bottomNavBar.dart';
+import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
