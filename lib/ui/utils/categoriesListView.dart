@@ -34,31 +34,6 @@ class CategoriesListView extends StatelessWidget {
             SizedBox(
               width: screenWidth * 0.02,
             ),
-            WhiteButton(
-              screenWidth: screenWidth,
-              txt: 'Lenses',
-            ),
-            SizedBox(
-              width: screenWidth * 0.02,
-            ),
-            WhiteButton(
-              screenWidth: screenWidth,
-              txt: 'Makeup',
-            ),
-            SizedBox(
-              width: screenWidth * 0.02,
-            ),
-            WhiteButton(
-              screenWidth: screenWidth,
-              txt: 'Beauty',
-            ),
-            SizedBox(
-              width: screenWidth * 0.02,
-            ),
-            WhiteButton(
-              screenWidth: screenWidth,
-              txt: 'Products',
-            ),
           ],
         ),
       ),
