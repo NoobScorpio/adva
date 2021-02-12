@@ -1,5 +1,6 @@
 import 'package:adva/screens/changePasswordScreen.dart';
 import 'package:adva/utils/constants.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -131,8 +132,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       'First Name',
                       style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                   Padding(
@@ -148,8 +150,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       'Last Name',
                       style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                   Padding(
@@ -165,8 +168,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       'Receiver Communication in',
                       style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                   Padding(
@@ -182,25 +186,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(25.0),
-            child: Container(
-                width: 160,
-                height: 40,
-                color: primaryColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(1.0),
-                  child: RaisedButton(
-                      color: Colors.white,
-                      child: Text(
-                        'Change Password',
-                        style: TextStyle(color: primaryColor),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChangePasswordScreen()));
-                      }),
-                )),
+            child: MyButton(
+                width: double.maxFinite,
+                height: 55,
+                borderColor: primaryColor,
+                innerColor: Colors.white,
+                child: Text(
+                  'Change Password',
+                  style: TextStyle(color: primaryColor),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangePasswordScreen()));
+                }),
           ),
         ],
       ),

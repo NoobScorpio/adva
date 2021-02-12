@@ -15,6 +15,8 @@ class ShopCategoryScreen extends StatefulWidget {
 
 class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
   bool box = true;
+  List<String> sortValues = ['Sort by', 'High to Low', 'Low to High'];
+  String sortVal = 'Sort by';
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -74,19 +76,30 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                         decoration: BoxDecoration(
                             border:
                                 Border.all(width: 0.1, color: Colors.black)),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: screenWidth * 0.04,
-                                  right: screenWidth * 0.02),
-                              child: Text(
-                                'Sort by',
-                                style: TextStyle(fontSize: 15),
-                              ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            icon: Icon(
+                              Icons.sort,
+                              size: 25,
                             ),
-                            Icon(Icons.sort)
-                          ],
+                            iconSize: 42,
+                            value: sortVal,
+                            focusColor: primaryColor,
+                            underline: SizedBox(),
+                            items: sortValues.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: new Text('$value'),
+                              );
+                            }).toList(),
+                            onChanged: (_) {
+                              setState(() {
+                                sortVal = _;
+                              });
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -101,7 +114,9 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                               box = !box;
                             });
                           },
-                          child: Icon(Icons.list)),
+                          child: !box
+                              ? Icon(Icons.widgets_outlined)
+                              : Icon(Icons.list)),
                     ),
                   ],
                 ),

@@ -5,6 +5,7 @@ import 'package:adva/screens/galleryTabScreen.dart';
 import 'package:adva/screens/homeScreen.dart';
 import 'package:adva/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -44,10 +45,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
           BottomNavigationBarItem(
             activeIcon: Column(
               children: [
-                Icon(
-                  Icons.home_filled,
-                  color: primaryColor,
+                // Icon(
+                //   Icons.home_filled,
+                //   color: primaryColor,
+                // ),
+                SvgPicture.asset(
+                  'assets/icons/Home-active.svg',
                 ),
+                // Image.asset('assets/icons/Home-active.svg'),
                 Text(
                   'Home',
                   style: TextStyle(color: primaryColor),
@@ -57,9 +62,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Home',
             icon: Column(
               children: [
-                Icon(
-                  Icons.home_filled,
+                // Icon(
+                //   Icons.home_filled,
+                // ),
+                SvgPicture.asset(
+                  'assets/icons/Home-grey.svg',
                 ),
+
                 Text(
                   'Home',
                   style: TextStyle(color: Colors.grey),
@@ -70,9 +79,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
           BottomNavigationBarItem(
             activeIcon: Column(
               children: [
-                Icon(
-                  Icons.category_rounded,
-                  color: primaryColor,
+                SvgPicture.asset(
+                  'assets/icons/Categories-active.svg',
                 ),
                 Text(
                   'Categories',
@@ -83,8 +91,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Category',
             icon: Column(
               children: [
-                Icon(
-                  Icons.category_rounded,
+                SvgPicture.asset(
+                  'assets/icons/Categories-grey.svg',
                 ),
                 Text(
                   'Category',
@@ -97,29 +105,28 @@ class _BottomNavBarState extends State<BottomNavBar> {
             activeIcon: CircleAvatar(
               backgroundColor: primaryColor,
               radius: 25,
-              child: Icon(
-                Icons.shopping_cart_outlined,
-                color: Colors.white,
-                size: 30,
+              child: SvgPicture.asset(
+                'assets/icons/Cart-icon.svg',
+                height: 25,
+                width: 25,
               ),
             ),
             label: 'Cart',
             icon: CircleAvatar(
               backgroundColor: primaryColor,
               radius: 25,
-              child: Icon(
-                Icons.shopping_cart_outlined,
-                color: Colors.white,
-                size: 30,
+              child: SvgPicture.asset(
+                'assets/icons/Cart-icon.svg',
+                height: 30,
+                width: 30,
               ),
             ),
           ),
           BottomNavigationBarItem(
             activeIcon: Column(
               children: [
-                Icon(
-                  Icons.photo_library_rounded,
-                  color: primaryColor,
+                SvgPicture.asset(
+                  'assets/icons/Gallery-active.svg',
                 ),
                 Text(
                   'Gallery',
@@ -130,8 +137,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Gallery',
             icon: Column(
               children: [
-                Icon(
-                  Icons.photo_library_rounded,
+                SvgPicture.asset(
+                  'assets/icons/Gallery-grey.svg',
                 ),
                 Text(
                   'Gallery',
@@ -143,9 +150,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
           BottomNavigationBarItem(
             activeIcon: Column(
               children: [
-                Icon(
-                  Icons.person,
-                  color: primaryColor,
+                SvgPicture.asset(
+                  'assets/icons/Accounts-active.svg',
                 ),
                 Text(
                   'Account',
@@ -156,8 +162,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
             label: 'Account',
             icon: Column(
               children: [
-                Icon(
-                  Icons.person,
+                SvgPicture.asset(
+                  'assets/icons/Accounts-grey.svg',
                 ),
                 Text(
                   'Account',

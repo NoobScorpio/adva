@@ -1,5 +1,6 @@
 import 'package:adva/paymentScreen.dart';
 import 'package:adva/utils/constants.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:adva/utils/paymentColumn.dart';
 import 'package:adva/utils/roundDoneContainer.dart';
 import 'package:adva/utils/tFContainer.dart';
@@ -250,87 +251,34 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
               Container(
-                height: screenHeight * 0.25,
+                // height: screenHeight * 0.26,
                 width: screenWidth,
                 color: Colors.white,
                 child: Column(
                   children: [
-                    Column(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: screenHeight * 0.025,
-                              left: screenWidth * 0.032,
-                              right: screenWidth * 0.032),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Flat Shipping Rate',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  )),
-                              Text('SAR. 999',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  )),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: screenHeight * 0.025,
-                              left: screenWidth * 0.032,
-                              right: screenWidth * 0.032),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Sub - Total',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  )),
-                              Text('SAR. 999',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                  ))
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: screenHeight * 0.025,
-                              left: screenWidth * 0.032,
-                              right: screenWidth * 0.032),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total',
-                                  style: TextStyle(
-                                      fontSize: 15, color: cartTextColor)),
-                              Text('SAR. 999',
-                                  style: TextStyle(
-                                      fontSize: 15, color: cartTextColor))
-                            ],
-                          ),
-                        ),
-                      ],
+                    PaymentColumn(
+                      screenHeight: screenHeight,
+                      screenWidth: screenWidth,
+                      subTotal: 999.toString(),
+                      total: 999.toString(),
+                      flatShippingRate: 999.toString(),
                     ),
-                    Container(
-                      width: screenWidth,
-                      height: 70,
-                      child: Padding(
-                        padding: const EdgeInsets.all(11),
-                        child: MaterialButton(
-                          color: primaryColor,
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PaymentScreen()));
-                          },
-                          child: Text('Proceed to payments',
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
-                        ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: MyButton(
+                        height: 65,
+                        width: screenWidth,
+                        child: Text('Proceed to payments',
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.white)),
+                        borderColor: Colors.transparent,
+                        innerColor: primaryColor,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PaymentScreen()));
+                        },
                       ),
                     ),
                   ],

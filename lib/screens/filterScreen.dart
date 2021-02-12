@@ -1,5 +1,5 @@
 import 'package:adva/utils/constants.dart';
-import 'package:adva/utils/primaryButton.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:flutter/material.dart';
 
 class FilterScreen extends StatefulWidget {
@@ -178,34 +178,35 @@ class _FilterScreenState extends State<FilterScreen> {
                           ),
                       ],
                     ),
-                    Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: screenWidth * 0.09,
-                            right: screenWidth * 0.01,
-                          ),
-                          child: Container(
-                            width: screenWidth * 0.27,
-                            height: screenHeight * 0.047,
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 0.1, color: Colors.black)),
-                            child: Center(
-                              child: Text(
-                                'Clear',
-                                style: TextStyle(fontSize: 15),
-                              ),
+                    Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: MyButton(
+                              innerColor: Colors.white,
+                              borderColor: primaryColor,
+                              height: 52,
+                              // width: double.maxFinite,
+                              child: Text('Clear'),
+                              onPressed: () {},
                             ),
                           ),
-                        ),
-                        PrimaryButton(
-                          screenHeight: screenHeight,
-                          screenWidth: screenWidth * 0.57,
-                          txt: 'Apply',
-                          onpressed: () {},
-                        )
-                      ],
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: MyButton(
+                              innerColor: primaryColor,
+                              borderColor: Colors.transparent,
+                              height: 55,
+                              // width: double.maxFinite,
+                              child: Text('Apply'),
+                              onPressed: () {},
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: screenHeight * 0.03,

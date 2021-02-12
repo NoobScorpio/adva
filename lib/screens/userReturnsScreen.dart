@@ -1,12 +1,12 @@
 import 'package:adva/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-class UserOrdersScreen extends StatefulWidget {
+class UserReturnsScreen extends StatefulWidget {
   @override
-  _UserOrdersScreenState createState() => _UserOrdersScreenState();
+  _UserReturnsScreenState createState() => _UserReturnsScreenState();
 }
 
-class _UserOrdersScreenState extends State<UserOrdersScreen> {
+class _UserReturnsScreenState extends State<UserReturnsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +44,7 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
                   child: Text(
-                    'Orders',
+                    'Returns',
                     style: boldTextStyle,
                   ),
                 ),
@@ -52,7 +52,7 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
                   height: 60,
                   child: TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Enter order id',
+                      hintText: 'Enter order return id',
                       suffix: IconButton(
                         onPressed: () {},
                         icon: Icon(

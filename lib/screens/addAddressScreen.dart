@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:adva/screens/confirmAddressScreen.dart';
 import 'package:adva/utils/constants.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -45,23 +46,22 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Container(
-              height: 45,
+            child: MyButton(
+              height: 55,
               width: double.maxFinite,
-              child: RaisedButton(
-                onPressed: () async {
-                  await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ConfirmAddressScreen()));
-                  Navigator.pop(context);
-                  // Navigator.pop(context);
-                },
-                color: primaryColor,
-                child: Text(
-                  'Confirm Location',
-                  style: TextStyle(color: Colors.white),
-                ),
+              onPressed: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ConfirmAddressScreen()));
+                Navigator.pop(context);
+                // Navigator.pop(context);
+              },
+              innerColor: primaryColor,
+              borderColor: Colors.transparent,
+              child: Text(
+                'Confirm Location',
+                style: TextStyle(color: Colors.white),
               ),
             ),
           )

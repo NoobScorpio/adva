@@ -1,4 +1,5 @@
 import 'package:adva/utils/constants.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmAddressScreen extends StatefulWidget {
@@ -32,11 +33,16 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                           width: 60,
                           child: Image.asset('assets/images/advalogo.png')),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15.0, right: 20),
-                      child: Text(
-                        'Cancel',
-                        style: boldTextStyle,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15.0, right: 20),
+                        child: Text(
+                          'Cancel',
+                          style: boldTextStyle,
+                        ),
                       ),
                     )
                   ],
@@ -87,23 +93,28 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                             )
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Card(
-                            child: Column(
-                              children: [
-                                Container(
-                                    height: 90,
-                                    width: 90,
-                                    child: FittedBox(
-                                        fit: BoxFit.cover,
-                                        child: Image.asset(
-                                            'assets/images/advabeauty.png'))),
-                                Text(
-                                  'Edit',
-                                  style: TextStyle(color: Colors.blue),
-                                ),
-                              ],
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Card(
+                              child: Column(
+                                children: [
+                                  Container(
+                                      height: 90,
+                                      width: 90,
+                                      child: FittedBox(
+                                          fit: BoxFit.cover,
+                                          child: Image.asset(
+                                              'assets/images/advabeauty.png'))),
+                                  Text(
+                                    'Edit',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -150,18 +161,17 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Container(
-              height: 45,
+            child: MyButton(
+              height: 55,
               width: double.maxFinite,
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                color: primaryColor,
-                child: Text(
-                  'Save Address',
-                  style: TextStyle(color: Colors.white),
-                ),
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              innerColor: primaryColor,
+              borderColor: Colors.transparent,
+              child: Text(
+                'Save Address',
+                style: TextStyle(color: Colors.white),
               ),
             ),
           )

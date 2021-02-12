@@ -28,6 +28,7 @@ class _GalleryRecentScreenState extends State<GalleryRecentScreen> {
                 child: Post(
                     userImage: 'assets/images/advabeauty.png',
                     userName: 'John Doe',
+                    bodyText: null,
                     date: 'Today',
                     time: '12:45 PM',
                     comments: '30',
@@ -53,6 +54,7 @@ class _GalleryRecentScreenState extends State<GalleryRecentScreen> {
                     date: 'Today',
                     time: '12:45 PM',
                     comments: '30',
+                    bodyText: null,
                     likes: '30',
                     bodyImage: 'assets/images/advabeauty.png'),
               ),

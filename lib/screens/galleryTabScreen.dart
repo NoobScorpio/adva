@@ -3,6 +3,8 @@ import 'package:adva/screens/galleryTopScreen.dart';
 import 'package:adva/utils/constants.dart';
 import 'package:flutter/material.dart';
 
+import 'createPostScreen.dart';
+
 class GalleryScreen extends StatefulWidget {
   @override
   _GalleryScreenState createState() => _GalleryScreenState();
@@ -49,7 +51,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (_) => CreatePostScreen()));
+          },
           backgroundColor: primaryColor,
           child: Icon(Icons.add),
         ),

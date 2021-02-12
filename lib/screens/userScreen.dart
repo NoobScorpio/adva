@@ -1,14 +1,15 @@
-import 'package:adva/paymentScreen.dart';
 import 'package:adva/screens/advaPointsScreen.dart';
 import 'package:adva/screens/claimScreen.dart';
 import 'package:adva/screens/myPaymentScreen.dart';
 import 'package:adva/screens/profileScreen.dart';
 import 'package:adva/screens/refundScreen.dart';
 import 'package:adva/screens/userOrdersScreen.dart';
+import 'package:adva/screens/userReturnsScreen.dart';
 import 'package:adva/screens/wishlist.dart';
 import 'package:adva/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'addressScreen.dart';
 
@@ -98,7 +99,7 @@ class _UserScreenState extends State<UserScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => RefundScreen()));
+                                builder: (context) => UserReturnsScreen()));
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -258,13 +259,19 @@ class _UserScreenState extends State<UserScreen> {
           Divider(
             height: 1,
           ),
-          ListTile(
-            tileColor: Colors.white,
-            leading: Icon(
-              Icons.settings_outlined,
-              color: secondaryColor,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => RefundScreen()));
+            },
+            child: ListTile(
+              tileColor: Colors.white,
+              leading: Icon(
+                Icons.settings_outlined,
+                color: secondaryColor,
+              ),
+              title: Text('Preferences'),
             ),
-            title: Text('Preferences'),
           ),
           Padding(
             padding: const EdgeInsets.all(15),
@@ -273,13 +280,23 @@ class _UserScreenState extends State<UserScreen> {
               style: boldTextStyle,
             ),
           ),
-          ListTile(
-            tileColor: Colors.white,
-            leading: Icon(
-              Icons.help_outline,
-              color: secondaryColor,
+          GestureDetector(
+            onTap: () async {
+              const url = 'https://advabeauty.com/faqs';
+              if (await canLaunch(url)) {
+                await launch(url);
+              } else {
+                throw 'Could not launch $url';
+              }
+            },
+            child: ListTile(
+              tileColor: Colors.white,
+              leading: Icon(
+                Icons.help_outline,
+                color: secondaryColor,
+              ),
+              title: Text('Help'),
             ),
-            title: Text('Help'),
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),

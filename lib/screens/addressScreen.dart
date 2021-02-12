@@ -1,5 +1,6 @@
 import 'package:adva/screens/addAddressScreen.dart';
 import 'package:adva/utils/constants.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:flutter/material.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class _AddressScreenState extends State<AddressScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          'Wish list',
+          'Addresses',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -176,22 +177,21 @@ class _AddressScreenState extends State<AddressScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Container(
-              height: 45,
-              width: double.maxFinite,
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddAddressScreen()));
-                },
-                color: primaryColor,
-                child: Text(
-                  'Add new address',
-                  style: TextStyle(color: Colors.white),
-                ),
+            child: MyButton(
+              height: 55,
+              child: Text(
+                'Add new address',
+                style: TextStyle(color: Colors.white),
               ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddAddressScreen()));
+              },
+              width: double.maxFinite,
+              innerColor: primaryColor,
+              borderColor: Colors.transparent,
             ),
           )
         ],

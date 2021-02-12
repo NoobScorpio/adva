@@ -32,32 +32,33 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       time: '12:45 PM',
                       comments: '30',
                       likes: '30',
+                      bodyText:
+                          'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut'
+                          'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
                       bodyImage: 'assets/images/advabeauty.png'),
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    height: sH * 0.5,
-                    child: ListView(
-                      children: [
-                        Comment(
-                            image: 'assets/images/advabeauty.png',
-                            body:
-                                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
-                            name: 'John Doe'),
-                        Comment(
-                            image: 'assets/images/advabeauty.png',
-                            body:
-                                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
-                            name: 'John Doe'),
-                        Comment(
-                            image: 'assets/images/advabeauty.png',
-                            body:
-                                'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
-                            name: 'John Doe'),
-                      ],
-                    ),
-                  ),
+                  Comment(
+                      image: 'assets/images/advabeauty.png',
+                      body:
+                          'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
+                      name: 'John Doe'),
+                  Comment(
+                      image: 'assets/images/advabeauty.png',
+                      body:
+                          'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
+                      name: 'John Doe'),
+                  Comment(
+                      image: 'assets/images/advabeauty.png',
+                      body:
+                          'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
+                      name: 'John Doe'),
+                  Comment(
+                      image: 'assets/images/advabeauty.png',
+                      body:
+                          'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
+                      name: 'John Doe'),
                 ],
               ),
             ),

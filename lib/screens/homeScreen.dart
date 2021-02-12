@@ -163,8 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: screenHeight * 0.005,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
-                        left: screenWidth * 0.05, top: screenHeight * 0.001),
+                    padding: EdgeInsets.only(top: screenHeight * 0.001),
                     child: Container(
                       height: screenHeight * 0.13,
                       child: ListView(
@@ -225,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 builder: (context) => ProductViewScreen()));
                       },
                       child: ProductContainer(
+                        box: true,
                         screenHeight: screenHeight,
                         image: 'assets/images/product1.png',
                       ),
@@ -235,6 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                     child: ProductContainer(
+                      box: true,
                       screenHeight: screenHeight,
                       image: 'assets/images/product2.png',
                     ),

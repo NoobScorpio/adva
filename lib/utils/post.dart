@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart';
 
 class Post extends StatelessWidget {
-  final userImage, userName, date, time, comments, likes, bodyImage;
+  final userImage, userName, date, time, comments, likes, bodyImage, bodyText;
   const Post({
     Key key,
     this.userImage,
@@ -14,12 +14,11 @@ class Post extends StatelessWidget {
     this.comments,
     this.likes,
     this.bodyImage,
+    this.bodyText,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Container(
       child: Column(
         children: [
@@ -52,13 +51,14 @@ class Post extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
+          //IMAGE
           GestureDetector(
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => PostViewScreen()));
             },
             child: Container(
-              height: height * 0.28,
+              height: 265,
               width: double.maxFinite,
               child:
                   FittedBox(fit: BoxFit.cover, child: Image.asset(bodyImage)),
@@ -67,6 +67,16 @@ class Post extends StatelessWidget {
           SizedBox(
             height: 15,
           ),
+
+          if (bodyText != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: Container(
+                width: double.maxFinite,
+                child: Text(bodyText),
+              ),
+            ),
+          // SHARE COMMENT LIKE
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

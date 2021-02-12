@@ -7,11 +7,14 @@ class PaymentColumn extends StatelessWidget {
     Key key,
     @required this.screenHeight,
     @required this.screenWidth,
+    this.flatShippingRate,
+    this.subTotal,
+    this.total,
   }) : super(key: key);
 
   final double screenHeight;
   final double screenWidth;
-
+  final String flatShippingRate, subTotal, total;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,7 +26,7 @@ class PaymentColumn extends StatelessWidget {
               style: TextStyle(
                 fontSize: 15,
               )),
-          txt1: Text('SAR. 999',
+          txt1: Text('SAR. $flatShippingRate',
               style: TextStyle(
                 fontSize: 15,
               )),
@@ -35,7 +38,7 @@ class PaymentColumn extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15,
                 )),
-            txt1: Text('SAR. 999',
+            txt1: Text('SAR. $subTotal',
                 style: TextStyle(
                   fontSize: 15,
                 ))),
@@ -44,7 +47,7 @@ class PaymentColumn extends StatelessWidget {
             screenWidth: screenWidth,
             txt: Text('Total',
                 style: TextStyle(fontSize: 15, color: cartTextColor)),
-            txt1: Text('SAR. 999',
+            txt1: Text('SAR. $total',
                 style: TextStyle(fontSize: 15, color: cartTextColor))),
       ],
     );

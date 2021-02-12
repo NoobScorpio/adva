@@ -71,7 +71,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   height: screenHeight,
                   color: sideContainerColor,
                   child: CategoriesSideContainer()),
-              Container(child: CatergoryCustomColumns()),
+              Container(child: CategoryCustomColumns()),
             ],
           )
         ],
@@ -80,12 +80,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 }
 
-class CatergoryCustomColumns extends StatefulWidget {
+class CategoryCustomColumns extends StatefulWidget {
   @override
-  _CatergoryCustomColumnsState createState() => _CatergoryCustomColumnsState();
+  _CategoryCustomColumnsState createState() => _CategoryCustomColumnsState();
 }
 
-class _CatergoryCustomColumnsState extends State<CatergoryCustomColumns> {
+class _CategoryCustomColumnsState extends State<CategoryCustomColumns> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -103,38 +103,38 @@ class _CatergoryCustomColumnsState extends State<CatergoryCustomColumns> {
           SizedBox(
             height: screenHeight * 0.01,
           ),
-          CatergoryRow(),
+          CategoryRow(),
           SizedBox(
             height: screenHeight * 0.02,
           ),
-          CatergoryRow(),
+          CategoryRow(),
           SizedBox(
             height: screenHeight * 0.02,
           ),
-          CatergoryRow(),
+          CategoryRow(),
           SizedBox(
             height: screenHeight * 0.02,
           ),
-          CatergoryRow(),
+          CategoryRow(),
           SizedBox(
             height: screenHeight * 0.02,
           ),
-          CatergoryRow(),
+          CategoryRow(),
           SizedBox(
             height: screenHeight * 0.02,
           ),
-          CatergoryRow(),
+          CategoryRow(),
           SizedBox(
             height: screenHeight * 0.02,
           ),
-          CatergoryRow(),
+          CategoryRow(),
         ],
       ),
     );
   }
 }
 
-class CatergoryRow extends StatelessWidget {
+class CategoryRow extends StatelessWidget {
   // CatergoryRow({this.});
 
   @override

@@ -1,5 +1,6 @@
 import 'package:adva/screens/checkoutScreen.dart';
 import 'package:adva/utils/constants.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -168,44 +169,26 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
             ),
-            CartPaymentButton(
-                screenHeight: screenHeight * 0.1, screenWidth: screenWidth),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: MyButton(
+                height: screenHeight * 0.08,
+                width: screenWidth,
+                borderColor: Colors.transparent,
+                innerColor: primaryColor,
+                child: Center(
+                  child: Text('Buy 3 items for SAR 233.09',
+                      style: TextStyle(fontSize: 15, color: Colors.white)),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CheckoutScreen()));
+                },
+              ),
+            ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class CartPaymentButton extends StatelessWidget {
-  const CartPaymentButton({
-    Key key,
-    @required this.screenHeight,
-    @required this.screenWidth,
-  }) : super(key: key);
-
-  final double screenHeight;
-  final double screenWidth;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.015),
-      child: Container(
-        width: screenWidth,
-        height: screenHeight,
-        decoration: BoxDecoration(border: Border.all(width: 0.07)),
-        child: Padding(
-          padding: const EdgeInsets.all(11),
-          child: MaterialButton(
-            color: primaryColor,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CheckoutScreen()));
-            },
-            child: Text('Buy 3 items for SAR 233.09',
-                style: TextStyle(fontSize: 15, color: Colors.white)),
-          ),
         ),
       ),
     );

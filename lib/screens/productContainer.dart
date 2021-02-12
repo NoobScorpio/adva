@@ -113,7 +113,7 @@ class ProductContainer extends StatelessWidget {
                       Align(
                         alignment: Alignment.topRight,
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.only(right: 8.0, top: 8.0),
                           child: Icon(
                             Icons.favorite_border,
                             color: primaryColor,
@@ -128,7 +128,7 @@ class ProductContainer extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Container(
-                                  height: screenHeight * 0.24,
+                                  height: 100,
                                   width: screenHeight * 0.22,
                                   child: FittedBox(
                                       fit: BoxFit.cover,
@@ -144,7 +144,7 @@ class ProductContainer extends StatelessWidget {
                                   Text(
                                     'Product Name',
                                     style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 17,
                                     ),
                                   ),
                                   Container(
@@ -157,7 +157,7 @@ class ProductContainer extends StatelessWidget {
                                         Text(
                                           'Price ',
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 17,
                                           ),
                                         ),
                                         Row(
@@ -165,13 +165,13 @@ class ProductContainer extends StatelessWidget {
                                             Text(
                                               'SAR ',
                                               style: TextStyle(
-                                                  fontSize: 14,
+                                                  fontSize: 15,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
                                               '75.00',
                                               style: TextStyle(
-                                                fontSize: 18,
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -188,11 +188,10 @@ class ProductContainer extends StatelessWidget {
                                         // width: double.maxFinite,
                                         child: Text(
                                           'Lorem ipsum dol Lorem ipsum dol '
-                                          'Lorem ipsum dol Lorem ipsum dol '
                                           'Lorem ipsum dol Lorem ipsum dol ',
                                           // max
                                           style: TextStyle(
-                                            fontSize: 15,
+                                            fontSize: 12,
                                           ),
                                         ),
                                       ),

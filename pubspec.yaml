@@ -36,7 +36,8 @@ dependencies:
   google_maps_flutter: ^1.2.0
   pinput: ^1.0.0
   flutter_rating_bar: ^3.2.0+1
-
+  url_launcher: ^5.7.10
+  flutter_svg:
 dev_dependencies:
   flutter_test:
     sdk: flutter

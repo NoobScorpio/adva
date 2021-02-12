@@ -1,17 +1,19 @@
 import 'package:adva/screens/orderDetailsScreen.dart';
 import 'package:adva/utils/constants.dart';
-import 'package:adva/utils/primaryButton.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:adva/utils/tFContainer.dart';
 import 'package:flutter/material.dart';
 
-class AddCart extends StatefulWidget {
+class AddCardScreen extends StatefulWidget {
   @override
-  _AddCartState createState() => _AddCartState();
+  _AddCardScreenState createState() => _AddCardScreenState();
 }
 
-class _AddCartState extends State<AddCart> {
+class _AddCardScreenState extends State<AddCardScreen> {
   int _groupValue = 1;
   bool checkBoxValue = false;
+  List<String> cards = ['Visa', 'Master', 'Mada'];
+  String cardName = 'Visa';
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -19,25 +21,17 @@ class _AddCartState extends State<AddCart> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: screenHeight * 0.12,
         backgroundColor: Colors.white,
-        leading: Padding(
-          padding: EdgeInsets.only(top: screenHeight * 0.035),
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
+        leading: Icon(
+          Icons.arrow_back_ios,
+          color: Colors.black,
         ),
-        title: Padding(
-          padding: EdgeInsets.only(
-              left: screenWidth * 0.2, top: screenHeight * 0.04),
-          child: Text(
-            'Add Cart',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontWeight: FontWeight.w400,
-            ),
+        title: Text(
+          'Add Card',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 22,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),
@@ -59,7 +53,7 @@ class _AddCartState extends State<AddCart> {
                 children: [
                   Text(
                     'Payment Method',
-                    style: TextStyle(color: cartTextColor, fontSize: 18),
+                    style: TextStyle(color: primaryColor, fontSize: 18),
                   ),
                   Padding(
                     padding: EdgeInsets.only(
@@ -101,32 +95,87 @@ class _AddCartState extends State<AddCart> {
           SizedBox(
             height: screenHeight * 0.029,
           ),
-          Container(
-            color: Colors.white,
-            width: screenWidth,
-            // height: screenHeight * 0.315,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.03,
-                  vertical: screenHeight * 0.01),
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              color: Colors.white,
+              width: screenWidth,
+              // height: screenHeight * 0.315,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Details',
-                    style: TextStyle(color: cartTextColor, fontSize: 18),
+                    style: TextStyle(color: primaryColor, fontSize: 18),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: screenWidth * 0.02, top: screenHeight * 0.015),
-                    child: Text(
-                      'Card Number',
-                      style: TextStyle(fontSize: 14, color: Colors.black),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Card Name',
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    color: Colors.grey,
+                    width: double.maxFinite,
+                    child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Container(
+                        color: Colors.white,
+                        width: double.maxFinite,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: DropdownButton<String>(
+                            isExpanded: true,
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                            ),
+                            iconSize: 42,
+                            value: cardName,
+                            underline: SizedBox(),
+                            items: cards.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: new Text('$value'),
+                              );
+                            }).toList(),
+                            onChanged: (_) {
+                              setState(() {
+                                cardName = _;
+                              });
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  TFContainer(
-                    screenHeight: screenHeight,
-                    screenWidth: screenWidth,
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Card Number',
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    height: screenHeight * 0.06,
+                    child: TextFormField(
+                      autovalidateMode: AutovalidateMode.always,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      onSaved: (String value) {},
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -136,17 +185,23 @@ class _AddCartState extends State<AddCart> {
                           screenWidth: screenWidth,
                           screenHeight: screenHeight,
                           txt: 'Expiry Date'),
+                      SizedBox(
+                        width: 10,
+                      ),
                       DetailContainerRow(
                           screenWidth: screenWidth,
                           screenHeight: screenHeight,
                           txt: 'Security Code'),
                     ],
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Row(
                     children: [
                       Checkbox(
                           value: checkBoxValue,
-                          activeColor: Colors.black,
+                          activeColor: primaryColor,
                           onChanged: (bool newValue) {
                             setState(() {
                               checkBoxValue = newValue;
@@ -172,34 +227,34 @@ class _AddCartState extends State<AddCart> {
             ),
           )),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+            padding: const EdgeInsets.all(15.0),
             child: Container(
-              width: screenWidth,
-              height: screenHeight * 0.05,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.05, color: Colors.black),
-                color: Colors.white,
+              height: screenHeight * 0.080,
+              color: primaryColor,
+              child: Padding(
+                padding: const EdgeInsets.all(1.0),
+                child: Container(
+                  color: Colors.white,
+                  child: Center(
+                      child: Text(
+                    'Scan Card',
+                    style: TextStyle(color: primaryColor),
+                  )),
+                ),
               ),
-              child: Center(
-                  child: Text(
-                'Scan Card',
-                // style: TextStyle(fontSize: 15),
-              )),
             ),
           ),
-          SizedBox(
-            height: screenHeight * 0.14,
-          ),
-          PrimaryButton(
-            screenWidth: screenWidth,
-            screenHeight: screenHeight,
-            txt: 'Save',
-            onpressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => OrderDetailsScreen()));
-            },
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              height: screenHeight * 0.080,
+              color: primaryColor,
+              child: Center(
+                  child: Text(
+                'Save',
+                style: TextStyle(color: Colors.white),
+              )),
+            ),
           ),
         ],
       ),
@@ -222,30 +277,29 @@ class DetailContainerRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Padding(
-        padding: EdgeInsets.only(top: screenHeight * 0.01),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: screenWidth * 0.02),
-              child: Text(
-                txt,
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: TFContainer(
-                    screenHeight: screenHeight,
-                    screenWidth: screenWidth,
-                  ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            txt,
+            style: TextStyle(color: Colors.black),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            height: screenHeight * 0.06,
+            child: TextFormField(
+              autovalidateMode: AutovalidateMode.always,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
                 ),
-              ],
+              ),
+              onSaved: (String value) {},
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

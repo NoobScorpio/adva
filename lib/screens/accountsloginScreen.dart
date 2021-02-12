@@ -1,7 +1,7 @@
 import 'package:adva/screens/userScreen.dart';
 import 'package:adva/screens/bottomNavBar.dart';
 import 'package:adva/utils/constants.dart';
-import 'package:adva/utils/primaryButton.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:flutter/material.dart';
 
 class AccountsLoginScreen extends StatefulWidget {
@@ -61,11 +61,11 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                 left: screenWidth * 0.02,
                 right: screenWidth * 0.02,
                 top: screenHeight * 0.03),
-            child: PrimaryButton(
-              screenHeight: screenHeight,
-              screenWidth: screenWidth,
-              txt: 'SIGN IN',
-              onpressed: () {
+            child: MyButton(
+              height: screenHeight,
+              width: screenWidth,
+              child: Text('Post'),
+              onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => BottomNavBar()));
               },

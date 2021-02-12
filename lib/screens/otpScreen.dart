@@ -1,4 +1,4 @@
-import 'package:adva/utils/primaryButton.dart';
+import 'package:adva/utils/myButton.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
@@ -113,11 +113,11 @@ class _OTPScreenState extends State<OTPScreen> {
                   left: screenWidth * 0.22,
                   right: screenWidth * 0.22,
                 ),
-                child: PrimaryButton(
-                  screenHeight: screenHeight,
-                  screenWidth: screenWidth,
-                  txt: 'CONFIRM',
-                  onpressed: () {},
+                child: MyButton(
+                  height: screenHeight,
+                  width: screenWidth,
+                  child: Text('Post'),
+                  onPressed: () {},
                 ),
               ),
             ],
