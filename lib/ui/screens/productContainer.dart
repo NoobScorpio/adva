@@ -2,11 +2,20 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class ProductContainer extends StatelessWidget {
-  ProductContainer({this.screenHeight, this.image, this.box});
+  ProductContainer(
+      {this.screenHeight,
+      this.image,
+      this.box,
+      this.name,
+      this.description,
+      this.price});
 
   final double screenHeight;
   final String image;
   final bool box;
+  final String name, description;
+  final String price;
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -45,7 +54,7 @@ class ProductContainer extends StatelessWidget {
                       padding:
                           const EdgeInsets.only(top: 10, left: 12, right: 12),
                       child: Text(
-                        'Product Name',
+                        '$name',
                         style: TextStyle(
                           fontSize: 20,
                         ),
@@ -55,7 +64,9 @@ class ProductContainer extends StatelessWidget {
                       padding:
                           const EdgeInsets.only(top: 10, left: 12, right: 12),
                       child: Text(
-                        'Lorem ipsum dolor sit amet, consectetur sadipiscing elit,',
+                        '$description',
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 3,
                         // max
                         style: TextStyle(
                           fontSize: 15,
@@ -82,7 +93,7 @@ class ProductContainer extends StatelessWidget {
                                     fontSize: 14, fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '75.00',
+                                '$price',
                                 style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,

@@ -1,8 +1,5 @@
-import 'package:adva/bloc/ads_bloc/adsEvent.dart';
-import 'package:adva/bloc/ads_bloc/adsState.dart';
 import 'package:adva/bloc/category_bloc/categoryEvent.dart';
 import 'package:adva/bloc/category_bloc/categoryState.dart';
-import 'package:adva/data/model/ads.dart';
 import 'package:adva/data/model/category.dart';
 import 'package:adva/data/repository/categoryRepo.dart';
 import 'package:flutter/material.dart';

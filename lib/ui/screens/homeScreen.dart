@@ -4,11 +4,23 @@ import 'package:adva/bloc/ads_bloc/adsState.dart';
 import 'package:adva/bloc/category_bloc/categoryBloc.dart';
 import 'package:adva/bloc/category_bloc/categoryEvent.dart';
 import 'package:adva/bloc/category_bloc/categoryState.dart';
+import 'package:adva/bloc/featured_bloc/featuredBloc.dart';
+import 'package:adva/bloc/featured_bloc/featuredEvent.dart';
+import 'package:adva/bloc/featured_bloc/featuredState.dart';
+import 'package:adva/bloc/offer_bloc/offerBloc.dart';
+import 'package:adva/bloc/offer_bloc/offerEvent.dart';
+import 'package:adva/bloc/offer_bloc/offerState.dart';
+import 'package:adva/bloc/product_bloc/productBloc.dart';
+import 'package:adva/bloc/product_bloc/productEvent.dart';
+import 'package:adva/bloc/seller_bloc/sellerBloc.dart';
+import 'package:adva/bloc/seller_bloc/sellerEvent.dart';
+import 'package:adva/bloc/seller_bloc/sellerState.dart';
 import 'package:adva/data/model/ads.dart';
 import 'package:adva/data/model/category.dart';
+import 'package:adva/data/model/featured.dart';
+import 'package:adva/data/model/offer.dart';
+import 'package:adva/data/model/seller.dart';
 import 'package:adva/ui/screens/productContainer.dart';
-import 'package:adva/ui/screens/productViewScreen.dart';
-import 'package:adva/ui/utils/categoriesListView.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +36,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   AdsBloc adsBloc;
   CategoryBloc categoryBloc;
+  OfferBloc offerBloc;
+  SellerBloc sellerBloc;
+  FeaturedBloc featuredBloc;
+  ProductBloc productBloc;
   Widget buildErrorUi(String message) {
     return Center(
       child: Padding(
@@ -50,8 +66,32 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     adsBloc = BlocProvider.of<AdsBloc>(context);
     adsBloc.add(FetchAdsEvent());
+
     categoryBloc = BlocProvider.of<CategoryBloc>(context);
     categoryBloc.add(FetchCategoryEvent());
+
+    offerBloc = BlocProvider.of<OfferBloc>(context);
+    offerBloc.add(FetchOfferEvent());
+
+    sellerBloc = BlocProvider.of<SellerBloc>(context);
+    sellerBloc.add(FetchSellerEvent());
+
+    featuredBloc = BlocProvider.of<FeaturedBloc>(context);
+    featuredBloc.add(FetchFeaturedEvent());
+
+    productBloc = BlocProvider.of<ProductBloc>(context);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    sellerBloc.close();
+    offerBloc.close();
+    categoryBloc.close();
+    adsBloc.close();
+    featuredBloc.close();
+    productBloc.close();
   }
 
   @override
@@ -98,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
 
                             return Carousel(
+                              autoplayDuration: Duration(seconds: 10),
                               boxFit: BoxFit.contain,
                               dotBgColor: Colors.transparent,
                               overlayShadowColors: Color(0xFF00000029),
@@ -169,6 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: Container(
+                height: 45,
                 child: BlocBuilder<CategoryBloc, CategoryState>(
                   builder: (context, state) {
                     if (state is CategoryInitialState) {
@@ -188,11 +230,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           images.add(Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: MyButton(
-                              height: 50,
-                              width: 100,
+                              height: 40,
+                              width: 150,
                               innerColor: Colors.white,
-                              borderColor: Colors.grey,
-                              onPressed: () {},
+                              borderColor: Colors.grey[300],
+                              onPressed: () {
+                                productBloc.add(FetchCategoryProductEvent(
+                                    cat.categoryName.toString()));
+                              },
                               child: Text(
                                 '${cat.categoryName}',
                                 style: TextStyle(color: Colors.black),
@@ -222,41 +267,70 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 21),
               ),
             ),
-            // Center(
-            //   child: IconButton(
-            //     icon: Icon(Icons.refresh),
-            //     onPressed: () {
-            //       adsBloc.add(FetchAdsEvent());
-            //     },
-            //   ),
-            // ),
-            // Center(
-            //   child: Container(
-            //     child:
-            //   ),
-            // ),
             Padding(
-              padding: EdgeInsets.only(
-                  left: screenWidth * 0.076, top: screenHeight * 0.006),
-              child: Row(
-                children: [
-                  Image.asset('assets/images/foundation.png'),
-                  SizedBox(
-                    width: screenWidth * 0.03,
-                  ),
-                  Image.asset('assets/images/foundation.png'),
-                  SizedBox(
-                    width: screenWidth * 0.03,
-                  ),
-                  Image.asset('assets/images/foundation.png'),
-                ],
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              child: Container(
+                height: 150,
+                child: BlocBuilder<OfferBloc, OfferState>(
+                  builder: (context, state) {
+                    if (state is OfferInitialState) {
+                      return buildLoading();
+                    } else if (state is OfferLoadingState) {
+                      return buildLoading();
+                    } else if (state is OfferLoadedState) {
+                      if (state.offer == null) {
+                        return Center(
+                            child: CircularProgressIndicator(
+                          backgroundColor: primaryColor,
+                        ));
+                      } else {
+                        List<Offer> offers = state.offer;
+                        List<Widget> widgets = [
+                          SizedBox(
+                            width: 10,
+                          )
+                        ];
+                        for (Offer offer in offers) {
+                          widgets.add(Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color:
+                                      Colors.grey[300], // red as border color
+                                ),
+                              ),
+                              height: 150,
+                              width: 150,
+                              child: FittedBox(
+                                fit: BoxFit.cover,
+                                child: Image.network(
+                                  offer.image,
+                                ),
+                              ),
+                            ),
+                          ));
+                        }
+
+                        return ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: widgets,
+                        );
+                      }
+                    } else if (state is OfferErrorState) {
+                      return buildErrorUi(state.message);
+                    } else {
+                      return buildErrorUi('Could not load data.');
+                    }
+                  },
+                ),
               ),
             ),
             SizedBox(
               height: screenHeight * 0.028,
             ),
             Container(
-              height: screenHeight * 0.19,
+              height: 170,
               color: Color(0xFFF6EDE8),
               child: Column(
                 children: [
@@ -274,30 +348,66 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: screenHeight * 0.005,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: screenHeight * 0.001),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     child: Container(
-                      height: screenHeight * 0.13,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          Image.asset('assets/images/kit.png'),
-                          SizedBox(
-                            width: screenWidth * 0.02,
-                          ),
-                          Image.asset('assets/images/lipstick.png'),
-                          SizedBox(
-                            width: screenWidth * 0.02,
-                          ),
-                          Image.asset('assets/images/brush.png'),
-                          SizedBox(
-                            width: screenWidth * 0.02,
-                          ),
-                          Image.asset('assets/images/kit.png'),
-                          SizedBox(
-                            width: screenWidth * 0.02,
-                          ),
-                          Image.asset('assets/images/brush.png'),
-                        ],
+                      height: 100,
+                      child: BlocBuilder<SellerBloc, SellerState>(
+                        builder: (context, state) {
+                          if (state is SellerInitialState) {
+                            return buildLoading();
+                          } else if (state is SellerLoadingState) {
+                            return buildLoading();
+                          } else if (state is SellerLoadedState) {
+                            if (state.seller == null) {
+                              return Center(
+                                  child: CircularProgressIndicator(
+                                backgroundColor: primaryColor,
+                              ));
+                            } else {
+                              List<Seller> sellings = state.seller;
+                              List<Widget> widgets = [
+                                SizedBox(
+                                  width: 10,
+                                )
+                              ];
+                              // print(sellings.length);
+                              for (Seller selling in sellings) {
+                                // print(
+                                //     selling.productimages[0].pictureReference);
+                                widgets.add(Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors
+                                            .grey[300], // red as border color
+                                      ),
+                                    ),
+                                    height: 100,
+                                    width: 100,
+                                    child: FittedBox(
+                                      fit: BoxFit.cover,
+                                      child: Image.network(
+                                        selling
+                                            .productimages[0].pictureReference,
+                                      ),
+                                    ),
+                                  ),
+                                ));
+                              }
+
+                              return ListView(
+                                scrollDirection: Axis.horizontal,
+                                children: widgets,
+                              );
+                            }
+                          } else if (state is SellerErrorState) {
+                            return buildErrorUi(state.message);
+                          } else {
+                            return buildErrorUi('Could not load data.');
+                          }
+                        },
                       ),
                     ),
                   ),
@@ -317,41 +427,60 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: screenWidth * 0.042,
-                  right: screenWidth * 0.042,
-                  top: screenHeight * 0.01,
-                  bottom: screenHeight * 0.017),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProductViewScreen()));
-                      },
-                      child: ProductContainer(
-                        box: true,
-                        screenHeight: screenHeight,
-                        image: 'assets/images/product1.png',
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Expanded(
-                    child: ProductContainer(
-                      box: true,
-                      screenHeight: screenHeight,
-                      image: 'assets/images/product2.png',
-                    ),
-                  ),
-                ],
+            // ProductContainer(
+            //   box: true,
+            //   screenHeight: screenHeight,
+            //   image: 'assets/images/product1.png',
+            // ),
+            Container(
+              width: double.maxFinite,
+              height: 400,
+              child: BlocBuilder<FeaturedBloc, FeaturedState>(
+                builder: (context, state) {
+                  if (state is FeaturedInitialState) {
+                    return buildLoading();
+                  } else if (state is FeaturedLoadingState) {
+                    return buildLoading();
+                  } else if (state is FeaturedLoadedState) {
+                    if (state.featured == null) {
+                      return Center(
+                          child: CircularProgressIndicator(
+                        backgroundColor: primaryColor,
+                      ));
+                    } else {
+                      List<Featured> featured = state.featured;
+                      List<Widget> widgets = [];
+                      // print(sellings.length);
+                      for (Featured feature in featured) {
+                        // print(
+                        //     selling.productimages[0].pictureReference);
+                        widgets.add(ProductContainer(
+                          box: true,
+                          name: feature.productName,
+                          description: feature.productDescription,
+                          price: feature.price.toString(),
+                          screenHeight: screenHeight,
+                          image: 'assets/images/product1.png',
+                        ));
+                      }
+                      widgets.add(SizedBox(
+                        height: 200,
+                      ));
+                      return GridView.count(
+                        crossAxisCount: 2,
+                        padding: const EdgeInsets.all(15),
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 0.465,
+                        children: widgets,
+                      );
+                    }
+                  } else if (state is FeaturedErrorState) {
+                    return buildErrorUi(state.message);
+                  } else {
+                    return buildErrorUi('Could not load data.');
+                  }
+                },
               ),
             ),
           ],

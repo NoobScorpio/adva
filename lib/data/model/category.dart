@@ -1,6 +1,8 @@
 class Category {
   int id;
   String categoryName;
+  String description;
+  int status;
   String banner;
   String createdAt;
   String updatedAt;
@@ -8,6 +10,8 @@ class Category {
   Category(
       {this.id,
       this.categoryName,
+      this.description,
+      this.status,
       this.banner,
       this.createdAt,
       this.updatedAt});
@@ -15,6 +19,8 @@ class Category {
   Category.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     categoryName = json['category_name'];
+    description = json['description'];
+    status = json['status'];
     banner = json['banner'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -24,6 +30,8 @@ class Category {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['category_name'] = this.categoryName;
+    data['description'] = this.description;
+    data['status'] = this.status;
     data['banner'] = this.banner;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

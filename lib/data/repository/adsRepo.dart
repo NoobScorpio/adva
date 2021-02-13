@@ -19,11 +19,15 @@ class AdsRepositoryImpl implements AdsRepository {
         List<Ads> ads = AdsResultModel.fromJson(data).ads;
         return ads;
       } catch (e) {
-        print(e);
+        // print(e);
         return [];
       }
+    } else if (response.statusCode == 400) {
+      throw UnimplementedError('This data does not exist.');
+    } else if (response.statusCode == 500) {
+      throw UnimplementedError('Internal server error.');
     } else {
-      throw UnimplementedError();
+      throw UnimplementedError('Something went wrong');
     }
   }
 }

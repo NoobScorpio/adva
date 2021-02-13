@@ -1,11 +1,17 @@
 import 'package:adva/bloc/ads_bloc/adsBloc.dart';
 import 'package:adva/bloc/category_bloc/categoryBloc.dart';
+import 'package:adva/bloc/featured_bloc/featuredBloc.dart';
+import 'package:adva/bloc/offer_bloc/offerBloc.dart';
+import 'package:adva/bloc/product_bloc/productBloc.dart';
+import 'package:adva/bloc/seller_bloc/sellerBloc.dart';
 import 'package:adva/data/repository/adsRepo.dart';
 import 'package:adva/data/repository/categoryRepo.dart';
-import 'package:adva/res/generatedRoutes.dart';
+import 'package:adva/data/repository/featuredRepo.dart';
+import 'package:adva/data/repository/offerRepo.dart';
+import 'package:adva/data/repository/productRepo.dart';
+import 'package:adva/data/repository/sellerRepo.dart';
 import 'package:adva/ui/screens/bottomNavBar.dart';
 import 'package:adva/ui/utils/constants.dart';
-import 'package:adva/ui/utils/testScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +21,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final AppRouter _appRouter = AppRouter();
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -25,6 +30,17 @@ class MyApp extends StatelessWidget {
         BlocProvider<CategoryBloc>(
             create: (context) =>
                 CategoryBloc(repository: CategoryRepositoryImpl())),
+        BlocProvider<OfferBloc>(
+            create: (context) => OfferBloc(repository: OfferRepositoryImpl())),
+        BlocProvider<SellerBloc>(
+            create: (context) =>
+                SellerBloc(repository: SellerRepositoryImpl())),
+        BlocProvider<FeaturedBloc>(
+            create: (context) =>
+                FeaturedBloc(repository: FeaturedRepositoryImpl())),
+        BlocProvider<ProductBloc>(
+            create: (context) =>
+                ProductBloc(repository: ProductRepositoryImpl())),
       ],
       child: MaterialApp(
         title: 'ADVA',
@@ -35,7 +51,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        onGenerateRoute: _appRouter.onGenerateRoute,
+        home: BottomNavBar(),
         // home: TestScreen(),
       ),
     );
