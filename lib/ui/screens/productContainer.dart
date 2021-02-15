@@ -1,112 +1,148 @@
+import 'package:adva/bloc/product_bloc/productBloc.dart';
+import 'package:adva/bloc/product_bloc/productEvent.dart';
+import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductContainer extends StatelessWidget {
+class ProductContainer extends StatefulWidget {
   ProductContainer(
       {this.screenHeight,
       this.image,
       this.box,
       this.name,
       this.description,
-      this.price});
+      this.price,
+      this.pid});
 
   final double screenHeight;
   final String image;
   final bool box;
+  final int pid;
   final String name, description;
   final String price;
 
   @override
+  _ProductContainerState createState() => _ProductContainerState();
+}
+
+class _ProductContainerState extends State<ProductContainer> {
+  ProductBloc productBloc;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    productBloc = BlocProvider.of<ProductBloc>(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    return box
-        ? Container(
-            width: screenHeight * 0.216,
-            decoration: BoxDecoration(
-                border: Border.all(width: 0.6, color: primaryColor)),
-            child: Column(
-              children: [
-                Container(
-                  child: Stack(
+    return widget.box
+        ? GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ProductViewScreen(pid: widget.pid)));
+            },
+            child: Container(
+              width: screenHeight * 0.216,
+              decoration: BoxDecoration(
+                  border: Border.all(width: 0.6, color: primaryColor)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        width: screenHeight * 0.25,
-                        child: FittedBox(
-                          child: Image.asset(image),
-                          fit: BoxFit.contain,
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: screenHeight * 0.25,
+                              height: 220,
+                              child: FittedBox(
+                                child: Image.network(widget.image),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: Icon(
+                                Icons.favorite_outline,
+                                color: primaryColor,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Positioned(
-                        top: 8,
-                        right: 8,
-                        child: Icon(
-                          Icons.favorite_outline,
-                          color: primaryColor,
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 10, left: 12, right: 12),
+                        child: Text(
+                          '${widget.name}',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 10, left: 12, right: 12),
+                        child: Text(
+                          '${widget.description}',
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                          // max
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 12, right: 12),
-                      child: Text(
-                        '$name',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 12, right: 12),
-                      child: Text(
-                        '$description',
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 3,
-                        // max
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 9, left: 12, right: 15, bottom: 11),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Price   ',
-                            style: TextStyle(
-                              fontSize: 18,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 9, left: 12, right: 15, bottom: 11),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Price   ',
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
                             ),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                'SAR  ',
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                '$price',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                            Row(
+                              children: [
+                                Text(
+                                  'SAR  ',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
+                                Text(
+                                  '${widget.price}',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           )
         : Padding(
@@ -143,7 +179,7 @@ class ProductContainer extends StatelessWidget {
                                   width: screenHeight * 0.22,
                                   child: FittedBox(
                                       fit: BoxFit.cover,
-                                      child: Image.asset(image))),
+                                      child: Image.asset(widget.image))),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(

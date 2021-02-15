@@ -17,14 +17,24 @@ class ProductLoadingState extends ProductState {
   List<Object> get props => [];
 }
 
-class ProductLoadedState extends ProductState {
-  final List<Product> offer;
+class ProductsLoadedState extends ProductState {
+  final List<Product> product;
 
-  ProductLoadedState({this.offer});
+  ProductsLoadedState({this.product});
 
   @override
   // TODO: implement props
-  List<Object> get props => [offer];
+  List<Object> get props => [product];
+}
+
+class ProductLoadedState extends ProductState {
+  final Product product;
+
+  ProductLoadedState({this.product});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [product];
 }
 
 class ProductErrorState extends ProductState {
@@ -35,4 +45,14 @@ class ProductErrorState extends ProductState {
   @override
   // TODO: implement props
   List<Object> get props => [message];
+}
+
+class ProductPostQuestionState extends ProductState {
+  final bool posted;
+
+  ProductPostQuestionState({this.posted});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [posted];
 }

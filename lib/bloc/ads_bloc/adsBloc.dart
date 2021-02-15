@@ -17,6 +17,7 @@ class AdsBloc extends Bloc<AdsEvent, AdsState> {
   @override
   Stream<AdsState> mapEventToState(AdsEvent event) async* {
     if (event is FetchAdsEvent) {
+      print('ADS EVENT CALEED');
       yield AdsLoadingState();
       try {
         List<Ads> ads = await repository.getAds();

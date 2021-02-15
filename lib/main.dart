@@ -1,10 +1,13 @@
 import 'package:adva/bloc/ads_bloc/adsBloc.dart';
+import 'package:adva/bloc/cart_bloc/cartBloc.dart';
 import 'package:adva/bloc/category_bloc/categoryBloc.dart';
 import 'package:adva/bloc/featured_bloc/featuredBloc.dart';
 import 'package:adva/bloc/offer_bloc/offerBloc.dart';
 import 'package:adva/bloc/product_bloc/productBloc.dart';
 import 'package:adva/bloc/seller_bloc/sellerBloc.dart';
+import 'package:adva/data/model/cart.dart';
 import 'package:adva/data/repository/adsRepo.dart';
+import 'package:adva/data/repository/cartRepo.dart';
 import 'package:adva/data/repository/categoryRepo.dart';
 import 'package:adva/data/repository/featuredRepo.dart';
 import 'package:adva/data/repository/offerRepo.dart';
@@ -21,8 +24,10 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  Cart cart = Cart();
   @override
   Widget build(BuildContext context) {
+    cart.cartItem = [];
     return MultiBlocProvider(
       providers: [
         BlocProvider<AdsBloc>(
@@ -41,6 +46,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProductBloc>(
             create: (context) =>
                 ProductBloc(repository: ProductRepositoryImpl())),
+        BlocProvider<CartBloc>(
+            create: (context) => CartBloc(repository: CartRepositoryImpl())),
       ],
       child: MaterialApp(
         title: 'ADVA',

@@ -23,6 +23,7 @@ import 'package:adva/data/model/seller.dart';
 import 'package:adva/ui/screens/productContainer.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/widgets.dart';
@@ -40,25 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   SellerBloc sellerBloc;
   FeaturedBloc featuredBloc;
   ProductBloc productBloc;
-  Widget buildErrorUi(String message) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          message,
-          style: TextStyle(color: Colors.red),
-        ),
-      ),
-    );
-  }
-
-  Widget buildLoading() {
-    return Center(
-      child: CircularProgressIndicator(
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
 
   @override
   void initState() {
@@ -91,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
     categoryBloc.close();
     adsBloc.close();
     featuredBloc.close();
-    productBloc.close();
+    // productBloc.close();
   }
 
   @override
@@ -102,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: SafeArea(
         child: ListView(
+          shrinkWrap: true,
           children: [
             Container(
               width: screenWidth,
@@ -128,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             for (Ads ad in ads) {
                               images.add(Container(
                                   width: double.maxFinite,
+                                  height: screenHeight * 0.365,
                                   child: FittedBox(
                                     fit: BoxFit.contain,
                                     child: Image.network(
@@ -456,22 +440,23 @@ class _HomeScreenState extends State<HomeScreen> {
                         //     selling.productimages[0].pictureReference);
                         widgets.add(ProductContainer(
                           box: true,
+                          pid: feature.id,
                           name: feature.productName,
                           description: feature.productDescription,
                           price: feature.price.toString(),
                           screenHeight: screenHeight,
-                          image: 'assets/images/product1.png',
+                          image: feature.productimages[0].pictureReference,
                         ));
                       }
-                      widgets.add(SizedBox(
-                        height: 200,
-                      ));
+                      // widgets.add(SizedBox(
+                      //   height: 200,
+                      // ));
                       return GridView.count(
                         crossAxisCount: 2,
                         padding: const EdgeInsets.all(15),
                         crossAxisSpacing: 10,
                         mainAxisSpacing: 10,
-                        childAspectRatio: 0.465,
+                        childAspectRatio: 0.50,
                         children: widgets,
                       );
                     }

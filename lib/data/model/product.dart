@@ -1,6 +1,10 @@
 import 'package:adva/data/model/brand.dart';
 import 'package:adva/data/model/category.dart';
+import 'package:adva/data/model/colors.dart';
 import 'package:adva/data/model/productImage.dart';
+import 'package:adva/data/model/qas.dart';
+import 'package:adva/data/model/review.dart';
+import 'package:adva/data/model/sizes.dart';
 
 class Product {
   int id;
@@ -24,11 +28,20 @@ class Product {
   String timerTo;
   int featured;
   int shipping;
+  double weight;
+  double length;
+  double width;
+  double height;
+  String deletedAt;
   String createdAt;
   String updatedAt;
   Category category;
+  List<Reviews> reviews;
   Brand brand;
   List<Productimages> productimages;
+  List<QAS> qas;
+  List<Sizes> sizes;
+  List<ProductColors> productColors;
 
   Product(
       {this.id,
@@ -52,11 +65,20 @@ class Product {
       this.timerTo,
       this.featured,
       this.shipping,
+      this.weight,
+      this.length,
+      this.width,
+      this.height,
+      this.deletedAt,
       this.createdAt,
       this.updatedAt,
       this.category,
+      this.reviews,
       this.brand,
-      this.productimages});
+      this.productimages,
+      this.qas,
+      this.sizes,
+      this.productColors});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -80,16 +102,48 @@ class Product {
     timerTo = json['timer_to'];
     featured = json['featured'];
     shipping = json['shipping'];
+    weight = json['weight'];
+    length = json['length'];
+    width = json['width'];
+    height = json['height'];
+    deletedAt = json['deleted_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+
     category = json['category'] != null
         ? new Category.fromJson(json['category'])
         : null;
+
+    if (json['reviews'] != null) {
+      reviews = new List<Reviews>();
+      json['reviews'].forEach((v) {
+        reviews.add(new Reviews.fromJson(v));
+      });
+    }
     brand = json['brand'] != null ? new Brand.fromJson(json['brand']) : null;
+
     if (json['productimages'] != null) {
       productimages = new List<Productimages>();
       json['productimages'].forEach((v) {
         productimages.add(new Productimages.fromJson(v));
+      });
+    }
+    if (json['sizes'] != null) {
+      sizes = new List<Sizes>();
+      json['sizes'].forEach((v) {
+        sizes.add(new Sizes.fromJson(v));
+      });
+    }
+    if (json['colors'] != null) {
+      productColors = new List<ProductColors>();
+      json['colors'].forEach((v) {
+        productColors.add(new ProductColors.fromJson(v));
+      });
+    }
+    if (json['qas'] != null) {
+      qas = new List<QAS>();
+      json['qas'].forEach((v) {
+        qas.add(new QAS.fromJson(v));
       });
     }
   }
@@ -117,10 +171,18 @@ class Product {
     data['timer_to'] = this.timerTo;
     data['featured'] = this.featured;
     data['shipping'] = this.shipping;
+    data['weight'] = this.weight;
+    data['length'] = this.length;
+    data['width'] = this.width;
+    data['height'] = this.height;
+    data['deleted_at'] = this.deletedAt;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     if (this.category != null) {
       data['category'] = this.category.toJson();
+    }
+    if (this.reviews != null) {
+      data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
     }
     if (this.brand != null) {
       data['brand'] = this.brand.toJson();
@@ -128,6 +190,15 @@ class Product {
     if (this.productimages != null) {
       data['productimages'] =
           this.productimages.map((v) => v.toJson()).toList();
+    }
+    if (this.sizes != null) {
+      data['sizes'] = this.sizes.map((v) => v.toJson()).toList();
+    }
+    if (this.productColors != null) {
+      data['colors'] = this.productColors.map((v) => v.toJson()).toList();
+    }
+    if (this.qas != null) {
+      data['qas'] = this.qas.map((v) => v.toJson()).toList();
     }
     return data;
   }
