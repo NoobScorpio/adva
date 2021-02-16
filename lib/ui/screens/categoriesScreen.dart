@@ -1,4 +1,4 @@
-import 'package:adva/ui/screens/shopCategoryScreen.dart';
+import 'package:adva/ui/screens/categoryScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 

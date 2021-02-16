@@ -27,122 +27,99 @@ class ProductContainer extends StatefulWidget {
 }
 
 class _ProductContainerState extends State<ProductContainer> {
-  ProductBloc productBloc;
+  // ProductBloc productBloc;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    productBloc = BlocProvider.of<ProductBloc>(context);
+    // productBloc = BlocProvider.of<ProductBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     return widget.box
-        ? GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ProductViewScreen(pid: widget.pid)));
-            },
-            child: Container(
-              width: screenHeight * 0.216,
-              decoration: BoxDecoration(
-                  border: Border.all(width: 0.6, color: primaryColor)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Stack(
-                          children: [
-                            Container(
-                              width: screenHeight * 0.25,
-                              height: 220,
-                              child: FittedBox(
-                                child: Image.network(widget.image),
-                                fit: BoxFit.cover,
-                              ),
+        ? Container(
+            width: screenHeight * 0.216,
+            decoration: BoxDecoration(
+                border: Border.all(width: 0.6, color: primaryColor)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: 200,
+                            height: 200,
+                            child: FittedBox(
+                              child: Image.network(widget.image),
+                              fit: BoxFit.cover,
                             ),
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: Icon(
-                                Icons.favorite_outline,
-                                color: primaryColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 10, left: 12, right: 12),
-                        child: Text(
-                          '${widget.name}',
-                          style: TextStyle(
-                            fontSize: 20,
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(top: 10, left: 12, right: 12),
-                        child: Text(
-                          '${widget.description}',
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 3,
-                          // max
-                          style: TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 9, left: 12, right: 15, bottom: 11),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Price   ',
-                              style: TextStyle(
-                                fontSize: 18,
-                              ),
+                          Positioned(
+                            top: 8,
+                            right: 8,
+                            child: Icon(
+                              Icons.favorite_outline,
+                              color: primaryColor,
                             ),
-                            Row(
-                              children: [
-                                Text(
-                                  'SAR  ',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  '${widget.price}',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 12, right: 12),
+                      child: Text(
+                        '${widget.name}',
+                        style: TextStyle(
+                          fontSize: 20,
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 9, left: 12, right: 15, bottom: 11),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Price   ',
+                            style: TextStyle(
+                              fontSize: 18,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'SAR  ',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                '${widget.price}',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           )
         : Padding(
@@ -156,6 +133,7 @@ class _ProductContainerState extends State<ProductContainer> {
                   width: double.maxFinite,
                   color: Colors.white,
                   child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Align(
                         alignment: Alignment.topRight,
@@ -175,11 +153,11 @@ class _ProductContainerState extends State<ProductContainer> {
                             Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Container(
-                                  height: 100,
+                                  height: 80,
                                   width: screenHeight * 0.22,
                                   child: FittedBox(
                                       fit: BoxFit.cover,
-                                      child: Image.asset(widget.image))),
+                                      child: Image.network(widget.image))),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(
@@ -189,10 +167,13 @@ class _ProductContainerState extends State<ProductContainer> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Product Name',
+                                    '${widget.name}',
                                     style: TextStyle(
                                       fontSize: 17,
                                     ),
+                                  ),
+                                  SizedBox(
+                                    height: 30,
                                   ),
                                   Container(
                                     width: screenHeight * 0.25,
@@ -216,7 +197,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                              '75.00',
+                                              '${widget.price}',
                                               style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold,
@@ -226,23 +207,6 @@ class _ProductContainerState extends State<ProductContainer> {
                                         )
                                       ],
                                     ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      Container(
-                                        width: screenHeight * 0.25,
-                                        // color: Colors.blue,
-                                        // width: double.maxFinite,
-                                        child: Text(
-                                          'Lorem ipsum dol Lorem ipsum dol '
-                                          'Lorem ipsum dol Lorem ipsum dol ',
-                                          // max
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),

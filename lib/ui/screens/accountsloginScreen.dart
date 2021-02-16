@@ -1,7 +1,11 @@
-import 'package:adva/ui/screens/userScreen.dart';
+import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/ui/screens/createAccount.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bottomNavBar.dart';
 
@@ -11,135 +15,181 @@ class AccountsLoginScreen extends StatefulWidget {
 }
 
 class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
+  SharedPreferences sharedPreferences;
+  getPrefs() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+  }
+
+  String username = '', pass = '';
+  bool passH = true;
   @override
   Widget build(BuildContext context) {
+    getPrefs();
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        toolbarHeight: screenHeight * 0.09,
-        title: Center(
-            child: Padding(
-          padding: EdgeInsets.only(
-              top: screenHeight * 0.026, right: screenWidth * 0.12),
-          child: Text(
-            'Accounts',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
-          ),
-        )),
+        // toolbarHeight: screenHeight * 0.09,
+        title: Text(
+          'Accounts',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        ),
       ),
-      body: Column(
+      body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: [
-                Center(
+                Column(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: screenHeight * 0.06),
+                        child: Text(
+                          'Login',
+                          style: TextStyle(fontSize: 16, color: Colors.black),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      thickness: 1,
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Enter Email or Phone no',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                        ),
+                        onChanged: (val) {
+                          username = val;
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: Container(
+                        height: 60,
+                        child: TextField(
+                          obscureText: passH,
+                          decoration: InputDecoration(
+                            suffix: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  passH = !passH;
+                                });
+                              },
+                              icon: Icon(Icons.remove_red_eye),
+                            ),
+                            hintText: 'Password',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black)),
+                          ),
+                          onChanged: (val) {
+                            pass = val;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
                   child: Padding(
-                    padding: EdgeInsets.only(top: screenHeight * 0.06),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
                     child: Text(
-                      'Login',
-                      style: TextStyle(fontSize: 16, color: Colors.black),
+                      'Forget Password?',
+                      style: boldTextStyle,
                     ),
                   ),
                 ),
-                Divider(
-                  thickness: 1,
+                SizedBox(
+                  height: 20,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: screenHeight * 0.1),
-                  child: HTFContainer(
-                    screenHeight: screenHeight,
-                    hintT: 'Enter Email or Phone no.',
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: MyButton(
+                    height: 60,
+                    borderColor: Colors.transparent,
+                    innerColor: primaryColor,
+                    width: screenWidth,
+                    child: Text(
+                      'SIGN IN',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () async {
+                      if (username != '' && pass != '') {
+                        bool loggedIn =
+                            await BlocProvider.of<UserLogInCubit>(context)
+                                .loginUser(username, pass);
+                        print("USER LOGGED IN $loggedIn");
+                        if (loggedIn) {
+                          sharedPreferences.setBool('loggedIn', true);
+                          BlocProvider.of<UserLogInCubit>(context)
+                              .setStatus(true);
+                        } else {
+                          sharedPreferences.setBool('loggedIn', false);
+                          BlocProvider.of<UserLogInCubit>(context)
+                              .setStatus(false);
+                        }
+                      } else
+                        showToast("Please fill the fields", primaryColor);
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: screenHeight * 0.013),
+                  child: Text(
+                    'or',
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                ),
+                Text(
+                  'Login with',
+                  style: TextStyle(color: Colors.black, fontSize: 14),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/socialmedia/facebooklogo.png'),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Image.asset('assets/socialmedia/googlelogo.png'),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CreateAccount()));
+                  },
+                  child: Text(
+                    'Create New Account',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 14,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.black,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: screenWidth * 0.02,
-                right: screenWidth * 0.02,
-                top: screenHeight * 0.03),
-            child: MyButton(
-              height: screenHeight,
-              width: screenWidth,
-              child: Text('Post'),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => BottomNavBar()));
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.013),
-            child: Text(
-              'or',
-              style: TextStyle(color: Colors.black, fontSize: 15),
-            ),
-          ),
-          Text(
-            'Login with',
-            style: TextStyle(color: Colors.black, fontSize: 14),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/socialmedia/facebooklogo.png'),
-              SizedBox(
-                width: screenWidth * 0.03,
-                height: screenHeight * 0.07,
-              ),
-              Image.asset('assets/socialmedia/googlelogo.png'),
-            ],
-          ),
-          SizedBox(height: screenHeight * 0.23),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => UserScreen()));
-            },
-            child: Text(
-              'Create New Account',
-              style: TextStyle(
-                color: primaryColor,
-                fontSize: 16,
-                decoration: TextDecoration.underline,
-                decorationColor: Colors.black,
-              ),
-            ),
-          ),
         ],
-      ),
-    );
-  }
-}
-
-class HTFContainer extends StatelessWidget {
-  const HTFContainer({
-    Key key,
-    @required this.screenHeight,
-    this.hintT,
-  }) : super(key: key);
-
-  final double screenHeight;
-  final String hintT;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: screenHeight * 0.06,
-      child: TextFormField(
-        autovalidateMode: AutovalidateMode.always,
-        decoration: InputDecoration(
-          hintText: hintT,
-          contentPadding: EdgeInsets.only(top: 1, left: 10),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 0.6, color: Colors.black),
-          ),
-        ),
-        onSaved: (String value) {},
       ),
     );
   }

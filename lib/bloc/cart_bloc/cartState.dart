@@ -1,4 +1,3 @@
-import 'package:adva/data/model/ads.dart';
 import 'package:adva/data/model/cartItem.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +26,16 @@ class CartLoadedState extends CartState {
   List<Object> get props => [cartItems];
 }
 
+class CartErrorState extends CartState {
+  final String message;
+
+  CartErrorState({@required this.message});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [message];
+}
+
 class CartItemAddedState extends CartState {
   final bool added;
   CartItemAddedState({@required this.added});
@@ -44,16 +53,6 @@ class CartItemRemoveState extends CartState {
   @override
   // TODO: implement props
   List<Object> get props => [removed];
-}
-
-class CartErrorState extends CartState {
-  final String message;
-
-  CartErrorState({@required this.message});
-
-  @override
-  // TODO: implement props
-  List<Object> get props => [message];
 }
 
 class GetCartItemState extends CartState {

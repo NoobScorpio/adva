@@ -20,6 +20,7 @@ class QuestionWidget extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(vertical: 5.0, horizontal: 15),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: 35,
@@ -50,6 +51,7 @@ class QuestionWidget extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     width: 35,

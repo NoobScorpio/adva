@@ -1,27 +1,28 @@
-import 'package:adva/bloc/ads_bloc/adsBloc.dart';
-import 'package:adva/bloc/ads_bloc/adsEvent.dart';
 import 'package:adva/bloc/ads_bloc/adsState.dart';
-import 'package:adva/bloc/category_bloc/categoryBloc.dart';
-import 'package:adva/bloc/category_bloc/categoryEvent.dart';
+import 'package:adva/bloc/ads_bloc/getAdsCubit.dart';
+import 'package:adva/bloc/brand_bloc/getBrandsCubit.dart';
 import 'package:adva/bloc/category_bloc/categoryState.dart';
-import 'package:adva/bloc/featured_bloc/featuredBloc.dart';
-import 'package:adva/bloc/featured_bloc/featuredEvent.dart';
+import 'package:adva/bloc/category_bloc/getCategoryCubit.dart';
+import 'package:adva/bloc/category_bloc/getCategoryProductsCubit.dart';
 import 'package:adva/bloc/featured_bloc/featuredState.dart';
-import 'package:adva/bloc/offer_bloc/offerBloc.dart';
-import 'package:adva/bloc/offer_bloc/offerEvent.dart';
+import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
+import 'package:adva/bloc/offer_bloc/getOffersCubit.dart';
 import 'package:adva/bloc/offer_bloc/offerState.dart';
-import 'package:adva/bloc/product_bloc/productBloc.dart';
-import 'package:adva/bloc/product_bloc/productEvent.dart';
-import 'package:adva/bloc/seller_bloc/sellerBloc.dart';
-import 'package:adva/bloc/seller_bloc/sellerEvent.dart';
+import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
+import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
+import 'package:adva/bloc/seller_bloc/getSellerCubit.dart';
 import 'package:adva/bloc/seller_bloc/sellerState.dart';
 import 'package:adva/data/model/ads.dart';
 import 'package:adva/data/model/category.dart';
 import 'package:adva/data/model/featured.dart';
 import 'package:adva/data/model/offer.dart';
 import 'package:adva/data/model/seller.dart';
-import 'package:adva/ui/screens/productContainer.dart';
+import 'package:adva/data/repository/productRepo.dart';
+import 'file:///C:/Users/CIFER/AndroidStudioProjects/adva/lib/ui/utils/productContainer.dart';
+import 'package:adva/ui/screens/productViewScreen.dart';
+import 'package:adva/ui/screens/categoryScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/makeProducts.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
@@ -35,45 +36,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  AdsBloc adsBloc;
-  CategoryBloc categoryBloc;
-  OfferBloc offerBloc;
-  SellerBloc sellerBloc;
-  FeaturedBloc featuredBloc;
-  ProductBloc productBloc;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    adsBloc = BlocProvider.of<AdsBloc>(context);
-    adsBloc.add(FetchAdsEvent());
-
-    categoryBloc = BlocProvider.of<CategoryBloc>(context);
-    categoryBloc.add(FetchCategoryEvent());
-
-    offerBloc = BlocProvider.of<OfferBloc>(context);
-    offerBloc.add(FetchOfferEvent());
-
-    sellerBloc = BlocProvider.of<SellerBloc>(context);
-    sellerBloc.add(FetchSellerEvent());
-
-    featuredBloc = BlocProvider.of<FeaturedBloc>(context);
-    featuredBloc.add(FetchFeaturedEvent());
-
-    productBloc = BlocProvider.of<ProductBloc>(context);
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    sellerBloc.close();
-    offerBloc.close();
-    categoryBloc.close();
-    adsBloc.close();
-    featuredBloc.close();
-    // productBloc.close();
+    BlocProvider.of<GetAdsCubit>(context).getAds();
+    BlocProvider.of<GetCategoryCubit>(context).getCategories();
+    BlocProvider.of<GetOfferCubit>(context).getOffers();
+    BlocProvider.of<GetSellerCubit>(context).getSellers();
+    BlocProvider.of<GetFeaturedCubit>(context).getSellers();
   }
 
   @override
@@ -86,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           shrinkWrap: true,
           children: [
+            //ADS
             Container(
               width: screenWidth,
               child: Stack(
@@ -93,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: screenHeight * 0.365,
                     width: screenWidth,
-                    child: BlocBuilder<AdsBloc, AdsState>(
+                    child: BlocBuilder<GetAdsCubit, AdsState>(
                       builder: (context, state) {
                         if (state is AdsInitialState) {
                           return buildLoading();
@@ -191,11 +163,12 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 10,
             ),
+            //CATEGORIES
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: Container(
                 height: 45,
-                child: BlocBuilder<CategoryBloc, CategoryState>(
+                child: BlocBuilder<GetCategoryCubit, CategoryState>(
                   builder: (context, state) {
                     if (state is CategoryInitialState) {
                       return buildLoading();
@@ -209,9 +182,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ));
                       } else {
                         var cats = state.category;
-                        List<Widget> images = [];
+                        List<Widget> widgets = [];
                         for (Category cat in cats) {
-                          images.add(Padding(
+                          widgets.add(Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
                             child: MyButton(
                               height: 40,
@@ -219,8 +192,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               innerColor: Colors.white,
                               borderColor: Colors.grey[300],
                               onPressed: () {
-                                productBloc.add(FetchCategoryProductEvent(
-                                    cat.categoryName.toString()));
+                                BlocProvider.of<GetCategoryProductsCubit>(
+                                        context)
+                                    .getCategoryProducts(cat.id.toString());
+                                BlocProvider.of<GetBrandsCubit>(context)
+                                    .getBrands();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ShopCategoryScreen(
+                                              cid: cat.id.toString(),
+                                              brand: false,
+                                            )));
                               },
                               child: Text(
                                 '${cat.categoryName}',
@@ -232,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         return ListView(
                           scrollDirection: Axis.horizontal,
-                          children: images,
+                          children: widgets,
                         );
                       }
                     } else if (state is CategoryErrorState) {
@@ -251,11 +235,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 21),
               ),
             ),
+            //OFFERS
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: Container(
                 height: 150,
-                child: BlocBuilder<OfferBloc, OfferState>(
+                child: BlocBuilder<GetOfferCubit, OfferState>(
                   builder: (context, state) {
                     if (state is OfferInitialState) {
                       return buildLoading();
@@ -313,6 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: screenHeight * 0.028,
             ),
+            //TOP SELLERS
             Container(
               height: 170,
               color: Color(0xFFF6EDE8),
@@ -335,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     child: Container(
                       height: 100,
-                      child: BlocBuilder<SellerBloc, SellerState>(
+                      child: BlocBuilder<GetSellerCubit, SellerState>(
                         builder: (context, state) {
                           if (state is SellerInitialState) {
                             return buildLoading();
@@ -348,33 +334,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                 backgroundColor: primaryColor,
                               ));
                             } else {
-                              List<Seller> sellings = state.seller;
+                              List<Seller> selling = state.seller;
                               List<Widget> widgets = [
                                 SizedBox(
                                   width: 10,
                                 )
                               ];
                               // print(sellings.length);
-                              for (Seller selling in sellings) {
+                              for (Seller selling in selling) {
                                 // print(
                                 //     selling.productimages[0].pictureReference);
-                                widgets.add(Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors
-                                            .grey[300], // red as border color
+
+                                widgets.add(GestureDetector(
+                                  onTap: () {
+                                    BlocProvider.of<GetIDProductCubit>(context)
+                                        .getProduct(selling.id);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ProductViewScreen(
+                                                    pid: selling.id)));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors
+                                              .grey[300], // red as border color
+                                        ),
                                       ),
-                                    ),
-                                    height: 100,
-                                    width: 100,
-                                    child: FittedBox(
-                                      fit: BoxFit.cover,
-                                      child: Image.network(
-                                        selling
-                                            .productimages[0].pictureReference,
+                                      height: 100,
+                                      width: 100,
+                                      child: FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: Image.network(
+                                          selling.productimages[0]
+                                              .pictureReference,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -411,16 +410,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            // ProductContainer(
-            //   box: true,
-            //   screenHeight: screenHeight,
-            //   image: 'assets/images/product1.png',
-            // ),
+            // Featured products
             Container(
               width: double.maxFinite,
-              height: 400,
-              child: BlocBuilder<FeaturedBloc, FeaturedState>(
+              // height: 400,
+              child: BlocBuilder<GetFeaturedCubit, FeaturedState>(
                 builder: (context, state) {
+                  print('INSIDE BRAND');
                   if (state is FeaturedInitialState) {
                     return buildLoading();
                   } else if (state is FeaturedLoadingState) {
@@ -431,35 +427,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: CircularProgressIndicator(
                         backgroundColor: primaryColor,
                       ));
-                    } else {
-                      List<Featured> featured = state.featured;
-                      List<Widget> widgets = [];
-                      // print(sellings.length);
-                      for (Featured feature in featured) {
-                        // print(
-                        //     selling.productimages[0].pictureReference);
-                        widgets.add(ProductContainer(
-                          box: true,
-                          pid: feature.id,
-                          name: feature.productName,
-                          description: feature.productDescription,
-                          price: feature.price.toString(),
-                          screenHeight: screenHeight,
-                          image: feature.productimages[0].pictureReference,
-                        ));
-                      }
-                      // widgets.add(SizedBox(
-                      //   height: 200,
-                      // ));
-                      return GridView.count(
-                        crossAxisCount: 2,
-                        padding: const EdgeInsets.all(15),
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 0.50,
-                        children: widgets,
-                      );
-                    }
+                    } else
+                      return makeProducts(
+                          screenHeight, state.featured, true, context);
                   } else if (state is FeaturedErrorState) {
                     return buildErrorUi(state.message);
                   } else {

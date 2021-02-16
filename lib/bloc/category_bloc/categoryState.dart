@@ -1,6 +1,8 @@
 import 'package:adva/data/model/category.dart';
+import 'package:adva/data/model/product.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+
+//////////////////////    STATES     /////////////////////
 
 abstract class CategoryState extends Equatable {}
 
@@ -19,17 +21,27 @@ class CategoryLoadingState extends CategoryState {
 class CategoryLoadedState extends CategoryState {
   final List<Category> category;
 
-  CategoryLoadedState({@required this.category});
+  CategoryLoadedState({this.category});
 
   @override
   // TODO: implement props
   List<Object> get props => [category];
 }
 
+class CategoryProductsLoadedState extends CategoryState {
+  final List<Product> products;
+
+  CategoryProductsLoadedState({this.products});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [products];
+}
+
 class CategoryErrorState extends CategoryState {
   final String message;
 
-  CategoryErrorState({@required this.message});
+  CategoryErrorState({this.message});
 
   @override
   // TODO: implement props

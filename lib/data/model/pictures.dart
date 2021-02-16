@@ -1,17 +1,21 @@
-class Pictures {
+class ProductImages {
   int id;
-  int reviewId;
-  String picture;
+  int productId;
+  String pictureReference;
   String createdAt;
   String updatedAt;
 
-  Pictures(
-      {this.id, this.reviewId, this.picture, this.createdAt, this.updatedAt});
+  ProductImages(
+      {this.id,
+      this.productId,
+      this.pictureReference,
+      this.createdAt,
+      this.updatedAt});
 
-  Pictures.fromJson(Map<String, dynamic> json) {
+  ProductImages.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    reviewId = json['review_id'];
-    picture = json['picture'];
+    productId = json['product_id'];
+    pictureReference = json['picture_reference'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
@@ -19,8 +23,8 @@ class Pictures {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['review_id'] = this.reviewId;
-    data['picture'] = this.picture;
+    data['product_id'] = this.productId;
+    data['picture_reference'] = this.pictureReference;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;

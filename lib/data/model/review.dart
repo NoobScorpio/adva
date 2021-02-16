@@ -10,7 +10,7 @@ class Reviews {
   String createdAt;
   String updatedAt;
   Customer customer;
-  List<Pictures> pictures;
+  List<ProductImages> pictures;
 
   Reviews(
       {this.id,
@@ -35,9 +35,9 @@ class Reviews {
         ? new Customer.fromJson(json['customer'])
         : null;
     if (json['pictures'] != null) {
-      pictures = new List<Pictures>();
+      pictures = new List<ProductImages>();
       json['pictures'].forEach((v) {
-        pictures.add(new Pictures.fromJson(v));
+        pictures.add(new ProductImages.fromJson(v));
       });
     }
   }

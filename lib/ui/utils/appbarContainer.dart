@@ -25,22 +25,30 @@ class AppbarContainer extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Icon(Icons.arrow_back_ios),
-                SizedBox(
-                  width: screenWidth * 0.02,
-                ),
-                Image.asset(
-                  'assets/images/advalogo.png',
-                  scale: 2,
-                ),
-              ],
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.arrow_back_ios),
+                  SizedBox(
+                    width: screenWidth * 0.02,
+                  ),
+                  Image.asset(
+                    'assets/images/advalogo.png',
+                    scale: 2,
+                  ),
+                ],
+              ),
             ),
             SizedBox(
               width: screenWidth * 0.03,
             ),
-            Image.asset('assets/images/search.png')
+            Icon(
+              Icons.search,
+              color: Colors.black,
+            )
           ],
         ),
       ),

@@ -8,11 +8,11 @@ class Customer {
   String phone;
   Null confirmationCode;
   String address;
-  Null profileImage;
+  String profileImage;
   String token;
   String preferences;
   int points;
-  Null deletedAt;
+  String deletedAt;
   String createdAt;
   String updatedAt;
 

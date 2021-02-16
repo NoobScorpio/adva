@@ -4,8 +4,8 @@ class CartItem {
   String pName;
   int color;
   int qty;
-
-  CartItem({this.pid, this.color, this.qty});
+  int size;
+  CartItem({this.pid, this.color, this.qty, this.size});
 
   CartItem.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -13,6 +13,7 @@ class CartItem {
     color = json['color'];
     qty = json['qty'];
     pName = json['pName'];
+    size = json['size'];
   }
 
   Map<String, dynamic> toJson() {
@@ -22,6 +23,7 @@ class CartItem {
     data['qty'] = this.qty;
     data['id'] = this.id;
     data['pName'] = this.pName;
+    data['size'] = this.size;
     return data;
   }
 }

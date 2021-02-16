@@ -14,7 +14,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      // The number of tabs / content sections to display.
       length: 2,
 
       child: Scaffold(

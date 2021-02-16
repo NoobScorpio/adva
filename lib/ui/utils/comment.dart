@@ -16,7 +16,20 @@ class Comment extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        CircleAvatar(radius: 25.0, backgroundImage: AssetImage(image)),
+        if (image == null)
+          CircleAvatar(
+              backgroundColor: primaryColor,
+              radius: 25.0,
+              child: Icon(
+                Icons.person,
+                color: Colors.white,
+              )),
+        if (image != null)
+          CircleAvatar(
+            backgroundColor: primaryColor,
+            radius: 25.0,
+            backgroundImage: NetworkImage(image),
+          ),
         SizedBox(
           width: 10,
         ),
@@ -31,11 +44,11 @@ class Comment extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    name ?? "Anonymous",
                     style: boldTextStyle,
                   ),
                   SizedBox(
-                    width: 5,
+                    width: 10,
                   ),
                   Text(
                     body,

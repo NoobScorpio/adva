@@ -34,3 +34,26 @@ class Brand {
     return data;
   }
 }
+
+class BrandResultModel {
+  List<Brand> brands;
+
+  BrandResultModel({this.brands});
+
+  BrandResultModel.fromJson(List<dynamic> json) {
+    if (json != null) {
+      brands = List<Brand>();
+      json.forEach((v) {
+        brands.add(new Brand.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.brands != null) {
+      data['brands'] = this.brands.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}

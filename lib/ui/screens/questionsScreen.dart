@@ -1,3 +1,4 @@
+import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
 import 'package:adva/bloc/product_bloc/productBloc.dart';
 import 'package:adva/bloc/product_bloc/productEvent.dart';
 import 'package:adva/bloc/product_bloc/productState.dart';
@@ -20,13 +21,14 @@ class QuestionsScreen extends StatefulWidget {
 
 class _QuestionsScreenState extends State<QuestionsScreen> {
   String questionBody = '';
-  ProductBloc productBloc;
+  TextEditingController questionController = TextEditingController();
+  // ProductBloc productBloc;
   List<Widget> questions = [];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    productBloc = BlocProvider.of<ProductBloc>(context);
+    // productBloc = BlocProvider.of<ProductBloc>(context);
     questions = widget.questions;
   }
 
@@ -34,7 +36,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    productBloc.close();
+    questionController.dispose();
+    // productBloc.close();
   }
 
   @override
@@ -120,10 +123,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   height: 60,
                   width: double.maxFinite,
                   child: TextField(
-                    onChanged: (val) {
-                      questionBody = val;
-                      print(questionBody);
-                    },
+                    controller: questionController,
                     decoration: InputDecoration(
                       hintText: 'Type your question(s) here',
                       border: OutlineInputBorder(
@@ -132,13 +132,14 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                     // autofillHints: ['Type your comment here'],
                   ),
                 ),
-                BlocListener<ProductBloc, ProductState>(
+                BlocListener<PostQuestionCubit, ProductState>(
                   listener: (context, state) {
-                    if (state is ProductPostQuestionState) {
+                    if (state is ProductPostQuestionScreenState) {
                       if (state.posted) {
                         showToast('Question Posted', primaryColor);
                         setState(() {
                           questions.add(QuestionWidget(
+                            screenWidth: screenWidth,
                             color: primaryColor,
                             question: questionBody,
                             answer: '',
@@ -156,9 +157,18 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                         width: screenWidth / 2.5,
                         child: RaisedButton(
                           onPressed: () {
-                            BlocProvider.of<ProductBloc>(context).add(
-                                PostProductQuestionEvent(
-                                    widget.pid, questionBody, 0));
+                            if (questionController.text.length >= 10) {
+                              print('EVENT');
+                              BlocProvider.of<PostQuestionCubit>(context)
+                                  .postQuestionScreen(
+                                      widget.pid, questionController.text, 0);
+                              questionBody = questionController.text;
+                              questionController.text = '';
+                            } else {
+                              showToast(
+                                  'Question should have at least 10 characters',
+                                  primaryColor);
+                            }
                           },
                           color: primaryColor,
                           child: Text(

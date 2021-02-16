@@ -1,3 +1,4 @@
+import 'package:adva/data/model/comment.dart';
 import 'package:adva/ui/screens/postViewScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -5,6 +6,8 @@ import 'constants.dart';
 
 class Post extends StatelessWidget {
   final userImage, userName, date, time, comments, likes, bodyImage, bodyText;
+  final List<Comments> commentsList;
+
   const Post({
     Key key,
     this.userImage,
@@ -15,6 +18,7 @@ class Post extends StatelessWidget {
     this.likes,
     this.bodyImage,
     this.bodyText,
+    this.commentsList,
   }) : super(key: key);
 
   @override
@@ -28,7 +32,11 @@ class Post extends StatelessWidget {
               Row(
                 children: [
                   CircleAvatar(
-                      radius: 25.0, backgroundImage: AssetImage("$userImage")),
+                    radius: 25.0,
+                    backgroundImage: NetworkImage(
+                      userImage,
+                    ),
+                  ),
                   SizedBox(
                     width: 15,
                   ),
@@ -41,9 +49,9 @@ class Post extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text('Today'), Text('12:45 PM')],
+                  children: [Text('$date')],
                 ),
               ),
             ],
@@ -54,14 +62,26 @@ class Post extends StatelessWidget {
           //IMAGE
           GestureDetector(
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PostViewScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PostViewScreen(
+                            userImage: userImage,
+                            userName: userName,
+                            date: date,
+                            time: time,
+                            comments: comments,
+                            likes: likes,
+                            bodyImage: bodyImage,
+                            bodyText: bodyText,
+                            commentsList: commentsList,
+                          )));
             },
             child: Container(
               height: 265,
               width: double.maxFinite,
               child:
-                  FittedBox(fit: BoxFit.cover, child: Image.asset(bodyImage)),
+                  FittedBox(fit: BoxFit.cover, child: Image.network(bodyImage)),
             ),
           ),
           SizedBox(
@@ -73,7 +93,10 @@ class Post extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 15),
               child: Container(
                 width: double.maxFinite,
-                child: Text(bodyText),
+                child: Text(
+                  bodyText,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           // SHARE COMMENT LIKE
@@ -89,6 +112,7 @@ class Post extends StatelessWidget {
                     SizedBox(
                       width: 10,
                     ),
+                    //TODO : SHARE FUNCTIONALITY
                     Icon(
                       Icons.share,
                       color: primaryColor,
@@ -112,6 +136,7 @@ class Post extends StatelessWidget {
                     width: 10,
                   ),
                   // Image.asset('assets/images/comment.png'),
+                  //TODO : COMMENT FUNCTIONALITY
                   Icon(
                     Icons.comment,
                     color: primaryColor,
@@ -135,9 +160,14 @@ class Post extends StatelessWidget {
                     SizedBox(
                       width: 10,
                     ),
-                    Icon(
-                      Icons.thumb_up,
-                      color: primaryColor,
+                    GestureDetector(
+                      onTap: () {
+                        //TODO : LIKE FUNCTIONALITY
+                      },
+                      child: Icon(
+                        Icons.thumb_up,
+                        color: primaryColor,
+                      ),
                     ),
                   ],
                 ),
