@@ -11,8 +11,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
 
   CategoryBloc({@required this.repository}) : super(null);
 
-  @override
-  // TODO: implement initialState
   CategoryState get initialState => CategoryInitialState();
 
   @override

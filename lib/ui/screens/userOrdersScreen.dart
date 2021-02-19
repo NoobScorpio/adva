@@ -1,12 +1,29 @@
+import 'package:adva/bloc/order_bloc/orderCubit.dart';
+import 'package:adva/bloc/order_bloc/orderState.dart';
+import 'package:adva/data/model/orderDetails.dart';
+import 'package:adva/data/model/user.dart';
+import 'package:adva/ui/screens/orderDetailsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserOrdersScreen extends StatefulWidget {
+  final User user;
+
+  const UserOrdersScreen({Key key, this.user}) : super(key: key);
   @override
   _UserOrdersScreenState createState() => _UserOrdersScreenState();
 }
 
 class _UserOrdersScreenState extends State<UserOrdersScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<OrderCubit>(context).getOrders(widget.user.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,206 +82,150 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Expanded(child: Text('ID')),
-                    Expanded(child: Text('Date')),
-                    Expanded(child: Text('Status')),
-                    Text('Total'),
-                  ],
-                ),
-                Divider(
-                  color: Colors.grey,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Container(
-                      width: double.maxFinite,
-                      height: 60,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                'ID-12312',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline),
-                              )),
-                              Expanded(child: Text('12/05/2020')),
-                              Expanded(
-                                  child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.timelapse,
-                                    size: 15,
-                                  ),
-                                  Text('Pending'),
-                                ],
-                              )),
-                              Text('SAR. 999'),
-                            ],
-                          ),
-                        ),
-                      )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Container(
-                      width: double.maxFinite,
-                      height: 60,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                'ID-12312',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline),
-                              )),
-                              Expanded(child: Text('12/05/2020')),
-                              Expanded(
-                                  child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.timelapse,
-                                    size: 15,
-                                  ),
-                                  Text('Pending'),
-                                ],
-                              )),
-                              Text('SAR. 999'),
-                            ],
-                          ),
-                        ),
-                      )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Container(
-                      width: double.maxFinite,
-                      height: 60,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                'ID-12312',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline),
-                              )),
-                              Expanded(child: Text('12/05/2020')),
-                              Expanded(
-                                  child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.timelapse,
-                                    size: 15,
-                                  ),
-                                  Text('Pending'),
-                                ],
-                              )),
-                              Text('SAR. 999'),
-                            ],
-                          ),
-                        ),
-                      )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Container(
-                      width: double.maxFinite,
-                      height: 60,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                'ID-12312',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline),
-                              )),
-                              Expanded(child: Text('12/05/2020')),
-                              Expanded(
-                                  child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.timelapse,
-                                    size: 15,
-                                  ),
-                                  Text('Pending'),
-                                ],
-                              )),
-                              Text('SAR. 999'),
-                            ],
-                          ),
-                        ),
-                      )),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Container(
-                      width: double.maxFinite,
-                      height: 60,
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                'ID-12312',
-                                style: TextStyle(
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline),
-                              )),
-                              Expanded(child: Text('12/05/2020')),
-                              Expanded(
-                                  child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.timelapse,
-                                    size: 15,
-                                  ),
-                                  Text('Pending'),
-                                ],
-                              )),
-                              Text('SAR. 999'),
-                            ],
-                          ),
-                        ),
-                      )),
-                ),
+                BlocBuilder<OrderCubit, OrderState>(builder: (context, state) {
+                  if (state is OrderInitialState)
+                    return buildLoading();
+                  else if (state is OrderLoadingState)
+                    return buildLoading();
+                  else if (state is OrderLoadedState) {
+                    if (state.orderDetails != null)
+                      return getOrders(orderDetails: state.orderDetails);
+                    else
+                      return getOrders(orderDetails: []);
+                  } else if (state is OrderDetailsLoadedState) {
+                    if (state.orderDetails != null)
+                      return getOrders(orderDetails: state.orderDetails);
+                    else
+                      return getOrders(orderDetails: []);
+                  } else if (state is OrderErrorState)
+                    return getOrders(orderDetails: []);
+                  else
+                    return getOrders(orderDetails: []);
+                })
               ],
             ),
           )
         ],
       ),
     );
+  }
+
+  Widget getOrders({List<OrderDetails> orderDetails}) {
+    if (orderDetails.length > 0) {
+      List<Widget> widgets = [];
+      widgets.add(SizedBox(
+        height: 15,
+      ));
+      widgets.add(Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text('ID'),
+            SizedBox(
+              width: 15,
+            ),
+            Expanded(child: Center(child: Text('Date'))),
+            Expanded(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text('Status'),
+              ],
+            )),
+            Text('Total'),
+          ],
+        ),
+      ));
+      widgets.add(Divider(
+        color: Colors.grey,
+      ));
+      for (OrderDetails order in orderDetails) {
+        widgets.add(GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => OrderDetailsScreen(
+                        cid: widget.user.id, oid: order.id)));
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
+            child: Container(
+                width: double.maxFinite,
+                height: 60,
+                child: Card(
+                  elevation: 8,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          '${order.id}',
+                          style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.underline),
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                            child: Center(
+                                child:
+                                    Text('${order.updatedAt.split("T")[0]}'))),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              order.status == 'returned'
+                                  ? Icons.keyboard_return_outlined
+                                  : (order.status == 'completed'
+                                      ? Icons.done
+                                      : Icons.timelapse),
+                              size: 20,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text('${order.status}'),
+                          ],
+                        )),
+                        Text('SAR. ${order.total}'),
+                      ],
+                    ),
+                  ),
+                )),
+          ),
+        ));
+      }
+      return ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: widgets,
+      );
+    } else {
+      return Column(
+        children: [
+          Icon(
+            Icons.account_balance_wallet_outlined,
+            size: 150,
+            color: primaryColor.withOpacity(0.1),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          Text(
+            'You don\'t have any Adva points',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ],
+      );
+    }
   }
 }

@@ -1,14 +1,33 @@
+import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserInfoScreen extends StatefulWidget {
+  final User user;
+
+  const UserInfoScreen({Key key, this.user}) : super(key: key);
   @override
   _UserInfoScreenState createState() => _UserInfoScreenState();
 }
 
 class _UserInfoScreenState extends State<UserInfoScreen> {
   List<String> comms = ['English', 'Arabic'];
+  TextEditingController lName, fName;
   String comValue = 'English';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    lName = TextEditingController();
+    fName = TextEditingController();
+    lName.text = widget.user.lastName;
+    fName.text = widget.user.firstName;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,6 +74,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   height: 5,
                 ),
                 TextField(
+                  controller: fName,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
@@ -71,6 +91,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   height: 5,
                 ),
                 TextField(
+                  controller: lName,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
@@ -128,8 +149,22 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 height: 45,
                 width: double.maxFinite,
                 child: RaisedButton(
-                  onPressed: () {
-                    Navigator.pop(context, true);
+                  onPressed: () async {
+                    if (fName.text != '' && lName.text != "") {
+                      User user = widget.user;
+                      user.firstName = fName.text;
+                      user.lastName = lName.text;
+                      bool updated = await BlocProvider.of<UserCubit>(context)
+                          .updateInfo(user);
+                      if (updated) {
+                        showToast("Password updated", primaryColor);
+                        Navigator.pop(context, true);
+                      } else {
+                        showToast("Password not updated", primaryColor);
+                      }
+                    } else {
+                      showToast('Please fill all fields', primaryColor);
+                    }
                   },
                   color: primaryColor,
                   child: Text(

@@ -10,8 +10,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   ProductBloc({@required this.repository}) : super(null);
 
-  @override
-  // TODO: implement initialState
   ProductState get initialState => ProductInitialState();
 
   @override

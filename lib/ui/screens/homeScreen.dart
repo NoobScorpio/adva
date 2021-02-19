@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:adva/bloc/ads_bloc/adsState.dart';
 import 'package:adva/bloc/ads_bloc/getAdsCubit.dart';
 import 'package:adva/bloc/brand_bloc/getBrandsCubit.dart';
@@ -17,6 +19,7 @@ import 'package:adva/data/model/category.dart';
 import 'package:adva/data/model/featured.dart';
 import 'package:adva/data/model/offer.dart';
 import 'package:adva/data/model/seller.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/productRepo.dart';
 import 'file:///C:/Users/CIFER/AndroidStudioProjects/adva/lib/ui/utils/productContainer.dart';
 import 'package:adva/ui/screens/productViewScreen.dart';
@@ -29,6 +32,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -40,11 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<GetAdsCubit>(context).getAds();
-    BlocProvider.of<GetCategoryCubit>(context).getCategories();
-    BlocProvider.of<GetOfferCubit>(context).getOffers();
-    BlocProvider.of<GetSellerCubit>(context).getSellers();
-    BlocProvider.of<GetFeaturedCubit>(context).getSellers();
   }
 
   @override
@@ -414,7 +413,12 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               width: double.maxFinite,
               // height: 400,
-              child: BlocBuilder<GetFeaturedCubit, FeaturedState>(
+              child: BlocConsumer<GetFeaturedCubit, FeaturedState>(
+                listener: (context, state) {
+                  if (!(state is FeaturedLoadedState)) {
+                    BlocProvider.of<GetFeaturedCubit>(context).getSellers();
+                  }
+                },
                 builder: (context, state) {
                   print('INSIDE BRAND');
                   if (state is FeaturedInitialState) {
@@ -441,6 +445,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     SharedPreferences sp = await SharedPreferences.getInstance();
+      //     User u = User.fromJson(json.decode(sp.getString('user')));
+      //     print(u.id);
+      //   },
+      // ),
     );
   }
 }

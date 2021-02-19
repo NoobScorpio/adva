@@ -1,21 +1,30 @@
 import 'dart:ui';
 
+import 'package:adva/bloc/payment_bloc/paymentState.dart';
+import 'package:adva/data/model/payment.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/addCardScreen.dart';
 import 'package:adva/ui/screens/orderDetailsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/tFContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PaymentScreen extends StatefulWidget {
+  final User user;
+
+  const PaymentScreen({Key key, this.user}) : super(key: key);
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
   int groupValue1 = 1, groupValue2 = 0;
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -23,23 +32,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: screenHeight * 0.12,
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        title: Padding(
-          padding: EdgeInsets.only(
-              left: screenWidth * 0.2, top: screenHeight * 0.04),
-          child: Text(
-            'Payments',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontWeight: FontWeight.w400,
-            ),
+        title: Text(
+          'Payments',
+          style: TextStyle(
+            color: Colors.black,
+            // fontSize: 22,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: ListView(
           children: [
             SizedBox(
               height: screenHeight * 0.02,
@@ -126,145 +132,88 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ),
             //ADD CARD
-            Padding(
-              padding: const EdgeInsets.all(13),
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AddCardScreen()));
-                },
-                child: Container(
-                  height: screenHeight * 0.085,
-                  child: Card(
-                      elevation: 5,
-                      child: Center(
-                          child: Text(
-                        '+Add Card',
-                        style: TextStyle(color: primaryColor),
-                      ))),
+            if (groupValue1 == 1)
+              Padding(
+                padding: const EdgeInsets.all(13),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                AddCardScreen(user: widget.user)));
+                  },
+                  child: Container(
+                    height: screenHeight * 0.085,
+                    child: Card(
+                        elevation: 5,
+                        child: Center(
+                            child: Text(
+                          '+Add Card',
+                          style: TextStyle(color: primaryColor),
+                        ))),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              color: Colors.white,
-              width: screenWidth,
-              // height: screenHeight * 0.31,
-              child: Padding(
-                padding: EdgeInsets.only(top: screenHeight * 0.02),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: screenWidth * 0.05,
+            //SAVED PAYMENTS
+            if (groupValue1 == 1)
+              Container(
+                color: Colors.white,
+                width: screenWidth,
+                // height: screenHeight * 0.31,
+                child: Padding(
+                  padding: EdgeInsets.only(top: screenHeight * 0.02),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: screenWidth * 0.05,
+                        ),
+                        child: Text(
+                          'Saved Payments',
+                          style: TextStyle(color: cartTextColor, fontSize: 17),
+                        ),
                       ),
-                      child: Text(
-                        'Saved Payments',
-                        style: TextStyle(color: cartTextColor, fontSize: 17),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        children: [
-                          Image.asset('assets/images/visa2.png'),
-                          TextColumn(
-                            screenWidth: screenWidth,
-                            txt: 'Name',
-                            txt1: '0010023145687',
-                          ),
-                          TextColumn(
-                            screenWidth: screenWidth,
-                            txt: '08/02/201',
-                            txt1: '0023',
-                          ),
-                          SizedBox(
-                            width: screenWidth * 0.07,
-                          ),
-                          Radio(
-                              activeColor: primaryColor,
-                              value: 0,
-                              groupValue: groupValue2,
-                              onChanged: (val) {
-                                setState(() {
-                                  groupValue2 = val;
-                                });
-                              })
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      thickness: 0.5,
-                      color: cartTextColor,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        children: [
-                          Image.asset('assets/images/visa2.png'),
-                          TextColumn(
-                            screenWidth: screenWidth,
-                            txt: 'Name',
-                            txt1: '0010023145687',
-                          ),
-                          TextColumn(
-                            screenWidth: screenWidth,
-                            txt: '08/02/201',
-                            txt1: '0023',
-                          ),
-                          SizedBox(
-                            width: screenWidth * 0.07,
-                          ),
-                          Radio(
-                              activeColor: primaryColor,
-                              value: 1,
-                              groupValue: groupValue2,
-                              onChanged: (val) {
-                                setState(() {
-                                  groupValue2 = val;
-                                });
-                              })
-                        ],
-                      ),
-                    ),
-                    Divider(
-                      thickness: 0.5,
-                      color: cartTextColor,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Row(
-                        children: [
-                          Image.asset('assets/images/visa2.png'),
-                          TextColumn(
-                            screenWidth: screenWidth,
-                            txt: 'Name',
-                            txt1: '0010023145687',
-                          ),
-                          TextColumn(
-                            screenWidth: screenWidth,
-                            txt: '08/02/201',
-                            txt1: '0023',
-                          ),
-                          SizedBox(
-                            width: screenWidth * 0.07,
-                          ),
-                          Radio(
-                              activeColor: primaryColor,
-                              value: 2,
-                              groupValue: groupValue2,
-                              onChanged: (val) {
-                                setState(() {
-                                  groupValue2 = val;
-                                });
-                              })
-                        ],
-                      ),
-                    ),
-                  ],
+                      BlocConsumer(
+                        listener: (context, state) {},
+                        builder: (context, state) {
+                          if (state is PaymentInitialState)
+                            return buildLoading();
+                          if (state is PaymentLoadingState)
+                            return buildLoading();
+                          if (state is PaymentLoadedState) {
+                            if (state.payments != null &&
+                                state.payments.length != 0) {
+                              groupValue2 = state.payments[0].id;
+                              return paymentWidgets(payments: state.payments);
+                            } else
+                              return paymentWidgets(payments: []);
+                          }
+                          if (state is PaymentAddState) {
+                            if (state.payments != null &&
+                                state.payments.length != 0) {
+                              groupValue2 = state.payments[0].id;
+                              return paymentWidgets(payments: state.payments);
+                            } else
+                              return paymentWidgets(payments: []);
+                          }
+                          if (state is PaymentDeleteState) {
+                            if (state.payments != null &&
+                                state.payments.length != 0) {
+                              groupValue2 = state.payments[0].id;
+                              return paymentWidgets(payments: state.payments);
+                            } else
+                              return paymentWidgets(payments: []);
+                          } else
+                            return paymentWidgets(payments: []);
+                        },
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
+            //PROMO
             Padding(
               padding: EdgeInsets.only(
                   top: screenHeight * 0.028, bottom: screenHeight * 0.02),
@@ -312,6 +261,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
               ),
             ),
+            //NEXT PAYMENT
             Padding(
               padding: EdgeInsets.only(top: screenHeight * 0.028),
               child: Container(
@@ -321,8 +271,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: Column(
                   children: [
                     PaymentColumn(
-                      screenHeight: screenHeight,
-                      screenWidth: screenWidth,
                       subTotal: 999.toString(),
                       total: 999.toString(),
                       flatShippingRate: 999.toString(),
@@ -397,28 +345,78 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
     );
   }
-}
 
-class TextColumn extends StatelessWidget {
-  const TextColumn({
-    Key key,
-    @required this.screenWidth,
-    this.txt,
-    this.txt1,
-  }) : super(key: key);
-
-  final double screenWidth;
-  final String txt;
-  final String txt1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          EdgeInsets.only(left: screenWidth * 0.06, right: screenWidth * 0.06),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text(txt), Text(txt1)],
+  Widget paymentWidgets({List<Payment> payments}) {
+    if (payments.length > 0) {
+      List<Widget> widgets = [];
+      List<String> cards = ['Visa', 'Master', 'Mada'];
+      for (Payment payment in payments) {
+        String image = payment.cardBrand == cards[0]
+            ? 'visa'
+            : (payment.cardBrand == cards[1] ? 'mCard' : 'mada');
+        widgets.add(Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                height: 30,
+                width: 50,
+                child: Image.asset("/assets/images/$image.png"),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Address ${payment.nameOnCard}'),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    '${payment.cardNumber}',
+                    style: normalTextStyle,
+                    maxLines: 3,
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${payment.expiryDate}'),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    '${payment.securityCode}.',
+                    style: normalTextStyle,
+                    maxLines: 3,
+                  )
+                ],
+              ),
+              Radio(
+                value: payment.id,
+                groupValue: groupValue2,
+                activeColor: primaryColor,
+                onChanged: (val) {
+                  setState(() {
+                    groupValue2 = val;
+                  });
+                },
+              ),
+            ],
+          ),
+        ));
+      }
+      return Container(
+        height: widgets.length == 1 ? 120 : (widgets.length == 2 ? 220 : (300)),
+        child: ListView(
+          children: widgets,
+        ),
+      );
+    }
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text('You have no payments saved.'),
       ),
     );
   }

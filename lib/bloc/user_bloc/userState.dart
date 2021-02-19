@@ -47,6 +47,16 @@ class UserLoggedInState extends UserState {
   List<Object> get props => [loggedIn];
 }
 
+class GetUserLoggedInState extends UserState {
+  final User user;
+
+  GetUserLoggedInState({this.user});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [user];
+}
+
 class UserCreatedState extends UserState {
   final bool created;
 
@@ -55,4 +65,24 @@ class UserCreatedState extends UserState {
   @override
   // TODO: implement props
   List<Object> get props => [created];
+}
+
+class UserUpdatedLoadedState extends UserState {
+  final bool updated;
+
+  UserUpdatedLoadedState({this.updated});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [updated];
+}
+
+class UserPassChangeState extends UserState {
+  final bool updated;
+
+  UserPassChangeState({this.updated});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [updated];
 }

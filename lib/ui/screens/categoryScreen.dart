@@ -385,8 +385,12 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                   if (state.products.length == 0) {
                                     return buildNotFound();
                                   } else
-                                    return makeProducts(screenHeight,
-                                        state.products, box, context);
+                                    return makeProducts(
+                                      screenHeight,
+                                      state.products,
+                                      box,
+                                      context,
+                                    );
                                 }
                               } else if (state is ProductErrorState) {
                                 return buildErrorUi(state.message);
@@ -419,8 +423,12 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                         backgroundColor: primaryColor,
                                       ));
                                     } else
-                                      return makeProducts(screenHeight,
-                                          state.products, box, context);
+                                      return makeProducts(
+                                        screenHeight,
+                                        state.products,
+                                        box,
+                                        context,
+                                      );
                                   } else if (state is BrandErrorState) {
                                     return buildErrorUi(state.message);
                                   } else {
@@ -453,8 +461,12 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                         backgroundColor: primaryColor,
                                       ));
                                     } else
-                                      return makeProducts(screenHeight,
-                                          state.products, box, context);
+                                      return makeProducts(
+                                        screenHeight,
+                                        state.products,
+                                        box,
+                                        context,
+                                      );
                                   } else if (state is CategoryErrorState) {
                                     return buildErrorUi(state.message);
                                   } else {

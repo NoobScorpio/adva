@@ -14,13 +14,15 @@ class UserScreen extends StatefulWidget {
 class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UserLogInCubit, UserState>(listener: (context, state) {
-      if (state is UserLoggedInState)
-        BlocProvider.of<UserLogInCubit>(context).setStatus(state.loggedIn);
+    return BlocConsumer<UserCubit, UserState>(listener: (context, state) {
+      if (state is UserLoggedInState) {
+        BlocProvider.of<UserCubit>(context).setStatus(state.loggedIn);
+        print("USER LOGGED IN ${state.loggedIn}");
+      }
     }, builder: (context, state) {
       print(state);
       if (state is UserInitialState) {
-        if (state.user == null) {
+        if (state.user.id == null) {
           print("UserInitialState: ${state.loggedIn}");
           return AccountsLoginScreen();
         } else
@@ -32,6 +34,11 @@ class _UserScreenState extends State<UserScreen> {
           return AccountScreen();
         else
           return AccountsLoginScreen();
+      } else if (state is GetUserLoggedInState) {
+        // if (state.user != null)
+        return AccountScreen();
+        // else
+        //   return AccountsLoginScreen();
       } else if (state is UserLoggedInState) {
         print("INSIDE UserLoggedInState ${state.loggedIn}");
         if (state.loggedIn) {

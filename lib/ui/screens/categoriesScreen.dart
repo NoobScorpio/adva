@@ -3,6 +3,9 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatefulWidget {
+  final sharedPreferences;
+
+  const CategoriesScreen({Key key, this.sharedPreferences}) : super(key: key);
   @override
   _CategoriesScreenState createState() => _CategoriesScreenState();
 }

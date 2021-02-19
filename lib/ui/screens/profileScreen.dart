@@ -1,9 +1,20 @@
+import 'dart:io';
+
+import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/changePasswordScreen.dart';
+import 'package:adva/ui/screens/userInfoScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:images_picker/images_picker.dart';
 
 class ProfileScreen extends StatefulWidget {
+  final User user;
+
+  const ProfileScreen({Key key, this.user}) : super(key: key);
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -37,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'John Doe',
+                  '${widget.user.firstName + " " + widget.user.lastName}',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
@@ -45,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Text(
-                  'johndoe@gmail.com',
+                  widget.user.email ?? '',
                   style: normalTextStyle,
                 ),
               ],
@@ -68,14 +79,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: boldTextStyle,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Text(
-                          'Edit',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: primaryColor),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      UserInfoScreen(user: widget.user)));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            'Edit',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: primaryColor),
+                          ),
                         ),
                       )
                     ],
@@ -89,8 +109,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             CircleAvatar(
                               radius: 60,
-                              backgroundImage:
-                                  AssetImage('assets/images/advabeauty.png'),
+                              backgroundImage: widget.user.profileImage ==
+                                          null ||
+                                      widget.user.profileImage == ''
+                                  ? NetworkImage(
+                                      "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")
+                                  : NetworkImage('${widget.user.profileImage}'),
                             ),
                             Positioned(
                               bottom: 2,
@@ -109,13 +133,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           spreadRadius: 1)
                                     ],
                                   ),
-                                  child: CircleAvatar(
-                                    radius: 25,
-                                    backgroundColor: Colors.white,
-                                    child: Icon(
-                                      Icons.photo,
-                                      color: primaryColor,
-                                      size: 30,
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      try {
+                                        List<Media> res =
+                                            await ImagesPicker.pick(
+                                          count: 1,
+                                          pickType: PickType.image,
+                                        );
+                                        if (res != null && res.length > 0) {
+                                          File image = File(res[0].path);
+                                          User user = widget.user;
+                                          bool updated =
+                                              await BlocProvider.of<UserCubit>(
+                                                      context)
+                                                  .updateProfile(
+                                                      widget.user, image);
+                                          print("UPDATED");
+                                        }
+                                      } catch (e) {
+                                        print(e);
+                                        showToast("Something went wrong",
+                                            primaryColor);
+                                      }
+                                    },
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.photo,
+                                        color: primaryColor,
+                                        size: 30,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -140,7 +189,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
-                      'John',
+                      '${widget.user.firstName ?? ""}',
                       style: boldTextStyle,
                     ),
                   ),
@@ -158,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
                     child: Text(
-                      'Doe',
+                      '${widget.user.lastName ?? ""}',
                       style: boldTextStyle,
                     ),
                   ),
@@ -199,7 +248,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ChangePasswordScreen()));
+                          builder: (context) =>
+                              ChangePasswordScreen(user: widget.user)));
                 }),
           ),
         ],

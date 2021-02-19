@@ -1,3 +1,6 @@
+import 'package:adva/bloc/cart_bloc/cartCubit.dart';
+import 'package:adva/data/model/cartItem.dart';
+import 'package:adva/ui/screens/categoryScreen.dart';
 import 'package:adva/ui/screens/userScreen.dart';
 import 'package:adva/ui/screens/cartScreen.dart';
 import 'package:adva/ui/screens/categoriesScreen.dart';
@@ -5,6 +8,7 @@ import 'package:adva/ui/screens/galleryTabScreen.dart';
 import 'package:adva/ui/screens/homeScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavBar extends StatefulWidget {
@@ -17,13 +21,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   _BottomNavBarState({this.number});
 
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    CategoriesScreen(),
-    CartScreen(),
-    GalleryScreen(),
-    UserScreen(),
-  ];
+  List<CartItem> cartItems;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -31,8 +29,32 @@ class _BottomNavBarState extends State<BottomNavBar> {
     });
   }
 
+  getItems() async {
+    cartItems = [];
+    cartItems = await BlocProvider.of<CartCubit>(context).getItems();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getItems();
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> _widgetOptions = <Widget>[
+      HomeScreen(),
+      ShopCategoryScreen(
+        cid: "Makeup",
+        brand: false,
+      ),
+      CartScreen(
+        cartItems: cartItems,
+      ),
+      GalleryScreen(),
+      UserScreen(),
+    ];
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -95,7 +117,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   'assets/icons/Categories-grey.svg',
                 ),
                 Text(
-                  'Category',
+                  'Products',
                   style: TextStyle(color: Colors.grey),
                 )
               ],

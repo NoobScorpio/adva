@@ -1,13 +1,33 @@
+import 'package:adva/bloc/points_bloc/pointsCubit.dart';
+import 'package:adva/bloc/points_bloc/pointsState.dart';
+import 'package:adva/data/model/advaPoints.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/statesUi.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:adva/data/model/points.dart';
+import 'package:flutter/services.dart';
 
 class ADVAPointsScreen extends StatefulWidget {
+  final User user;
+
+  const ADVAPointsScreen({Key key, this.user}) : super(key: key);
   @override
   _ADVAPointsScreenState createState() => _ADVAPointsScreenState();
 }
 
 class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<PointsCubit>(context).getPoints(widget.user.id);
+  }
+
+  String promo = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,85 +52,259 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
         ),
         backgroundColor: Colors.white,
       ),
-      body: ListView(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                'Wallet balance',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Text(
-                'PTS 0.00',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 35,
-              ),
-              Text(
-                'Promo Code',
-                style: TextStyle(color: Colors.grey),
-              ),
-              Text(
-                'DGRY6434',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Container(
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: ListView(
+          children: [
+            Column(
+              children: [
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Wallet balance',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                BlocBuilder<PointsCubit, PointsState>(
+                  builder: (context, state) {
+                    if (state is PointsInitialState)
+                      return buildLoading();
+                    else if (state is PointsLoadingState)
+                      return buildLoading();
+                    else if (state is PointsLoadedState) {
+                      if (state.aDVAPoints != null) {
+                        promo = state.aDVAPoints.promo.promoCode;
+                        return Text(
+                          'PTS ${state.aDVAPoints.total}',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        );
+                      } else
+                        return Text(
+                          'PTS 0.00',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        );
+                    } else if (state is PointsErrorState)
+                      return Text(
+                        'PTS 0.00',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      );
+                    else
+                      return Text(
+                        'PTS 0.00',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      );
+                  },
+                ),
+                SizedBox(
                   height: 35,
-                  width: 130,
-                  color: primaryColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: Container(
+                ),
+                Text(
+                  'Promo Code',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                BlocBuilder<PointsCubit, PointsState>(
+                  builder: (context, state) {
+                    if (state is PointsInitialState)
+                      return buildLoading();
+                    else if (state is PointsLoadingState)
+                      return buildLoading();
+                    else if (state is PointsLoadedState) {
+                      if (state.aDVAPoints != null)
+                        return Text(
+                          '${state.aDVAPoints.promo.promoCode}',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        );
+                      else
+                        return Text(
+                          'No Code',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600),
+                        );
+                    } else if (state is PointsErrorState)
+                      return Text(
+                        'No Code',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      );
+                    else
+                      return Text(
+                        'No Code',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600),
+                      );
+                  },
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Clipboard.setData(new ClipboardData(text: promo));
+                    showToast("Copied", primaryColor);
+                  },
+                  child: Container(
                       height: 35,
                       width: 130,
-                      color: Colors.white,
-                      child: Center(
-                        child: Text(
-                          'Copy Code',
-                          style: TextStyle(color: primaryColor),
+                      color: primaryColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Container(
+                          height: 35,
+                          width: 130,
+                          color: Colors.white,
+                          child: Center(
+                            child: Text(
+                              'Copy Code',
+                              style: TextStyle(color: primaryColor),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )),
-              SizedBox(
-                height: 25,
-              ),
-              Text(
-                'Share this promo code and get reward',
-                style: TextStyle(color: Colors.grey),
-              ),
-              SizedBox(
-                height: 75,
-              ),
-              Icon(
-                Icons.account_balance_wallet_outlined,
-                size: 150,
-                color: primaryColor.withOpacity(0.1),
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              Text(
-                'You don\'t have any Adva points',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          )
-        ],
+                      )),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                Text(
+                  'Share this promo code and get reward',
+                  style: TextStyle(color: Colors.grey),
+                ),
+                SizedBox(
+                  height: 75,
+                ),
+                BlocBuilder<PointsCubit, PointsState>(
+                  builder: (context, state) {
+                    if (state is PointsInitialState)
+                      return buildLoading();
+                    else if (state is PointsLoadingState)
+                      return buildLoading();
+                    else if (state is PointsLoadedState) {
+                      if (state.aDVAPoints != null)
+                        return getPoints(aDVAPoints: state.aDVAPoints);
+                      else
+                        return getPoints(aDVAPoints: null);
+                    } else if (state is PointsErrorState)
+                      return getPoints(aDVAPoints: null);
+                    else
+                      return getPoints(aDVAPoints: null);
+                  },
+                ),
+              ],
+            )
+          ],
+        ),
       ),
     );
+  }
+
+  Widget getPoints({ADVAPoints aDVAPoints}) {
+    if (aDVAPoints != null &&
+        aDVAPoints.points != null &&
+        aDVAPoints.points.length != 0) {
+      List<Widget> widgets = [];
+      widgets.add(SizedBox(
+        height: 15,
+      ));
+      widgets.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(child: Text('ID')),
+          Expanded(child: Center(child: Text('Date'))),
+          Expanded(child: Center(child: Text('Origin'))),
+          Expanded(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text('Points'),
+            ],
+          )),
+        ],
+      ));
+      widgets.add(Divider(
+        color: Colors.grey,
+      ));
+      for (Points point in aDVAPoints.points) {
+        widgets.add(Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: Container(
+              width: double.maxFinite,
+              height: 60,
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                          child: Text(
+                        '${point.id}',
+                        style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.underline),
+                      )),
+                      Expanded(child: Text('${point.createdAt.split('T')[0]}')),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                          child: Center(
+                              child: Text('${point.origin}', maxLines: 2))),
+                      Expanded(
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('${point.points}'),
+                        ],
+                      )),
+                    ],
+                  ),
+                ),
+              )),
+        ));
+      }
+      return ListView(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: widgets,
+      );
+    } else {
+      return Column(
+        children: [
+          Icon(
+            Icons.account_balance_wallet_outlined,
+            size: 150,
+            color: primaryColor.withOpacity(0.1),
+          ),
+          SizedBox(
+            height: 25,
+          ),
+          Text(
+            'You don\'t have any Adva points',
+            style: TextStyle(color: Colors.grey),
+          ),
+        ],
+      );
+    }
   }
 }

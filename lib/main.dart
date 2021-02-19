@@ -1,14 +1,17 @@
 import 'dart:convert';
 
+import 'package:adva/bloc/address_bloc/addressCubit.dart';
 import 'package:adva/bloc/ads_bloc/getAdsCubit.dart';
 import 'package:adva/bloc/brand_bloc/getBrandProductCubit.dart';
 import 'package:adva/bloc/brand_bloc/getBrandsCubit.dart';
-import 'package:adva/bloc/cart_bloc/cartBloc.dart';
+import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/category_bloc/getCategoryCubit.dart';
 import 'package:adva/bloc/category_bloc/getCategoryProductsCubit.dart';
 import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
 import 'package:adva/bloc/gallery_bloc/getPostsCubit.dart';
 import 'package:adva/bloc/offer_bloc/getOffersCubit.dart';
+import 'package:adva/bloc/order_bloc/orderCubit.dart';
+import 'package:adva/bloc/points_bloc/pointsCubit.dart';
 import 'package:adva/bloc/product_bloc/getFilterProductCubit.dart';
 import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/product_bloc/getSortProductCubit.dart';
@@ -16,8 +19,10 @@ import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
 import 'package:adva/bloc/product_bloc/postReviewCubit.dart';
 import 'package:adva/bloc/seller_bloc/getSellerCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
-import 'package:adva/data/model/cart.dart';
+import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
+import 'package:adva/data/model/myCart.dart';
 import 'package:adva/data/model/user.dart';
+import 'package:adva/data/repository/addressRepo.dart';
 import 'package:adva/data/repository/adsRepo.dart';
 import 'package:adva/data/repository/brandRepo.dart';
 import 'package:adva/data/repository/cartRepo.dart';
@@ -25,10 +30,14 @@ import 'package:adva/data/repository/categoryRepo.dart';
 import 'package:adva/data/repository/featuredRepo.dart';
 import 'package:adva/data/repository/galleryRepo.dart';
 import 'package:adva/data/repository/offerRepo.dart';
+import 'package:adva/data/repository/orderRepo.dart';
+import 'package:adva/data/repository/pointsRepo.dart';
 import 'package:adva/data/repository/productRepo.dart';
 import 'package:adva/data/repository/sellerRepo.dart';
 import 'package:adva/data/repository/userRepo.dart';
+import 'package:adva/data/repository/wishRepo.dart';
 import 'package:adva/ui/screens/bottomNavBar.dart';
+import 'package:adva/ui/screens/splashScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +54,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final Cart cart = Cart();
+  final MyCart cart = MyCart();
   User user;
   SharedPreferences sharedPreferences;
   @override
@@ -57,7 +66,15 @@ class _MyAppState extends State<MyApp> {
 
   getPrefs() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    user = User.fromJson(json.decode(sharedPreferences.getString('user')));
+    bool loggedIn = sharedPreferences.getBool('loggedIn');
+    if (loggedIn == null) {
+      await sharedPreferences.setBool('loggedIn', false);
+    }
+    String u = sharedPreferences.getString('user');
+    if (u == null)
+      user = User();
+    else
+      user = User.fromJson(json.decode(u));
   }
 
   @override
@@ -81,8 +98,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<GetIDProductCubit>(
             create: (context) =>
                 GetIDProductCubit(productRepository: ProductRepositoryImpl())),
-        BlocProvider<CartBloc>(
-            create: (context) => CartBloc(repository: CartRepositoryImpl())),
+        BlocProvider<CartCubit>(
+            create: (context) =>
+                CartCubit(cartRepository: CartRepositoryImpl())),
         BlocProvider<GetBrandsCubit>(
             create: (context) =>
                 GetBrandsCubit(brandRepository: BrandRepositoryImpl())),
@@ -110,11 +128,23 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<GetPostsCubit>(
             create: (context) =>
                 GetPostsCubit(galleryRepository: GalleryRepositoryImpl())),
-        BlocProvider<UserLogInCubit>(
-            create: (context) => UserLogInCubit(
+        BlocProvider<UserCubit>(
+            create: (context) => UserCubit(
                 initial: user == null ? false : true,
                 user: user,
-                userRepository: UserRepositoryImpl(sharedPreferences))),
+                userRepository: UserRepositoryImpl())),
+        BlocProvider<WishCubit>(
+            create: (context) =>
+                WishCubit(wishRepository: WishRepositoryImpl())),
+        BlocProvider<AddressCubit>(
+            create: (context) =>
+                AddressCubit(addressRepository: AddressRepositoryImpl())),
+        BlocProvider<PointsCubit>(
+            create: (context) =>
+                PointsCubit(pointsRepository: PointsRepositoryImpl())),
+        BlocProvider<OrderCubit>(
+            create: (context) =>
+                OrderCubit(orderRepository: OrderRepositoryImpl())),
       ],
       child: MaterialApp(
         title: 'ADVA',
@@ -125,7 +155,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: BottomNavBar(),
+        home: SplashScreen(),
         // home: TestScreen(),
       ),
     );

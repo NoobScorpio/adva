@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:adva/bloc/address_bloc/addressCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/bloc/user_bloc/userState.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/addressScreen.dart';
 import 'package:adva/ui/screens/advaPointsScreen.dart';
 import 'package:adva/ui/screens/claimScreen.dart';
@@ -9,9 +14,11 @@ import 'package:adva/ui/screens/userOrdersScreen.dart';
 import 'package:adva/ui/screens/userReturnsScreen.dart';
 import 'package:adva/ui/screens/wishlist.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -20,6 +27,13 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<UserCubit>(context).getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,25 +55,117 @@ class _AccountScreenState extends State<AccountScreen> {
                     width: 60,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hello, John Doe',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 21,
+                BlocBuilder<UserCubit, UserState>(
+                  builder: (context, state) {
+                    if (state is UserInitialState)
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 21,
+                              ),
+                            ),
+                            Text(
+                              '',
+                              style: normalTextStyle,
+                            ),
+                          ],
                         ),
-                      ),
-                      Text(
-                        'johndoe@gmail.com',
-                        style: normalTextStyle,
-                      ),
-                    ],
-                  ),
+                      );
+                    else if (state is UserLoadingState)
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 21,
+                              ),
+                            ),
+                            Text(
+                              '',
+                              style: normalTextStyle,
+                            ),
+                          ],
+                        ),
+                      );
+                    else if (state is GetUserLoggedInState) {
+                      if (state.user.id != null) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${state.user.firstName + " " + state.user.lastName}',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 21,
+                                ),
+                              ),
+                              Text(
+                                '${state.user.email}',
+                                style: normalTextStyle,
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      // BlocProvider.of<UserLogInCubit>(context).
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 21,
+                              ),
+                            ),
+                            Text(
+                              '',
+                              style: normalTextStyle,
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 21,
+                              ),
+                            ),
+                            Text(
+                              '',
+                              style: normalTextStyle,
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
@@ -74,11 +180,16 @@ class _AccountScreenState extends State<AccountScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        SharedPreferences sp =
+                            await SharedPreferences.getInstance();
+                        User user =
+                            User.fromJson(json.decode(sp.getString('user')));
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => UserOrdersScreen()));
+                                builder: (context) =>
+                                    UserOrdersScreen(user: user)));
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -96,7 +207,11 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        SharedPreferences sp =
+                            await SharedPreferences.getInstance();
+                        User user =
+                            User.fromJson(json.decode(sp.getString('user')));
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -118,11 +233,16 @@ class _AccountScreenState extends State<AccountScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        SharedPreferences sp =
+                            await SharedPreferences.getInstance();
+                        User user =
+                            User.fromJson(json.decode(sp.getString('user')));
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ADVAPointsScreen()));
+                                builder: (context) =>
+                                    ADVAPointsScreen(user: user)));
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -169,9 +289,14 @@ class _AccountScreenState extends State<AccountScreen> {
             height: 1,
           ),
           GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AddressScreen()));
+            onTap: () async {
+              SharedPreferences sp = await SharedPreferences.getInstance();
+              User user = User.fromJson(json.decode(sp.getString('user')));
+              BlocProvider.of<AddressCubit>(context).getAddresses(user.id);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddressScreen(user: user)));
             },
             child: ListTile(
               tileColor: Colors.white,
@@ -220,9 +345,13 @@ class _AccountScreenState extends State<AccountScreen> {
             height: 1,
           ),
           GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()));
+            onTap: () async {
+              SharedPreferences sp = await SharedPreferences.getInstance();
+              User user = User.fromJson(json.decode(sp.getString('user')));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ProfileScreen(user: user)));
             },
             child: ListTile(
               tileColor: Colors.white,
@@ -300,10 +429,14 @@ class _AccountScreenState extends State<AccountScreen> {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              BlocProvider.of<UserLogInCubit>(context).setStatus(false);
-              BlocProvider.of<UserLogInCubit>(context).logOut();
-              setState(() {});
+            onTap: () async {
+              showToast("Logging out...", primaryColor);
+              SharedPreferences sp = await SharedPreferences.getInstance();
+              sp.setString('user', null);
+              sp.setString('cart', null);
+              BlocProvider.of<UserCubit>(context).setStatus(false);
+              BlocProvider.of<UserCubit>(context).logOut();
+              // setState(() {});
             },
             child: Padding(
               padding: const EdgeInsets.all(15.0),

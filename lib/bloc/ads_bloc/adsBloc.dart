@@ -10,8 +10,6 @@ class AdsBloc extends Bloc<AdsEvent, AdsState> {
 
   AdsBloc({@required this.repository}) : super(null);
 
-  @override
-  // TODO: implement initialState
   AdsState get initialState => AdsInitialState();
 
   @override

@@ -9,7 +9,7 @@ class GetOfferCubit extends Cubit<OfferState> {
 
   Future<void> getOffers() async {
     try {
-      emit(OfferLoadingState());
+      // emit(OfferLoadingState());
       final categories = await offerRepository.getOffers();
       emit(OfferLoadedState(offer: categories));
     } on Exception {

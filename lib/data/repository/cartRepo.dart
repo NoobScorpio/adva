@@ -1,62 +1,108 @@
-import 'package:adva/data/model/cart.dart';
+import 'dart:convert';
+
+import 'package:adva/data/model/myCart.dart';
 import 'package:adva/data/model/cartItem.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class CartRepository {
-  bool addItem(CartItem cartItem);
-  List<CartItem> getItems();
-  bool removeItem(int itemID);
+  Future<List<CartItem>> addItem(CartItem cartItem);
+  Future<List<CartItem>> getItems();
+  Future<List<CartItem>> removeItem(CartItem cartItem, bool remove);
 }
 
 class CartRepositoryImpl extends CartRepository {
-  Cart cart = Cart();
+  // Cart cart = Cart();
+  SharedPreferences sharedPreferences;
 
+  CartRepositoryImpl();
   @override
-  bool addItem(CartItem cartItem) {
+  Future<List<CartItem>> addItem(CartItem cartItem) async {
     try {
-      // bool prev = false;
-      // if (cart.cartItem == null) {
-      //   cart.cartItem = [];
-      // }
-      // for (int i = 0; i < cart.cartItem.length; i++) {
-      //   if (cart.cartItem[i].id == cartItem.id) {
-      //     cart.cartItem[i].qty += cartItem.qty;
-      //     prev = true;
-      //     break;
-      //   }
-      // }
-      // if (prev) {
-      //   return true;
-      // } else {
-      cart.cartItem.add(cartItem);
-      return true;
+      sharedPreferences = await SharedPreferences.getInstance();
+      MyCart cart = MyCart();
+      var getCart = sharedPreferences.getString('cart');
+
+      if (getCart == null) {
+        cart.cartItem.add(cartItem);
+
+        await sharedPreferences.setString('cart', json.encode(cart.toJson()));
+      } else {
+        cart = MyCart.fromJson(json.decode(getCart));
+        // cartItem.id=cart.cartItem.length+1;
+        for (int i = 0; i < cart.cartItem.length; i++) {
+          if (cartItem == cart.cartItem[i]) {
+            cart.cartItem[i].qty += cartItem.qty;
+            await sharedPreferences.setString(
+                'cart', json.encode(cart.toJson()));
+            return cart.cartItem;
+          }
+        }
+        cart.cartItem.add(cartItem);
+        await sharedPreferences.setString('cart', json.encode(cart.toJson()));
+      }
+
+      return cart.cartItem;
       // }
     } catch (e) {
       print(e);
-      return false;
+      return null;
     }
     // TODO: implement getItem
     throw UnimplementedError();
   }
 
   @override
-  List<CartItem> getItems() {
-    return cart.cartItem ?? [];
+  Future<List<CartItem>> getItems() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    var getCart = sharedPreferences.getString('cart');
+
+    if (getCart == null) {
+      return [];
+    } else {
+      MyCart cart = MyCart();
+      cart = MyCart.fromJson(json.decode(getCart));
+      return cart.cartItem ?? [];
+    }
   }
 
   @override
-  bool removeItem(int itemID) {
-    bool deleted = false;
-    try {
+  Future<List<CartItem>> removeItem(CartItem cartItem, bool remove) async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    var getCart = sharedPreferences.getString('cart');
+    MyCart cart = MyCart();
+    cart = MyCart.fromJson(json.decode(getCart));
+    if (remove) {
       for (int i = 0; i < cart.cartItem.length; i++) {
-        if (cart.cartItem[i].id == itemID) {
+        if (cart.cartItem[i] == cartItem) {
           cart.cartItem.removeAt(i);
-          deleted = true;
+          await sharedPreferences.setString('cart', json.encode(cart.toJson()));
+          return cart.cartItem;
         }
       }
-      return deleted;
-    } catch (e) {
-      print(e);
-      return false;
+      return null;
+    } else {
+      if (cart.cartItem.length == 0) {
+        return [];
+      } else {
+        for (int i = 0; i < cart.cartItem.length; i++) {
+          if (cart.cartItem[i] == cartItem) {
+            if (cart.cartItem[i].qty >= 2) {
+              cart.cartItem[i].qty--;
+              // cart.cartItem.removeAt(i);
+              await sharedPreferences.setString(
+                  'cart', json.encode(cart.toJson()));
+              return cart.cartItem;
+            } else {
+              // cart.cartItem[i].qty--;
+              cart.cartItem.removeAt(i);
+              await sharedPreferences.setString(
+                  'cart', json.encode(cart.toJson()));
+              return cart.cartItem;
+            }
+          }
+        }
+        return null;
+      }
     }
   }
 }

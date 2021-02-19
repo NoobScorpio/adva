@@ -26,7 +26,7 @@ class ReviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("REVIEW IMAGES == ${images[0].pictureReference}");
+    // print("REVIEW IMAGES == ${images[0].pictureReference}");
     return Container(
       width: double.maxFinite,
       // height: 150,

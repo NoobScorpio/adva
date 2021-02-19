@@ -1,5 +1,3 @@
-import 'package:adva/bloc/category_bloc/categoryEvent.dart';
-import 'package:adva/bloc/category_bloc/categoryState.dart';
 import 'package:adva/bloc/seller_bloc/sellerEvent.dart';
 import 'package:adva/bloc/seller_bloc/sellerState.dart';
 import 'package:adva/data/model/seller.dart';
@@ -12,8 +10,6 @@ class SellerBloc extends Bloc<SellerEvent, SellerState> {
 
   SellerBloc({@required this.repository}) : super(null);
 
-  @override
-  // TODO: implement initialState
   SellerState get initialState => SellerInitialState();
 
   @override

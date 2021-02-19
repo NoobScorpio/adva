@@ -93,7 +93,8 @@ class Product {
     rewardPoints = json['reward_points'];
     discountedAmount = json['discounted_amount'];
 
-    if (json['related_products'] != null) {
+    if (json['related_products'] != null &&
+        json['related_products'].runtimeType != String) {
       relatedProducts = new List<RelatedProducts>();
       json['related_products'].forEach((v) {
         relatedProducts.add(new RelatedProducts.fromJson(v));

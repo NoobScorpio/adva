@@ -10,8 +10,6 @@ class OfferBloc extends Bloc<OfferEvent, OfferState> {
 
   OfferBloc({@required this.repository}) : super(null);
 
-  @override
-  // TODO: implement initialState
   OfferState get initialState => OfferInitialState();
 
   @override

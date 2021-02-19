@@ -9,7 +9,7 @@ class GetAdsCubit extends Cubit<AdsState> {
 
   Future<void> getAds() async {
     try {
-      emit(AdsLoadingState());
+      // emit(AdsLoadingState());
       final ads = await adsRepository.getAds();
       emit(AdsLoadedState(ads: ads));
     } on Exception {

@@ -1,17 +1,38 @@
+import 'package:adva/bloc/address_bloc/addressCubit.dart';
+import 'package:adva/bloc/address_bloc/addressState.dart';
+import 'package:adva/bloc/cart_bloc/cartCubit.dart';
+import 'package:adva/bloc/cart_bloc/cartState.dart';
+import 'package:adva/data/model/address.dart';
+import 'package:adva/data/model/cartItem.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/paymentScreen.dart';
+import 'package:adva/ui/screens/addAddressScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
 import 'package:adva/ui/utils/tFContainer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CheckoutScreen extends StatefulWidget {
+  final User user;
+
+  const CheckoutScreen({Key key, this.user}) : super(key: key);
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   bool checkBoxValue = false;
+  String name, email, phone;
+  int groupValue = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    BlocProvider.of<AddressCubit>(context).getAddresses(widget.user.id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,201 +41,193 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: screenHeight * 0.12,
         backgroundColor: Colors.white,
-        title: Padding(
-          padding: EdgeInsets.only(
-              left: screenWidth * 0.2, top: screenHeight * 0.04),
-          child: Text(
-            'Check Out',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontWeight: FontWeight.w400,
-            ),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Check Out',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 22,
+            fontWeight: FontWeight.w400,
           ),
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.only(top: screenHeight * 0.015),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: screenHeight * 0.46,
-                color: Colors.white,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      left: screenWidth * 0.015,
-                      right: screenWidth * 0.01,
-                      top: screenHeight * 0.015),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Personal Information',
-                          style: boldTextStyle,
-                        ),
-                      ),
-                      Form(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: screenHeight * 0.01,
-                                  left: screenWidth * 0.024),
-                              child: TFText(
-                                txt: 'Full Name',
-                              ),
-                            ),
-                            TFContainer(
-                                screenHeight: screenHeight,
-                                screenWidth: screenWidth),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: screenHeight * 0.015,
-                                  left: screenWidth * 0.024),
-                              child: TFText(
-                                txt: 'E-mail address',
-                              ),
-                            ),
-                            TFContainer(
-                                screenHeight: screenHeight,
-                                screenWidth: screenWidth),
-                            Row(
-                              children: [
-                                Checkbox(
-                                    value: checkBoxValue,
-                                    activeColor: Colors.black,
-                                    onChanged: (bool newValue) {
-                                      setState(() {
-                                        checkBoxValue = newValue;
-                                      });
-                                      Text('Remember me');
-                                    }),
-                                Text('Keep me up date with exclusive offers'),
-                              ],
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: screenHeight * 0.015,
-                                  left: screenWidth * 0.024),
-                              child: TFText(
-                                txt: 'Phone No.',
-                              ),
-                            ),
-                            TFContainer(
-                                screenHeight: screenHeight,
-                                screenWidth: screenWidth),
-                          ],
-                        ),
-                      ),
-                    ],
+        padding: const EdgeInsets.all(15.0),
+        child: ListView(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Personal Information',
+                    style: boldTextStyle,
                   ),
                 ),
-              ),
-              SizedBox(
-                height: screenHeight * 0.02,
-              ),
-              Container(
-                // height: screenHeight * 0.29,
-                width: screenWidth,
-                color: Colors.white,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    top: screenHeight * 0.017,
-                    left: screenWidth * 0.03,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TFText(
-                        txt: 'Shipping Address',
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          tileColor: Colors.white,
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text('Address 1'),
-                                  MaterialButton(
-                                    height: screenHeight * 0.03,
-                                    minWidth: screenWidth * 0.01,
-                                    color: checkoutButtonColor,
-                                    onPressed: () {},
-                                    child: Text(
-                                      '(Office)',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: screenWidth * 0.02,
-                              ),
-                              Text(
-                                'House No.1 , Sawabi street , Lower jinnahabad, Mandian, Abbottabad',
-                                style: normalTextStyle,
-                              ),
-                            ],
-                          ),
-                          trailing: Icon(
-                            Icons.check_circle,
-                            color: primaryColor,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          tileColor: Colors.white,
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text('Address 1'),
-                                  MaterialButton(
-                                    height: screenHeight * 0.03,
-                                    minWidth: screenWidth * 0.01,
-                                    color: checkoutButtonColor,
-                                    onPressed: () {},
-                                    child: Text(
-                                      '(Home)',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: screenWidth * 0.02,
-                              ),
-                              Text(
-                                'House No.1 , Sawabi street , Lower jinnahabad, Mandian, Abbottabad',
-                                style: normalTextStyle,
-                              ),
-                            ],
-                          ),
-                          trailing: Icon(Icons.circle),
-                        ),
-                      ),
-                      Divider(
-                        color: cartTextColor,
-                        endIndent: screenWidth * 0.05,
-                        thickness: 1,
-                      ),
-                    ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Full Name',
+                    style: normalTextStyle,
                   ),
                 ),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Enter your full name',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                  onChanged: (val) {
+                    name = val;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'E-mail address',
+                    style: normalTextStyle,
+                  ),
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Enter your email',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                  onChanged: (val) {
+                    email = val;
+                  },
+                ),
+                Row(
+                  children: [
+                    Checkbox(
+                        value: checkBoxValue,
+                        activeColor: Colors.black,
+                        onChanged: (bool newValue) {
+                          setState(() {
+                            checkBoxValue = newValue;
+                          });
+                          Text('Remember me');
+                        }),
+                    Text('Keep me up date with exclusive offers'),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  child: Text(
+                    'Phone no',
+                    style: normalTextStyle,
+                  ),
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Enter Phone no',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                  onChanged: (val) {
+                    phone = val;
+                  },
+                ),
+              ],
+            ),
+            SizedBox(
+              height: screenHeight * 0.02,
+            ),
+            Container(
+              // height: screenHeight * 0.29,
+              width: screenWidth,
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: screenHeight * 0.017,
+                  left: screenWidth * 0.03,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Text(
+                        'Shipping Address',
+                      ),
+                    ),
+                    BlocConsumer<AddressCubit, AddressState>(
+                        listener: (context, state) {
+                      if (state is AddressLoadedState) {
+                        if (state.address != null &&
+                            state.address.length != 0) {
+                          setState(() {
+                            groupValue = state.address[0].id;
+                          });
+                        }
+                      }
+                      if (state is AddressAddState) {
+                        if (state.address != null &&
+                            state.address.length != 0) {
+                          setState(() {
+                            groupValue = state.address[0].id;
+                          });
+                        }
+                      }
+                      if (state is AddressDeleteState) {
+                        if (state.address != null &&
+                            state.address.length != 0) {
+                          setState(() {
+                            groupValue = state.address[0].id;
+                          });
+                        }
+                      }
+                    }, builder: (context, state) {
+                      if (state is AddressLoadingState)
+                        return Center(
+                          child: CircularProgressIndicator(
+                            backgroundColor: primaryColor,
+                          ),
+                        );
+                      if (state is AddressLoadingState)
+                        return addresses(addresses: []);
+                      if (state is AddressLoadedState) {
+                        if (state.address != null) {
+                          return addresses(addresses: state.address);
+                        } else
+                          return addresses(addresses: []);
+                      }
+                      if (state is AddressAddState) {
+                        if (state.address != null) {
+                          return addresses(addresses: state.address);
+                        } else
+                          return addresses(addresses: []);
+                      }
+                      if (state is AddressDeleteState) {
+                        if (state.address != null) {
+                          return addresses(addresses: state.address);
+                        } else
+                          return addresses(addresses: []);
+                      }
+                      return addresses(addresses: []);
+                    }),
+                    Divider(
+                      color: cartTextColor,
+                      endIndent: screenWidth * 0.05,
+                      thickness: 1,
+                    ),
+                  ],
+                ),
               ),
-              Padding(
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => AddAddressScreen(
+                              user: widget.user,
+                            )));
+              },
+              child: Padding(
                 padding: EdgeInsets.all(15),
                 child: Material(
                   elevation: 4,
@@ -237,7 +250,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               ),
                             ),
                             Text(
-                              'Locate Me',
+                              'Add Address',
                               style: TextStyle(color: primaryColor),
                             ),
                           ],
@@ -247,58 +260,139 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
                 ),
               ),
-              Container(
-                // height: screenHeight * 0.26,
-                width: screenWidth,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    PaymentColumn(
-                      screenHeight: screenHeight,
-                      screenWidth: screenWidth,
-                      subTotal: 999.toString(),
-                      total: 999.toString(),
-                      flatShippingRate: 999.toString(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: MyButton(
-                        height: 65,
-                        width: screenWidth,
-                        child: Text('Proceed to payments',
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white)),
-                        borderColor: Colors.transparent,
-                        innerColor: primaryColor,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PaymentScreen()));
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            ),
+            BlocBuilder<CartCubit, CartState>(builder: (context, state) {
+              if (state is CartLoadedState) {
+                if (state.cartItems != null && state.cartItems.length != 0) {
+                  return orderPrices(cartItems: state.cartItems);
+                }
+                return orderPrices(cartItems: []);
+              }
+              return orderPrices(cartItems: []);
+            })
+          ],
         ),
       ),
     );
   }
-}
 
-class TFText extends StatelessWidget {
-  TFText({this.txt});
+  Widget orderPrices({List<CartItem> cartItems}) {
+    double subTotal = 0;
+    double vat = 0;
+    if (cartItems.length > 0) {
+      for (CartItem cartItem in cartItems) {
+        subTotal += cartItem.price * cartItem.qty - cartItem.discount;
+        vat += (cartItem.price * cartItem.qty - cartItem.discount) * 0.1;
+      }
+      return Container(
+        width: double.maxFinite,
+        color: Colors.white,
+        child: Column(
+          children: [
+            PaymentColumn(
+              subTotal: subTotal.toString(),
+              total: (subTotal + vat + 10).toString(),
+              flatShippingRate: 10.toString(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MyButton(
+                height: 65,
+                width: double.maxFinite,
+                child: Text('Proceed to payments',
+                    style: TextStyle(fontSize: 15, color: Colors.white)),
+                borderColor: Colors.transparent,
+                innerColor: primaryColor,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              PaymentScreen(user: widget.user)));
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Container(
+      width: double.maxFinite,
+      color: Colors.white,
+      child: Column(
+        children: [
+          PaymentColumn(
+            subTotal: "?",
+            total: "?",
+            flatShippingRate: "?",
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MyButton(
+              height: 65,
+              width: double.maxFinite,
+              child: Text('Proceed to payments',
+                  style: TextStyle(fontSize: 15, color: Colors.white)),
+              borderColor: Colors.transparent,
+              innerColor: primaryColor,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PaymentScreen()));
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  final String txt;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      txt,
-      style: TextStyle(color: Colors.black),
+  Widget addresses({List<Address> addresses}) {
+    if (addresses.length > 0) {
+      List<Widget> widgets = [];
+      for (Address address in addresses) {
+        widgets.add(Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: ListTile(
+            tileColor: Colors.white,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Address ${address.id}'),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  '${address.address} ${address.city}, ${address.country}.',
+                  style: normalTextStyle,
+                  maxLines: 3,
+                )
+              ],
+            ),
+            trailing: Radio(
+              value: address.id,
+              groupValue: groupValue,
+              activeColor: primaryColor,
+              onChanged: (val) {
+                setState(() {
+                  groupValue = val;
+                });
+              },
+            ),
+          ),
+        ));
+      }
+      return Container(
+        height: widgets.length == 1 ? 120 : (widgets.length == 2 ? 220 : (300)),
+        child: ListView(
+          children: widgets,
+        ),
+      );
+    }
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text('You have no address added.'),
+      ),
     );
   }
 }

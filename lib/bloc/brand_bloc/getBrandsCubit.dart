@@ -9,7 +9,7 @@ class GetBrandsCubit extends Cubit<BrandState> {
 
   Future<void> getBrands() async {
     try {
-      emit(BrandLoadingState());
+      // emit(BrandLoadingState());
       final brands = await brandRepository.getBrands();
       emit(BrandLoadedState(brands: brands));
     } on Exception {

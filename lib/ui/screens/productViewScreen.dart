@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:adva/bloc/cart_bloc/cartBloc.dart';
+import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/cart_bloc/cartEvent.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
@@ -14,6 +16,7 @@ import 'package:adva/data/model/productImage.dart';
 import 'package:adva/data/model/qas.dart';
 import 'package:adva/data/model/relatedProduct.dart';
 import 'package:adva/data/model/review.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/questionsScreen.dart';
 import 'package:adva/ui/screens/reviewScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -26,6 +29,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductViewScreen extends StatefulWidget {
   final int pid;
@@ -40,9 +44,10 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
   List<String> qtyValue = ["QTY 1", "QTY 2", "QTY 3", "QTY 4", "QTY 5"];
   String qtySelected = "QTY 1";
 
-  CartBloc cartBloc;
   int colorValue;
-  String pName;
+  String pName, image, desc;
+  double discount;
+  int price;
   String message = '';
   List<Widget> reviews = [];
   List<Widget> reviewsNext = [];
@@ -55,15 +60,6 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    cartBloc = BlocProvider.of<CartBloc>(context);
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    cartBloc.close();
-    // productBloc.close();
   }
 
   @override
@@ -299,6 +295,10 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                             } else {
                               product = state.product;
                               pName = product.productName;
+                              price = product.price;
+                              desc = product.productDescription;
+                              image = product.productimages[0].pictureReference;
+                              discount = product.discountedAmount + 0.0 ?? 0.0;
                               double reviewAvg = 0.0;
 
                               for (Reviews rev in product.reviews) {
@@ -1187,6 +1187,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                               onChanged: (_) {
                                 setState(() {
                                   qtySelected = _;
+                                  print(qtySelected);
                                 });
                               },
                             ),
@@ -1194,41 +1195,50 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                         ),
                       ),
                     ),
-                    BlocListener<CartBloc, CartState>(
+                    BlocListener<CartCubit, CartState>(
                       listener: (context, state) {
                         if (state is CartItemAddedState) {
-                          if (state.added) {
+                          if (state.added.length > 0) {
                             showToast("Added to cart", primaryColor);
-                            // Fluttertoast.showToast(
-                            //     msg: "Added to cart",
-                            //     toastLength: Toast.LENGTH_SHORT,
-                            //     gravity: ToastGravity.CENTER,
-                            //     timeInSecForIosWeb: 1,
-                            //     backgroundColor: primaryColor,
-                            //     textColor: Colors.white,
-                            //     fontSize: 16.0);
                           } else {
                             showToast('Could not add to cart', primaryColor);
                           }
                         }
-                        if (state is GetCartItemState) {
-                          print(state.cartItems[0].qty);
-                        }
+                        // if (state is CartLoadedState) {
+                        //   print("CART LENGTH ${state.cartItems.length}");
+                        // }
                       },
                       child: Container(
                         height: 55,
                         width: screenWidth / 1.8,
                         child: RaisedButton(
-                          onPressed: () {
-                            CartItem cartItem = CartItem();
-                            cartItem.pName = pName;
-                            cartItem.pid = widget.pid;
-                            cartItem.qty = int.parse(qtySelected.split(' ')[1]);
-                            cartItem.color = colorValue;
-                            BlocProvider.of<CartBloc>(context)
-                                .add(AddItemCartEvent(cartItem));
-                            BlocProvider.of<CartBloc>(context)
-                                .add(GetCartItemsEvent());
+                          onPressed: () async {
+                            showToast("Adding item", primaryColor);
+                            SharedPreferences sp =
+                                await SharedPreferences.getInstance();
+                            var user = User.fromJson(
+                                json.decode(sp.getString('user')));
+                            if (user != null && user.id != null) {
+                              print(qtySelected.split(' ')[1]);
+                              CartItem cartItem = CartItem();
+                              cartItem.pName = pName;
+                              cartItem.price = price;
+                              cartItem.image = image;
+                              cartItem.desc = desc;
+                              cartItem.pid = widget.pid;
+                              cartItem.discount = discount;
+                              cartItem.qty =
+                                  int.parse(qtySelected.split(' ')[1]);
+                              cartItem.color = colorValue;
+                              //TODO: CART ITEM ADD
+                              BlocProvider.of<CartCubit>(context)
+                                  .addItem(cartItem);
+
+                              // BlocProvider.of<CartBloc>(context)
+                              //     .add(GetCartItemsEvent());
+                            } else {
+                              showToast("You are not logged in", primaryColor);
+                            }
                           },
                           color: primaryColor,
                           child: Text(
@@ -1244,6 +1254,11 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
             ),
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
     );
   }

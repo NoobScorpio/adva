@@ -181,7 +181,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           showToast("Please fill all fields", primaryColor);
                         } else {
                           bool created =
-                              await BlocProvider.of<UserLogInCubit>(context)
+                              await BlocProvider.of<UserCubit>(context)
                                   .createUser(
                                       email, pass, cPass, phone, fName, lName);
                           if (created) {

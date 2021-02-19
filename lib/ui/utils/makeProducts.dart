@@ -11,10 +11,11 @@ Widget makeProducts(screenHeight, products, box, context) {
   if (products[0].runtimeType == Product) {
     for (Product product in products) {
       widgets.add(getProduct(
-          product: product,
-          context: context,
-          screenHeight: screenHeight,
-          box: box));
+        product: product,
+        context: context,
+        screenHeight: screenHeight,
+        box: box,
+      ));
     }
   } else {
     for (Featured product in products) {
@@ -43,22 +44,13 @@ Widget makeProducts(screenHeight, products, box, context) {
         );
 }
 
-Widget getProduct({product, context, screenHeight, box}) {
-  return GestureDetector(
-    onTap: () {
-      BlocProvider.of<GetIDProductCubit>(context).getProduct(product.id);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProductViewScreen(pid: product.id)));
-    },
-    child: ProductContainer(
-      box: box,
-      pid: product.id,
-      name: product.productName,
-      price: product.price.toString(),
-      screenHeight: screenHeight,
-      image: product.productimages[0].pictureReference,
-    ),
+Widget getProduct({product, context, screenHeight, box, sharedPreferences}) {
+  return ProductContainer(
+    box: box,
+    pid: product.id,
+    name: product.productName,
+    price: product.price.toString(),
+    screenHeight: screenHeight,
+    image: product.productimages[0].pictureReference,
   );
 }

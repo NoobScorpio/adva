@@ -1,15 +1,32 @@
+import 'package:adva/bloc/order_bloc/orderCubit.dart';
+import 'package:adva/bloc/order_bloc/orderState.dart';
+import 'package:adva/data/model/cart.dart';
+import 'package:adva/data/model/orderDetail.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
+  final int oid, cid;
+
+  const OrderDetailsScreen({Key key, this.oid, this.cid}) : super(key: key);
   @override
   _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    BlocProvider.of<OrderCubit>(context)
+        .getOrderDetails(widget.cid, widget.oid);
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -18,9 +35,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        leading: Icon(
-          Icons.arrow_back_ios,
-          color: Colors.black,
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
         ),
         title: Text(
           'Order Details',
@@ -35,33 +57,35 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              Text(
+                'Summary',
+                style: TextStyle(color: primaryColor),
+              ),
               //ORDER DETAILS
               Container(
-                width: screenWidth,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GeneralText(
-                      txt: 'Summary',
-                    ),
-                    SummaryRow(
-                        screenHeight: screenHeight, screenWidth: screenWidth),
-                    Divider(
-                      thickness: 0.5,
-                      endIndent: 26,
-                    ),
-                    SummaryRow(
-                        screenHeight: screenHeight, screenWidth: screenWidth),
-                    Divider(
-                      thickness: 0.5,
-                      endIndent: 26,
-                    ),
-                    SummaryRow(
-                        screenHeight: screenHeight, screenWidth: screenWidth),
-                  ],
-                ),
-              ),
+                  width: screenWidth,
+                  child: BlocBuilder<OrderCubit, OrderState>(
+                    builder: (context, state) {
+                      if (state is OrderInitialState)
+                        return buildLoading();
+                      else if (state is OrderLoadingState)
+                        return buildLoading();
+                      else if (state is OrderLoadedState) {
+                        return buildLoading();
+                      } else if (state is OrderDetailsLoadedState) {
+                        if (state.orderDetail != null)
+                          return getOrderSummary(
+                              orderDetail: state.orderDetail);
+                        else
+                          return buildLoading();
+                      } else if (state is OrderErrorState)
+                        return buildErrorUi("No items in this order");
+                      else
+                        return buildErrorUi("No items in this order");
+                    },
+                  )),
 
               //PERSONAL INFORMATION
               Container(
@@ -212,10 +236,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         vertical: 15, horizontal: 10),
                     child: Column(
                       children: [
-                        PaymentColumn(
-                          screenHeight: screenHeight,
-                          screenWidth: screenWidth,
-                        ),
+                        PaymentColumn(),
                         SizedBox(
                           height: screenHeight * 0.02,
                         ),
@@ -300,6 +321,71 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ]),
     );
   }
+
+  Widget getOrderSummary({OrderDetail orderDetail}) {
+    if (orderDetail != null) {
+      List<Widget> widgets = [];
+      for (Cart cart in orderDetail.cart) {
+        widgets.add(Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: 60,
+              width: 70,
+              child: Card(
+                color: Color(0xFFE6E6E6),
+                elevation: 5,
+                child: cart.product.productimages.length > 0
+                    ? FittedBox(
+                        fit: BoxFit.cover,
+                        child: Image.network(
+                            cart.product.productimages[0].pictureReference))
+                    : Center(
+                        child: Icon(
+                        Icons.photo_library_outlined,
+                        color: Colors.grey,
+                      )),
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${cart.product.productName}'),
+                  Text('${cart.product.category.categoryName} / ${cart.size}',
+                      style: TextStyle(
+                        color: cartTextColor,
+                      ))
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('Sar ${cart.price}',
+                    style: TextStyle(
+                      color: cartTextColor,
+                    )),
+                Text('Quantity: ${cart.quantity}',
+                    style: TextStyle(
+                      color: cartTextColor,
+                    ))
+              ],
+            ),
+          ],
+        ));
+      }
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.start, children: widgets);
+    }
+
+    return Center(
+      child: Text("No item in this order"),
+    );
+  }
 }
 
 class DialogText extends StatelessWidget {
@@ -332,67 +418,6 @@ class GeneralText extends StatelessWidget {
     return Text(
       txt,
       style: TextStyle(color: primaryColor),
-    );
-  }
-}
-
-class SummaryRow extends StatelessWidget {
-  const SummaryRow({
-    Key key,
-    @required this.screenHeight,
-    @required this.screenWidth,
-  }) : super(key: key);
-
-  final double screenHeight;
-  final double screenWidth;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          height: 60,
-          width: 70,
-          child: Card(
-            color: Color(0xFFE6E6E6),
-            elevation: 5,
-            child: Center(
-                child: Icon(
-              Icons.photo_library_outlined,
-              color: Colors.grey,
-            )),
-          ),
-        ),
-        SizedBox(
-          width: 15,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Product Name'),
-              Text('Category / Size',
-                  style: TextStyle(
-                    color: cartTextColor,
-                  ))
-            ],
-          ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text('Sar 999',
-                style: TextStyle(
-                  color: cartTextColor,
-                )),
-            Text('Quantity: 2',
-                style: TextStyle(
-                  color: cartTextColor,
-                ))
-          ],
-        ),
-      ],
     );
   }
 }

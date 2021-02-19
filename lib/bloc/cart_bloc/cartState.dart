@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 abstract class CartState extends Equatable {}
 
 class CartInitialState extends CartState {
+  final List<CartItem> carItems;
+
+  CartInitialState(this.carItems);
   @override
   // TODO: implement props
-  List<Object> get props => [];
+  List<Object> get props => [carItems];
 }
 
 class CartLoadingState extends CartState {
@@ -37,7 +40,7 @@ class CartErrorState extends CartState {
 }
 
 class CartItemAddedState extends CartState {
-  final bool added;
+  final List<CartItem> added;
   CartItemAddedState({@required this.added});
 
   @override
@@ -46,7 +49,7 @@ class CartItemAddedState extends CartState {
 }
 
 class CartItemRemoveState extends CartState {
-  final bool removed;
+  final List<CartItem> removed;
 
   CartItemRemoveState({@required this.removed});
 

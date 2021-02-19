@@ -38,7 +38,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
     var response = await http.get(baseURL + "/product/index?category=$catName");
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
-      // print(data);
+      print(data['data']);
       List<Product> products =
           ProductResultModel.fromJson(data['data']).products;
 

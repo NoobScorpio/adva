@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/createAccount.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
@@ -127,17 +131,19 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                     onPressed: () async {
                       if (username != '' && pass != '') {
                         bool loggedIn =
-                            await BlocProvider.of<UserLogInCubit>(context)
+                            await BlocProvider.of<UserCubit>(context)
                                 .loginUser(username, pass);
                         print("USER LOGGED IN $loggedIn");
                         if (loggedIn) {
                           sharedPreferences.setBool('loggedIn', true);
-                          BlocProvider.of<UserLogInCubit>(context)
-                              .setStatus(true);
+                          BlocProvider.of<UserCubit>(context).setStatus(true);
+                          BlocProvider.of<WishCubit>(context).getWishLists(
+                              User.fromJson(json.decode(
+                                      sharedPreferences.getString('user')))
+                                  .id);
                         } else {
                           sharedPreferences.setBool('loggedIn', false);
-                          BlocProvider.of<UserLogInCubit>(context)
-                              .setStatus(false);
+                          BlocProvider.of<UserCubit>(context).setStatus(false);
                         }
                       } else
                         showToast("Please fill the fields", primaryColor);
