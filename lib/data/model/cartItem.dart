@@ -4,7 +4,7 @@ class CartItem extends Equatable {
   int id;
   int pid;
   String pName;
-  int price;
+  double price;
   int color;
   int qty;
   int size;

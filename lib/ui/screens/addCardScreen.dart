@@ -178,6 +178,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                     height: 50,
                     width: double.maxFinite,
                     child: TextField(
+                      keyboardType: TextInputType.number,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
@@ -268,6 +269,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                             child: Container(
                               height: 50,
                               child: TextField(
+                                keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.grey),
@@ -337,8 +339,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
               onPressed: () async {
                 if (number != '' && code != '' && exp != '' && name != '') {
                   Payment payment = Payment();
-                  payment.securityCode = code;
-                  payment.cardNumber = number;
+                  payment.securityCode = int.parse(code);
+                  payment.cardNumber = int.parse(number);
                   payment.expiryDate = exp;
                   payment.nameOnCard = name;
                   payment.customerId = widget.user.id;

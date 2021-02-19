@@ -53,15 +53,18 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           ),
         ),
       ),
-      body: ListView(children: [
-        Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: ListView(children: [
+          Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                'Summary',
-                style: TextStyle(color: primaryColor),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Summary',
+                  style: TextStyle(color: primaryColor),
+                ),
               ),
               //ORDER DETAILS
               Container(
@@ -75,10 +78,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       else if (state is OrderLoadedState) {
                         return buildLoading();
                       } else if (state is OrderDetailsLoadedState) {
-                        if (state.orderDetail != null)
+                        if (state.orderDetail != null) {
+                          print(
+                              "INSIDE ORDER DETAIL ${state.orderDetail.cart.length}");
                           return getOrderSummary(
                               orderDetail: state.orderDetail);
-                        else
+                        } else
                           return buildLoading();
                       } else if (state is OrderErrorState)
                         return buildErrorUi("No items in this order");
@@ -317,13 +322,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               )
             ],
           ),
-        ),
-      ]),
+        ]),
+      ),
     );
   }
 
   Widget getOrderSummary({OrderDetail orderDetail}) {
-    if (orderDetail != null) {
+    if (orderDetail != null && orderDetail.cart.length > 0) {
       List<Widget> widgets = [];
       for (Cart cart in orderDetail.cart) {
         widgets.add(Row(
@@ -355,7 +360,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('${cart.product.productName}'),
-                  Text('${cart.product.category.categoryName} / ${cart.size}',
+                  Text(
+                      '${cart.product.category != null ? cart.product.category.categoryName : "No Category"} / ${cart.size ?? "No Size"}',
                       style: TextStyle(
                         color: cartTextColor,
                       ))

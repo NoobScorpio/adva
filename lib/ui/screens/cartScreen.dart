@@ -34,7 +34,7 @@ class _CartScreenState extends State<CartScreen> {
     cartItems = await BlocProvider.of<CartCubit>(context).getItems();
   }
 
-  int subTotal = 0;
+  double subTotal = 0;
   double vat = 0.0;
   @override
   Widget build(BuildContext context) {
@@ -136,7 +136,7 @@ class _CartScreenState extends State<CartScreen> {
             BlocConsumer<CartCubit, CartState>(listener: (context, state) {
               if (state is CartItemAddedState) {
                 if (state.added != null && state.added.length != 0) {
-                  int sub = 0;
+                  double sub = 0;
                   double v = 0.0;
                   for (var item in state.added) {
                     sub += item.price * item.qty;
@@ -150,7 +150,7 @@ class _CartScreenState extends State<CartScreen> {
               }
               if (state is CartItemRemoveState) {
                 if (state.removed != null && state.removed.length != 0) {
-                  int sub = 0;
+                  double sub = 0;
                   double v = 0.0;
                   for (var item in state.removed) {
                     sub += item.price * item.qty;

@@ -12,7 +12,7 @@ class OrderDetails {
   String lastName;
   String email;
   String phone;
-  int total;
+  dynamic total;
   String orderFrom;
   int gift;
   int staffId;

@@ -3,10 +3,10 @@ class Customer {
   String firstName;
   String lastName;
   String email;
-  Null taxCard;
+  String taxCard;
   String dob;
   String phone;
-  Null confirmationCode;
+  String confirmationCode;
   String address;
   String profileImage;
   String token;

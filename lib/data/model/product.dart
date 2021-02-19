@@ -10,48 +10,52 @@ import 'package:adva/data/model/sizes.dart';
 class Product {
   int id;
   String productName;
+  String productArabicName;
   int categoryId;
   int brandId;
   int quantity;
   String productDescription;
-  int price;
-  String rewardPoints;
+  String productArabicDescription;
+  dynamic price;
+  dynamic rewardPoints;
   int discountedAmount;
-
-  int costPrice;
-  int tax;
-  int vat;
+  List<RelatedProducts> relatedProducts;
+  dynamic costPrice;
+  dynamic tax;
+  dynamic vat;
   String sku;
-  String model;
+  dynamic model;
   String barcode;
   int timer;
   String timerFrom;
   String timerTo;
   int featured;
   int shipping;
-  int weight;
-  int length;
-  int width;
-  int height;
+  dynamic weight;
+  dynamic length;
+  dynamic width;
+  dynamic height;
+  int offerQuantity;
   String deletedAt;
   String createdAt;
   String updatedAt;
   Category category;
-  List<RelatedProducts> relatedProducts;
+  List<Reviews> reviews;
   Brand brand;
   List<Productimages> productimages;
   List<Qas> qas;
   List<Sizes> sizes;
   List<ProductColors> colors;
-  List<Reviews> reviews;
 
   Product(
       {this.id,
       this.productName,
+      this.productArabicName,
       this.categoryId,
       this.brandId,
       this.quantity,
       this.productDescription,
+      this.productArabicDescription,
       this.price,
       this.rewardPoints,
       this.discountedAmount,
@@ -71,6 +75,7 @@ class Product {
       this.length,
       this.width,
       this.height,
+      this.offerQuantity,
       this.deletedAt,
       this.createdAt,
       this.updatedAt,
@@ -85,14 +90,15 @@ class Product {
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productName = json['product_name'];
+    productArabicName = json['product_arabic_name'];
     categoryId = json['category_id'];
     brandId = json['brand_id'];
     quantity = json['quantity'];
     productDescription = json['product_description'];
+    productArabicDescription = json['product_arabic_description'];
     price = json['price'];
     rewardPoints = json['reward_points'];
     discountedAmount = json['discounted_amount'];
-
     if (json['related_products'] != null &&
         json['related_products'].runtimeType != String) {
       relatedProducts = new List<RelatedProducts>();
@@ -115,6 +121,7 @@ class Product {
     length = json['length'];
     width = json['width'];
     height = json['height'];
+    offerQuantity = json['offer_quantity'];
     deletedAt = json['deleted_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -158,13 +165,19 @@ class Product {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['product_name'] = this.productName;
+    data['product_arabic_name'] = this.productArabicName;
     data['category_id'] = this.categoryId;
     data['brand_id'] = this.brandId;
     data['quantity'] = this.quantity;
     data['product_description'] = this.productDescription;
+    data['product_arabic_description'] = this.productArabicDescription;
     data['price'] = this.price;
     data['reward_points'] = this.rewardPoints;
     data['discounted_amount'] = this.discountedAmount;
+    if (this.relatedProducts != null) {
+      data['related_products'] =
+          this.relatedProducts.map((v) => v.toJson()).toList();
+    }
     data['cost_price'] = this.costPrice;
     data['tax'] = this.tax;
     data['vat'] = this.vat;
@@ -180,13 +193,10 @@ class Product {
     data['length'] = this.length;
     data['width'] = this.width;
     data['height'] = this.height;
+    data['offer_quantity'] = this.offerQuantity;
     data['deleted_at'] = this.deletedAt;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
-    if (this.relatedProducts != null) {
-      data['related_products'] =
-          this.relatedProducts.map((v) => v.toJson()).toList();
-    }
     if (this.category != null) {
       data['category'] = this.category.toJson();
     }

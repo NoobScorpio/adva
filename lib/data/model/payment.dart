@@ -3,9 +3,9 @@ class Payment {
   int customerId;
   String cardBrand;
   String nameOnCard;
-  String cardNumber;
+  int cardNumber;
   String expiryDate;
-  String securityCode;
+  int securityCode;
   String createdAt;
   String updatedAt;
 

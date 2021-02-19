@@ -5,9 +5,9 @@ class Cart {
   int productId;
   int orderId;
   int quantity;
-  int price;
-  double total;
-  int subTotal;
+  dynamic price;
+  dynamic total;
+  dynamic subTotal;
   String color;
   String size;
   String createdAt;

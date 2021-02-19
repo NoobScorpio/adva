@@ -54,6 +54,7 @@ class CartRepositoryImpl extends CartRepository {
   @override
   Future<List<CartItem>> getItems() async {
     sharedPreferences = await SharedPreferences.getInstance();
+    // sharedPreferences.setString('cart', null);
     var getCart = sharedPreferences.getString('cart');
 
     if (getCart == null) {

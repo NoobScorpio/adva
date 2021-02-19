@@ -46,8 +46,8 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
 
   int colorValue;
   String pName, image, desc;
-  double discount;
-  int price;
+  dynamic discount;
+  dynamic price;
   String message = '';
   List<Widget> reviews = [];
   List<Widget> reviewsNext = [];
