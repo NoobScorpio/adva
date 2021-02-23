@@ -40,8 +40,8 @@ class CategoryRepositoryImpl implements CategoryRepository {
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data['data']);
-      print("PRICE TYPE ${data["data"][0]['price'].runtimeType} ");
-      print("COST TYPE ${data["data"][0]['cost_price'].runtimeType} ");
+      // print("PRICE TYPE ${data["data"][0]['price'].runtimeType} ");
+      // print("COST TYPE ${data["data"][0]['cost_price'].runtimeType} ");
       List<Product> products =
           ProductResultModel.fromJson(data['data']).products;
 

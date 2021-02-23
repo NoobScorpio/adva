@@ -6,6 +6,7 @@ import 'package:adva/data/model/user.dart';
 import 'package:adva/data/model/wishlist.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/statesUi.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,6 +101,7 @@ class _WishListScreenState extends State<WishListScreen> {
                             ),
                             GestureDetector(
                               onTap: () async {
+                                showToast('Removing', primaryColor);
                                 var sp = await SharedPreferences.getInstance();
                                 var id = User.fromJson(
                                         json.decode(sp.getString('user')))

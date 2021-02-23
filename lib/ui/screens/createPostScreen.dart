@@ -1,13 +1,24 @@
+import 'dart:io';
+
+import 'package:adva/bloc/gallery_bloc/postCubit.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreatePostScreen extends StatefulWidget {
+  final File image;
+  final User user;
+
+  const CreatePostScreen({Key key, this.image, this.user}) : super(key: key);
   @override
   _CreatePostScreenState createState() => _CreatePostScreenState();
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
+  String desc = '';
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -41,19 +52,15 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     height: 30,
                   ),
                   TextField(
-                    maxLines: 5,
+                    maxLines: 3,
                     decoration: InputDecoration(
                       hintText: 'Description',
-                      suffix: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.send,
-                          color: primaryColor,
-                        ),
-                      ),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                     ),
+                    onChanged: (val) {
+                      desc = val;
+                    },
                     // autofillHints: ['Type your comment here'],
                   ),
                   SizedBox(
@@ -61,12 +68,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   ),
                   Container(
                       width: screenWidth,
-                      // height: screenHeight * 0.6,
+                      height: screenHeight * 0.5,
                       child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Image.asset(
-                          'assets/images/post.png',
-                        ),
+                        fit: BoxFit.cover,
+                        child: Image.file(widget.image),
                       )),
                   SizedBox(
                     height: screenHeight * 0.025,
@@ -80,7 +85,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       'Post',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      if (desc != '') {
+                        bool posted = await BlocProvider.of<PostsCubit>(context)
+                            .postMedia(widget.image, desc, widget.user.id);
+                        if (posted) {
+                          showToast('Posted', primaryColor);
+                          Navigator.pop(context);
+                        } else {
+                          showToast('Not Posted', primaryColor);
+                        }
+                      } else
+                        showToast("Description is required", primaryColor);
+                    },
                   )
                 ],
               ),

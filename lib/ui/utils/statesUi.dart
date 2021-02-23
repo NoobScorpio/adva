@@ -13,9 +13,12 @@ Widget buildErrorUi(String message) {
 }
 
 Widget buildLoading() {
-  return Center(
-    child: CircularProgressIndicator(
-      backgroundColor: Colors.red,
+  return Padding(
+    padding: const EdgeInsets.all(25.0),
+    child: Center(
+      child: CircularProgressIndicator(
+        backgroundColor: Colors.red,
+      ),
     ),
   );
 }

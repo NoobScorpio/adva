@@ -1,5 +1,5 @@
 import 'package:adva/bloc/gallery_bloc/galleryState.dart';
-import 'package:adva/bloc/gallery_bloc/getPostsCubit.dart';
+import 'package:adva/bloc/gallery_bloc/postCubit.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/post.dart';
 import 'package:adva/ui/utils/statesUi.dart';
@@ -16,7 +16,7 @@ class _GalleryRecentScreenState extends State<GalleryRecentScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<GetPostsCubit>(context).getPosts('recent');
+    BlocProvider.of<PostsCubit>(context).getPosts('recent');
   }
 
   @override
@@ -28,7 +28,7 @@ class _GalleryRecentScreenState extends State<GalleryRecentScreen> {
           SizedBox(
             height: 20,
           ),
-          BlocBuilder<GetPostsCubit, GalleryState>(builder: (context, state) {
+          BlocBuilder<PostsCubit, GalleryState>(builder: (context, state) {
             if (state is GalleryInitialState) {
               return buildLoading();
             } else if (state is GalleryLoadingState) {
@@ -52,17 +52,7 @@ class _GalleryRecentScreenState extends State<GalleryRecentScreen> {
                       elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Post(
-                            userImage: posts[i].customer.profileImage,
-                            userName: posts[i].customer.firstName +
-                                ' ' +
-                                posts[i].customer.lastName,
-                            date: posts[i].createdAt,
-                            comments: posts[i].comments.length,
-                            commentsList: posts[i].comments,
-                            likes: posts[i].likes.length,
-                            bodyText: posts[i].description,
-                            bodyImage: posts[i].image),
+                        child: Post(post: posts[i]),
                       ),
                     ),
                   ));

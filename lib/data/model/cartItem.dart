@@ -4,20 +4,28 @@ class CartItem extends Equatable {
   int id;
   int pid;
   String pName;
-  double price;
+  dynamic price;
   int color;
+  dynamic vat;
+  String category;
+  int categoryID;
   int qty;
-  int size;
+  int sizeID;
+  String size;
   String image;
   String desc;
   bool wishList;
-  double discount;
+  dynamic discount;
   CartItem(
       {this.id,
       this.pName,
       this.pid,
       this.color,
+      this.category,
+      this.categoryID,
+      this.sizeID,
       this.qty,
+      this.vat,
       this.size,
       this.price,
       this.image,
@@ -26,6 +34,8 @@ class CartItem extends Equatable {
       this.desc});
 
   CartItem.fromJson(Map<String, dynamic> json) {
+    categoryID = json['categoryID'];
+    sizeID = json['sizeID'];
     id = json['id'];
     pid = json['pid'];
     color = json['color'];
@@ -37,10 +47,15 @@ class CartItem extends Equatable {
     desc = json['desc'];
     wishList = json['wishList'];
     discount = json['discount'];
+    vat = json['vat'];
+    category = json['category'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['categoryID'] = this.categoryID;
+    data['sizeID'] = this.sizeID;
+    data['category'] = this.category;
     data['pid'] = this.pid;
     data['color'] = this.color;
     data['qty'] = this.qty;
@@ -52,6 +67,7 @@ class CartItem extends Equatable {
     data['desc'] = this.desc;
     data['wishList'] = this.wishList;
     data['discount'] = this.discount;
+    data['vat'] = this.vat;
     return data;
   }
 
@@ -67,12 +83,16 @@ class CartItem extends Equatable {
           price == other.price &&
           image == other.image &&
           desc == other.desc &&
+          discount == other.discount &&
+          vat == other.vat &&
           wishList == other.wishList &&
           size == other.size;
 
   @override
   int get hashCode =>
       pName.hashCode +
+      discount.hashCode +
+      vat.hashCode +
       pid.hashCode +
       color.hashCode +
       qty.hashCode +

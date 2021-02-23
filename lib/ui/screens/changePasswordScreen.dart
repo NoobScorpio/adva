@@ -118,8 +118,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 30,
+              ),
               Container(
-                height: 45,
+                height: 55,
                 width: double.maxFinite,
                 child: RaisedButton(
                   onPressed: () async {

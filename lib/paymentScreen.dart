@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:adva/bloc/payment_bloc/paymentState.dart';
+import 'package:adva/data/model/checkOut.dart';
 import 'package:adva/data/model/payment.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/addCardScreen.dart';
@@ -16,8 +17,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PaymentScreen extends StatefulWidget {
   final User user;
-
-  const PaymentScreen({Key key, this.user}) : super(key: key);
+  final CheckOutInfo checkout;
+  final dynamic total, subTotal;
+  const PaymentScreen(
+      {Key key, this.user, this.checkout, this.total, this.subTotal})
+      : super(key: key);
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
@@ -54,67 +58,64 @@ class _PaymentScreenState extends State<PaymentScreen> {
               color: Colors.white,
               width: screenWidth,
               height: screenHeight * 0.25,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: screenWidth * 0.03,
-                    vertical: screenHeight * 0.01),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Payment Method',
-                      style: TextStyle(color: cartTextColor),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: screenHeight * 0.03,
-                          bottom: screenHeight * 0.01),
-                      child: Container(
-                        height: screenHeight * 0.07,
-                        decoration:
-                            BoxDecoration(border: Border.all(width: 0.5)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: Row(
-                            children: [
-                              Image.asset('assets/images/visa2.png'),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 15, right: 39),
-                                child: Image.asset(
-                                    'assets/images/mastercard2.png'),
-                              ),
-                              Text('Card Payment'),
-                              SizedBox(
-                                width: screenWidth * 0.18,
-                              ),
-                              Radio(
-                                value: 1,
-                                groupValue: groupValue1,
-                                onChanged: (newValue) =>
-                                    setState(() => groupValue1 = newValue),
-                                activeColor: primaryColor,
-                              )
-                            ],
-                          ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Payment Method',
+                    style: TextStyle(color: cartTextColor),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(border: Border.all(width: 0.5)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text('Card Payment'),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Image.asset('assets/images/visa.png'),
+                                Image.asset('assets/images/mCard.png'),
+                                Image.asset('assets/images/mada.png'),
+                              ],
+                            ),
+                            Radio(
+                              value: 1,
+                              groupValue: groupValue1,
+                              onChanged: (newValue) =>
+                                  setState(() => groupValue1 = newValue),
+                              activeColor: primaryColor,
+                            )
+                          ],
                         ),
                       ),
                     ),
-                    Container(
-                      height: screenHeight * 0.07,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Container(
+                      height: 50,
                       decoration: BoxDecoration(border: Border.all(width: 0.5)),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Image.asset('assets/images/cash.png'),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(left: screenWidth * 0.24),
-                              child: Text('Cash on delivery'),
-                            ),
-                            SizedBox(
-                              width: screenWidth * 0.15,
+                            Row(
+                              children: [
+                                Text('Cash on Delivery'),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Image.asset('assets/images/cash.png'),
+                              ],
                             ),
                             Radio(
                               value: 2,
@@ -127,8 +128,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             //ADD CARD
@@ -175,40 +176,40 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           style: TextStyle(color: cartTextColor, fontSize: 17),
                         ),
                       ),
-                      BlocConsumer(
-                        listener: (context, state) {},
-                        builder: (context, state) {
-                          if (state is PaymentInitialState)
-                            return buildLoading();
-                          if (state is PaymentLoadingState)
-                            return buildLoading();
-                          if (state is PaymentLoadedState) {
-                            if (state.payments != null &&
-                                state.payments.length != 0) {
-                              groupValue2 = state.payments[0].id;
-                              return paymentWidgets(payments: state.payments);
-                            } else
-                              return paymentWidgets(payments: []);
-                          }
-                          if (state is PaymentAddState) {
-                            if (state.payments != null &&
-                                state.payments.length != 0) {
-                              groupValue2 = state.payments[0].id;
-                              return paymentWidgets(payments: state.payments);
-                            } else
-                              return paymentWidgets(payments: []);
-                          }
-                          if (state is PaymentDeleteState) {
-                            if (state.payments != null &&
-                                state.payments.length != 0) {
-                              groupValue2 = state.payments[0].id;
-                              return paymentWidgets(payments: state.payments);
-                            } else
-                              return paymentWidgets(payments: []);
-                          } else
-                            return paymentWidgets(payments: []);
-                        },
-                      )
+                      // BlocConsumer(
+                      //   listener: (context, state) {},
+                      //   builder: (context, state) {
+                      //     if (state is PaymentInitialState)
+                      //       return buildLoading();
+                      //     if (state is PaymentLoadingState)
+                      //       return buildLoading();
+                      //     if (state is PaymentLoadedState) {
+                      //       if (state.payments != null &&
+                      //           state.payments.length != 0) {
+                      //         groupValue2 = state.payments[0].id;
+                      //         return paymentWidgets(payments: state.payments);
+                      //       } else
+                      //         return paymentWidgets(payments: []);
+                      //     }
+                      //     if (state is PaymentAddState) {
+                      //       if (state.payments != null &&
+                      //           state.payments.length != 0) {
+                      //         groupValue2 = state.payments[0].id;
+                      //         return paymentWidgets(payments: state.payments);
+                      //       } else
+                      //         return paymentWidgets(payments: []);
+                      //     }
+                      //     if (state is PaymentDeleteState) {
+                      //       if (state.payments != null &&
+                      //           state.payments.length != 0) {
+                      //         groupValue2 = state.payments[0].id;
+                      //         return paymentWidgets(payments: state.payments);
+                      //       } else
+                      //         return paymentWidgets(payments: []);
+                      //     } else
+                      //       return paymentWidgets(payments: []);
+                      //   },
+                      // )
                     ],
                   ),
                 ),
@@ -271,9 +272,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: Column(
                   children: [
                     PaymentColumn(
-                      subTotal: 999.toString(),
-                      total: 999.toString(),
-                      flatShippingRate: 999.toString(),
+                      subTotal: widget.subTotal.toString(),
+                      total: (widget.total + 10).toString(),
+                      flatShippingRate: 10.toString(),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -294,11 +295,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               borderColor: Colors.transparent,
                               innerColor: primaryColor,
                               onPressed: () {
+                                CheckOutInfo checkOutInfo = widget.checkout;
+                                checkOutInfo.paymentMethod = groupValue1 == 1
+                                    ? "Card Payment"
+                                    : "Cash on delivery";
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            OrderDetailsScreen()));
+                                            OrderDetailsScreen(
+                                                personal: checkOutInfo,
+                                                cart: true,
+                                                total: widget.total,
+                                                subTotal: widget.subTotal,
+                                                user: widget.user)));
                               },
                             ),
                           ),

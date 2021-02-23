@@ -54,13 +54,9 @@ class PaymentColumn extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Total(Inc. Vat)',
-                  style: TextStyle(
-                    fontSize: 15,
-                  )),
+                  style: TextStyle(fontSize: 15, color: primaryColor)),
               Text('SAR. ${total ?? ""}',
-                  style: TextStyle(
-                    fontSize: 15,
-                  )),
+                  style: TextStyle(fontSize: 15, color: primaryColor)),
             ],
           ),
         ),

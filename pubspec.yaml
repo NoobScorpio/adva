@@ -45,6 +45,8 @@ dependencies:
   images_picker: ^0.0.7
   permission_handler: ^5.1.0+2
   shared_preferences: ^0.5.12+4
+  easy_localization:
+  dio: ^3.0.10
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -66,6 +68,7 @@ flutter:
     - assets/bottomNav/
     - assets/socialmedia/
     - assets/icons/
+    - assets/translations/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

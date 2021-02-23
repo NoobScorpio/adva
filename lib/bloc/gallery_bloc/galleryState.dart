@@ -16,9 +16,19 @@ class GalleryLoadingState extends GalleryState {
 }
 
 class GalleryLoadedState extends GalleryState {
-  final List<Post> posts;
+  final List<PostModel> posts;
 
   GalleryLoadedState({this.posts});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [posts];
+}
+
+class GalleryPostLikedState extends GalleryState {
+  final List<PostModel> posts;
+
+  GalleryPostLikedState({this.posts});
 
   @override
   // TODO: implement props

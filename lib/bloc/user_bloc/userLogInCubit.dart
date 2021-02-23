@@ -73,11 +73,12 @@ class UserCubit extends Cubit<UserState> {
     try {
       emit(UserLoadingState());
       bool updated = await userRepository.updateUser(user);
-      emit(UserLoadedState(user: user));
-      if (updated)
-        return false;
-      else
+
+      if (updated) {
+        emit(UserLoadedState(user: user));
         return true;
+      } else
+        return false;
     } on Exception {
       emit(UserErrorState(message: "Could not get user"));
       return false;

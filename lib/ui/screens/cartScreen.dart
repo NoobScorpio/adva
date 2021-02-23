@@ -90,7 +90,7 @@ class _CartScreenState extends State<CartScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                 )),
-                            txt1: Text('SAR. $subTotal',
+                            txt1: Text('SAR. ${state.subTotal}',
                                 style: TextStyle(
                                   fontSize: 18,
                                 ))),
@@ -100,7 +100,7 @@ class _CartScreenState extends State<CartScreen> {
                             txt: Text('Total (Inc VAT)',
                                 style: TextStyle(
                                     fontSize: 18, color: cartTextColor)),
-                            txt1: Text('SAR. ${subTotal + vat}',
+                            txt1: Text('SAR. ${state.total}',
                                 style: TextStyle(
                                     fontSize: 18, color: cartTextColor))),
                       ],
@@ -133,77 +133,48 @@ class _CartScreenState extends State<CartScreen> {
               }
               return emptyCart();
             }),
-            BlocConsumer<CartCubit, CartState>(listener: (context, state) {
-              if (state is CartItemAddedState) {
-                if (state.added != null && state.added.length != 0) {
-                  double sub = 0;
-                  double v = 0.0;
-                  for (var item in state.added) {
-                    sub += item.price * item.qty;
-                    v += item.price * item.qty * 0.1;
+            BlocConsumer<CartCubit, CartState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state is CartLoadedState) {
+                    if (state.cartItems != null &&
+                        state.cartItems.length != 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15),
+                        child: MyButton(
+                          height: screenHeight * 0.08,
+                          width: screenWidth,
+                          borderColor: Colors.transparent,
+                          innerColor: primaryColor,
+                          child: Center(
+                            child: Text('Buy item(s) for SAR ${state.total}',
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.white)),
+                          ),
+                          onPressed: () async {
+                            User user =
+                                await BlocProvider.of<UserCubit>(context)
+                                    .getUser();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CheckoutScreen(user: user)));
+                          },
+                        ),
+                      );
+                    } else {
+                      return Column(
+                        children: [Text('You may also like.')],
+                      );
+                    }
+                  } else {
+                    return Column(
+                      children: [Text('You may also like.')],
+                    );
                   }
-                  setState(() {
-                    subTotal = sub;
-                    vat = v;
-                  });
-                }
-              }
-              if (state is CartItemRemoveState) {
-                if (state.removed != null && state.removed.length != 0) {
-                  double sub = 0;
-                  double v = 0.0;
-                  for (var item in state.removed) {
-                    sub += item.price * item.qty;
-                    v += item.price * item.qty * 0.1;
-                  }
-                  setState(() {
-                    subTotal = sub;
-                    vat = v;
-                  });
-                }
-              }
-            }, builder: (context, state) {
-              if (state is CartLoadedState) {
-                if (state.cartItems != null && state.cartItems.length != 0) {
-                  // for (var item in state.cartItems) {
-                  //   subTotal += item.price * item.qty;
-                  //   vat += item.price * item.qty * 0.1;
-                  // }
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 15.0, right: 15.0, top: 15),
-                    child: MyButton(
-                      height: screenHeight * 0.08,
-                      width: screenWidth,
-                      borderColor: Colors.transparent,
-                      innerColor: primaryColor,
-                      child: Center(
-                        child: Text('Buy item(s) for SAR ${subTotal + vat}',
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white)),
-                      ),
-                      onPressed: () async {
-                        User user =
-                            await BlocProvider.of<UserCubit>(context).getUser();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    CheckoutScreen(user: user)));
-                      },
-                    ),
-                  );
-                } else {
-                  return Column(
-                    children: [Text('You may also like.')],
-                  );
-                }
-              } else {
-                return Column(
-                  children: [Text('You may also like.')],
-                );
-              }
-            }),
+                }),
           ],
         ),
       ),

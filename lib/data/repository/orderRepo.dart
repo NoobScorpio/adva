@@ -2,12 +2,14 @@ import 'dart:convert';
 
 import 'package:adva/data/model/orderDetails.dart';
 import 'package:adva/data/model/orderDetail.dart';
+import 'package:adva/data/model/return.dart';
 import 'package:adva/res/appStrings.dart';
 import 'package:http/http.dart' as http;
 
 abstract class OrderRepository {
   Future<List<OrderDetails>> getOrders(int cid);
   Future<OrderDetail> getOrderDetail(int cid, int oid);
+  Future<List<Return>> getReturns(int cid);
 }
 
 class OrderRepositoryImpl extends OrderRepository {
@@ -47,6 +49,31 @@ class OrderRepositoryImpl extends OrderRepository {
         print(response.body);
         OrderDetail orderDetail = OrderDetail.fromJson(data);
         return orderDetail;
+      } else if (response.statusCode >= 400 && response.statusCode < 500) {
+        print("${response.statusCode}" + ": " + "${response.body}");
+        return null;
+      } else if (response.statusCode == 500) {
+        print("${response.statusCode}" + ": " + "${response.body}");
+        return null;
+      } else {
+        print("${response.statusCode}" + ": " + "${response.body}");
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  @override
+  Future<List<Return>> getReturns(int cid) async {
+    try {
+      var response = await http.get(baseURL + "/returned/orders/$cid");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // print("OrderDetails  ${response.statusCode}");
+        var data = json.decode(response.body);
+        List<Return> returns = ReturnResultModel.fromJson(data).returns;
+        return returns;
       } else if (response.statusCode >= 400 && response.statusCode < 500) {
         print("${response.statusCode}" + ": " + "${response.body}");
         return null;

@@ -1,7 +1,13 @@
+import 'package:adva/bloc/cart_bloc/cartCubit.dart';
+import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/bloc/order_bloc/orderCubit.dart';
 import 'package:adva/bloc/order_bloc/orderState.dart';
 import 'package:adva/data/model/cart.dart';
+import 'package:adva/data/model/cartItem.dart';
+import 'package:adva/data/model/checkOut.dart';
 import 'package:adva/data/model/orderDetail.dart';
+import 'package:adva/data/model/user.dart';
+import 'package:adva/ui/screens/orderReturnScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
@@ -12,8 +18,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final int oid, cid;
-
-  const OrderDetailsScreen({Key key, this.oid, this.cid}) : super(key: key);
+  final bool cart;
+  final User user;
+  final CheckOutInfo personal;
+  final dynamic total, subTotal;
+  const OrderDetailsScreen(
+      {Key key,
+      this.oid,
+      this.cid,
+      this.cart,
+      this.user,
+      this.personal,
+      this.total,
+      this.subTotal})
+      : super(key: key);
   @override
   _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
 }
@@ -23,8 +41,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<OrderCubit>(context)
-        .getOrderDetails(widget.cid, widget.oid);
+    if (!(widget.cart))
+      BlocProvider.of<OrderCubit>(context)
+          .getOrderDetails(widget.cid, widget.oid);
   }
 
   @override
@@ -55,196 +74,168 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: ListView(children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Summary',
-                  style: TextStyle(color: primaryColor),
-                ),
-              ),
-              //ORDER DETAILS
-              Container(
-                  width: screenWidth,
-                  child: BlocBuilder<OrderCubit, OrderState>(
-                    builder: (context, state) {
-                      if (state is OrderInitialState)
-                        return buildLoading();
-                      else if (state is OrderLoadingState)
-                        return buildLoading();
-                      else if (state is OrderLoadedState) {
-                        return buildLoading();
-                      } else if (state is OrderDetailsLoadedState) {
-                        if (state.orderDetail != null) {
-                          print(
-                              "INSIDE ORDER DETAIL ${state.orderDetail.cart.length}");
-                          return getOrderSummary(
-                              orderDetail: state.orderDetail);
-                        } else
-                          return buildLoading();
-                      } else if (state is OrderErrorState)
-                        return buildErrorUi("No items in this order");
-                      else
-                        return buildErrorUi("No items in this order");
-                    },
-                  )),
-
-              //PERSONAL INFORMATION
-              Container(
-                width: screenWidth,
-                // height: screenHeight * 0.2,
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Personal Information',
-                          style: TextStyle(color: primaryColor),
-                        ),
-                        SizedBox(
-                          height: screenHeight * 0.01,
-                        ),
-                        Text('Full Name'),
-                        Text(
-                          'Demo User Name',
-                          style: TextStyle(color: cartTextColor),
-                        ),
-                        SizedBox(
-                          height: screenHeight * 0.02,
-                        ),
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('E-mail address'),
-                                Text(
-                                  'Demo email address',
-                                  style: TextStyle(color: cartTextColor),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: screenWidth * 0.3,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Phone No.'),
-                                Text(
-                                  '0992406725',
-                                  style: TextStyle(color: cartTextColor),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: ListView(children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Summary',
+                        style: TextStyle(color: primaryColor),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              //SHIPPING PAYMENT
-              Container(
-                width: screenWidth,
-                // height: screenHeight * 0.27,
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Shipping',
-                          style: TextStyle(color: primaryColor),
-                        ),
-                        SizedBox(
-                          height: screenHeight * 0.02,
-                        ),
-                        Text('Address'),
-                        Text(
-                          'Demo address, Location, City, Postal Code',
-                          style: TextStyle(color: cartTextColor),
-                        ),
-                        SizedBox(
-                          height: screenHeight * 0.03,
-                        ),
-                        Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Country'),
-                                Text(
-                                  'Saudia Arabia',
-                                  style: TextStyle(color: cartTextColor),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: screenWidth * 0.3,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('City'),
-                                Text(
-                                  'Riyadh',
-                                  style: TextStyle(color: cartTextColor),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: screenHeight * 0.02,
-                        ),
-                        Text('Postal Code'),
-                        Text(
-                          '02215',
-                          style: TextStyle(color: cartTextColor),
-                        ),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        Text(
-                          'Payment',
-                          style: TextStyle(color: primaryColor),
-                        ),
-                        SizedBox(
-                          height: screenHeight * 0.02,
-                        ),
-                        Text('Payment method'),
-                        Text(
-                          'Cash on Delivery',
-                          style: TextStyle(color: cartTextColor),
-                        ),
-                      ],
+                    //ORDER DETAILS
+                    if (!(widget.cart))
+                      Container(
+                          width: screenWidth,
+                          child: BlocBuilder<OrderCubit, OrderState>(
+                            builder: (context, state) {
+                              if (state is OrderInitialState)
+                                return buildLoading();
+                              else if (state is OrderLoadingState)
+                                return buildLoading();
+                              else if (state is OrderLoadedState) {
+                                return buildLoading();
+                              } else if (state is OrderDetailsLoadedState) {
+                                if (state.orderDetail != null) {
+                                  print(
+                                      "INSIDE ORDER DETAIL ${state.orderDetail.cart.length}");
+                                  return getOrderSummary(
+                                      orderDetail: state.orderDetail);
+                                } else
+                                  return buildLoading();
+                              } else if (state is OrderErrorState)
+                                return buildErrorUi("No items in this order");
+                              else
+                                return buildErrorUi("No items in this order");
+                            },
+                          )),
+                    if (widget.cart)
+                      Container(
+                          width: screenWidth,
+                          child: BlocBuilder<CartCubit, CartState>(
+                            builder: (context, state) {
+                              if (state is CartInitialState)
+                                return buildLoading();
+                              else if (state is CartLoadingState)
+                                return buildLoading();
+                              else if (state is CartLoadedState) {
+                                if (state.cartItems != null &&
+                                    state.cartItems.length > 0) {
+                                  return getCartSummary(
+                                      cartItems: state.cartItems);
+                                } else
+                                  return buildLoading();
+                              } else if (state is CartErrorState)
+                                return buildErrorUi("No items in this order");
+                              else
+                                return buildErrorUi("No items in this order");
+                            },
+                          )),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Personal Information',
+                        style: TextStyle(color: primaryColor),
+                      ),
                     ),
-                  ),
+                    //PERSONAL INFORMATION
+                    if (!(widget.cart))
+                      BlocBuilder<OrderCubit, OrderState>(
+                        builder: (context, state) {
+                          if (state is OrderInitialState)
+                            return buildLoading();
+                          else if (state is OrderLoadingState)
+                            return buildLoading();
+                          else if (state is OrderLoadedState) {
+                            return buildLoading();
+                          } else if (state is OrderDetailsLoadedState) {
+                            if (state.orderDetail != null) {
+                              // print(
+                              //     "INSIDE ORDER DETAIL ${state.orderDetail.cart.length}");
+                              return getPersonalInfo(
+                                  orderDetail: state.orderDetail);
+                            } else
+                              return buildLoading();
+                          } else if (state is OrderErrorState)
+                            return buildErrorUi("No personal info available");
+                          else
+                            return buildErrorUi("No personal info available");
+                        },
+                      ),
+                    if (widget.cart) getPersonalCartInfo(),
+                    //SHIPPING PAYMENT
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Shipping',
+                        style: TextStyle(color: primaryColor),
+                      ),
+                    ),
+                    if (!(widget.cart))
+                      BlocBuilder<OrderCubit, OrderState>(
+                        builder: (context, state) {
+                          if (state is OrderInitialState)
+                            return buildLoading();
+                          else if (state is OrderLoadingState)
+                            return buildLoading();
+                          else if (state is OrderLoadedState) {
+                            return buildLoading();
+                          } else if (state is OrderDetailsLoadedState) {
+                            if (state.orderDetail != null) {
+                              // print(
+                              //     "INSIDE ORDER DETAIL ${state.orderDetail.cart.length}");
+                              return getShippingAndRate(
+                                  orderDetail: state.orderDetail);
+                            } else
+                              return buildLoading();
+                          } else if (state is OrderErrorState)
+                            return buildErrorUi(
+                                "No shipping & pricing info available");
+                          else
+                            return buildErrorUi(
+                                "No shipping & pricing info available");
+                        },
+                      ),
+                    if (widget.cart)
+                      BlocBuilder<CartCubit, CartState>(
+                        builder: (context, state) {
+                          if (state is CartInitialState)
+                            return buildLoading();
+                          else if (state is CartLoadingState)
+                            return buildLoading();
+                          else if (state is CartLoadedState) {
+                            if (state.cartItems != null) {
+                              return getCartShippingAndRate();
+                            } else
+                              return buildLoading();
+                          } else if (state is CartErrorState)
+                            return buildErrorUi(
+                                "No shipping & pricing info available");
+                          else
+                            return buildErrorUi(
+                                "No shipping & pricing info available");
+                        },
+                      ),
+                  ],
                 ),
-              ),
-              //RATES
+              ]),
+            ),
+            //BUTTON
+            if (widget.cart)
               Container(
-                // height: 200,
-                width: screenWidth,
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 10),
                     child: Column(
                       children: [
-                        PaymentColumn(),
-                        SizedBox(
-                          height: screenHeight * 0.02,
-                        ),
                         MyButton(
                           width: double.maxFinite,
                           height: 60,
@@ -267,7 +258,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                         width: screenWidth,
                                         child: Column(
                                           children: [
-                                            DialogText(text: 'Success'),
+                                            Center(
+                                              child: Text('Success'),
+                                            ),
                                             Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -287,9 +280,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                                 ),
                                               ),
                                             ),
-                                            DialogText(
-                                                text:
-                                                    'Your order is on your way'),
+                                            Text('Your order is on your way'),
                                             SizedBox(
                                                 height: screenHeight * 0.04),
                                             MyButton(
@@ -319,11 +310,74 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
-        ]),
+              ),
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget getCartSummary({List<CartItem> cartItems}) {
+    if (cartItems != null && cartItems.length > 0) {
+      List<Widget> widgets = [];
+      for (CartItem cart in cartItems) {
+        widgets.add(Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: 60,
+              width: 70,
+              child: Card(
+                color: Color(0xFFE6E6E6),
+                elevation: 5,
+                child: cart.image != null
+                    ? FittedBox(
+                        fit: BoxFit.cover, child: Image.network(cart.image))
+                    : Center(
+                        child: Icon(
+                        Icons.photo_library_outlined,
+                        color: Colors.grey,
+                      )),
+              ),
+            ),
+            SizedBox(
+              width: 15,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${cart.pName ?? ""}'),
+                  Text(
+                      '${cart != null ? cart.category : "No Category"} / ${cart.size == "" || cart.size == null ? "No Size" : cart.size}',
+                      style: TextStyle(
+                        color: cartTextColor,
+                      ))
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('Sar ${cart.price ?? 0.0}',
+                    style: TextStyle(
+                      color: cartTextColor,
+                    )),
+                Text('Quantity: ${cart.qty ?? 1}',
+                    style: TextStyle(
+                      color: cartTextColor,
+                    ))
+              ],
+            ),
+          ],
+        ));
+      }
+      return Column(
+          crossAxisAlignment: CrossAxisAlignment.start, children: widgets);
+    }
+
+    return Center(
+      child: Text("No item in this order"),
     );
   }
 
@@ -392,38 +446,358 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       child: Text("No item in this order"),
     );
   }
-}
 
-class DialogText extends StatelessWidget {
-  const DialogText({
-    Key key,
-    this.text,
-  }) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(color: Colors.white, fontSize: 15),
+  Widget getPersonalInfo({OrderDetail orderDetail}) {
+    if (orderDetail != null) {
+      return Container(
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Text('Full Name'),
+                Text(
+                  '${orderDetail.firstName ?? "Unknown"} ${orderDetail.lastName ?? ""}',
+                  style: TextStyle(color: cartTextColor),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('E-mail address'),
+                        Text(
+                          '${orderDetail.email ?? "no email"}',
+                          style: TextStyle(color: cartTextColor),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Phone No.'),
+                        Text(
+                          '${orderDetail.phone ?? "no phone"}',
+                          style: TextStyle(color: cartTextColor),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    return Center(
+      child: Text("No personal information available"),
     );
   }
-}
 
-class GeneralText extends StatelessWidget {
-  const GeneralText({
-    Key key,
-    this.txt,
-  }) : super(key: key);
+  Widget getPersonalCartInfo() {
+    if (widget.personal != null) {
+      return Container(
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Text('Full Name'),
+                Text(
+                  '${widget.personal.name ?? ""}',
+                  style: TextStyle(color: cartTextColor),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('E-mail address'),
+                        Text(
+                          '${widget.personal.email ?? "no email"}',
+                          style: TextStyle(color: cartTextColor),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Phone No.'),
+                        Text(
+                          '${widget.personal.phone ?? "no phone"}',
+                          style: TextStyle(color: cartTextColor),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+    return Center(
+      child: Text("No personal information available"),
+    );
+  }
 
-  final String txt;
+  Widget getShippingAndRate({OrderDetail orderDetail}) {
+    if (orderDetail != null) {
+      dynamic subTotal;
+      dynamic total;
+      if (orderDetail.cart.length > 0) {
+        subTotal = 0.0;
+        total = 0.0;
+        for (Cart cart in orderDetail.cart) {
+          subTotal += cart.subTotal;
+          total += cart.total;
+        }
+      }
 
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      txt,
-      style: TextStyle(color: primaryColor),
+      return Container(
+        child: Column(
+          children: [
+            Card(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Address'),
+                    Text(
+                      '${orderDetail.address ?? "No address"}',
+                      style: TextStyle(color: cartTextColor),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Country'),
+                            Text(
+                              '${orderDetail.country ?? "No country"}',
+                              style: TextStyle(color: cartTextColor),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('City'),
+                            Text(
+                              '${orderDetail.city ?? "No city"}',
+                              style: TextStyle(color: cartTextColor),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Postal Code'),
+                    Text(
+                      '${orderDetail.postalCode ?? "No postal code"}',
+                      style: TextStyle(color: cartTextColor),
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Payment',
+                style: TextStyle(color: primaryColor),
+              ),
+            ),
+            Card(
+                child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text('Payment method'),
+                  Text(
+                    '${orderDetail.paymentMethod ?? "No selected"}',
+                    style: TextStyle(color: cartTextColor),
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  PaymentColumn(
+                    total: total != null
+                        ? total.toString()
+                        : orderDetail.total.toString(),
+                    flatShippingRate: '10',
+                    subTotal: subTotal != null
+                        ? subTotal.toString()
+                        : orderDetail.total.toString(),
+                  )
+                ],
+              ),
+            )),
+            if (orderDetail.cart.length > 0)
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => OrderReturnScreen(
+                                user: widget.user,
+                                orderDetail: orderDetail,
+                              )));
+                },
+                child: Center(
+                  child: Text(
+                    'Return Order',
+                    style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 18,
+                        decoration: TextDecoration.underline),
+                  ),
+                ),
+              )
+          ],
+        ),
+      );
+    }
+    return Center(
+      child: Text("No shipping & pricing information available"),
+    );
+  }
+
+  Widget getCartShippingAndRate() {
+    if (widget.personal != null) {
+      return Container(
+        child: Column(
+          children: [
+            Card(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Address'),
+                    Text(
+                      '${widget.personal.address ?? "No address"}',
+                      style: TextStyle(color: cartTextColor),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Country'),
+                            Text(
+                              '${widget.personal.country ?? "No country"}',
+                              style: TextStyle(color: cartTextColor),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 40,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('City'),
+                            Text(
+                              '${widget.personal.city ?? "No city"}',
+                              style: TextStyle(color: cartTextColor),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Postal Code'),
+                    Text(
+                      '${widget.personal.postal ?? "No postal code"}',
+                      style: TextStyle(color: cartTextColor),
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Payment',
+                        style: TextStyle(color: primaryColor),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text('Payment method'),
+                    Text(
+                      '${widget.personal.paymentMethod ?? "No selected"}',
+                      style: TextStyle(color: cartTextColor),
+                    ),
+                    Divider(
+                      color: Colors.grey,
+                    ),
+                    PaymentColumn(
+                      total: (widget.total + 10).toString(),
+                      flatShippingRate: '10',
+                      subTotal: widget.subTotal.toString(),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Center(
+      child: Text("No shipping & pricing information available"),
     );
   }
 }

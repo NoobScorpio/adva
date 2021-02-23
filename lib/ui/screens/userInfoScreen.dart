@@ -154,13 +154,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                       User user = widget.user;
                       user.firstName = fName.text;
                       user.lastName = lName.text;
+                      print("${user.id} ${user.firstName} ${user.lastName}");
+                      print("${user.profileImage} ${user.email} ${user.name}");
+                      print("${user.phone} ${user.points} ");
                       bool updated = await BlocProvider.of<UserCubit>(context)
                           .updateInfo(user);
                       if (updated) {
-                        showToast("Password updated", primaryColor);
+                        showToast("Info updated", primaryColor);
                         Navigator.pop(context, true);
                       } else {
-                        showToast("Password not updated", primaryColor);
+                        showToast("Info not updated", primaryColor);
                       }
                     } else {
                       showToast('Please fill all fields', primaryColor);

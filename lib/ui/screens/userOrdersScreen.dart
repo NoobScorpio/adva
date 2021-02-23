@@ -147,7 +147,10 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (_) => OrderDetailsScreen(
-                        cid: widget.user.id, oid: order.id)));
+                        user: widget.user,
+                        cid: widget.user.id,
+                        oid: order.id,
+                        cart: false)));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -210,21 +213,14 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
         children: widgets,
       );
     } else {
-      return Column(
-        children: [
-          Icon(
-            Icons.account_balance_wallet_outlined,
-            size: 150,
-            color: primaryColor.withOpacity(0.1),
-          ),
-          SizedBox(
-            height: 25,
-          ),
-          Text(
-            'You don\'t have any Adva points',
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Text(
+            'You don\'t have any Orders',
             style: TextStyle(color: Colors.grey),
           ),
-        ],
+        ),
       );
     }
   }

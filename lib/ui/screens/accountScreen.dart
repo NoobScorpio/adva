@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:adva/bloc/address_bloc/addressCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/bloc/user_bloc/userState.dart';
+import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/addressScreen.dart';
 import 'package:adva/ui/screens/advaPointsScreen.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AccountScreen extends StatefulWidget {
   @override
@@ -34,6 +36,7 @@ class _AccountScreenState extends State<AccountScreen> {
     BlocProvider.of<UserCubit>(context).getUser();
   }
 
+  bool english = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,7 +205,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               color: Colors.white,
                             ),
                           ),
-                          Text('Orders'),
+                          Text('Orders').tr(),
                         ],
                       ),
                     ),
@@ -215,7 +218,9 @@ class _AccountScreenState extends State<AccountScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => UserReturnsScreen()));
+                                builder: (context) => UserReturnsScreen(
+                                      user: user,
+                                    )));
                       },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -228,7 +233,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               color: Colors.white,
                             ),
                           ),
-                          Text('Returns'),
+                          Text('Returns').tr(),
                         ],
                       ),
                     ),
@@ -255,7 +260,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               color: Colors.white,
                             ),
                           ),
-                          Text('Adva points'),
+                          Text('ADVA points').tr(),
                         ],
                       ),
                     ),
@@ -269,10 +274,13 @@ class _AccountScreenState extends State<AccountScreen> {
             child: Text(
               'My Account',
               style: boldTextStyle,
-            ),
+            ).tr(),
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
+              SharedPreferences sp = await SharedPreferences.getInstance();
+              User user = User.fromJson(json.decode(sp.getString('user')));
+              BlocProvider.of<WishCubit>(context).getWishLists(user.id);
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => WishListScreen()));
             },
@@ -282,7 +290,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Icons.favorite,
                 color: secondaryColor,
               ),
-              title: Text('Wish list'),
+              title: Text('Wish list').tr(),
             ),
           ),
           Divider(
@@ -304,7 +312,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Icons.location_pin,
                 color: secondaryColor,
               ),
-              title: Text('Addresses'),
+              title: Text('Addresses').tr(),
             ),
           ),
           Divider(
@@ -321,7 +329,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Icons.credit_card,
                 color: secondaryColor,
               ),
-              title: Text('Payment'),
+              title: Text('Payment').tr(),
             ),
           ),
           Divider(
@@ -338,7 +346,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Icons.fact_check_outlined,
                 color: secondaryColor,
               ),
-              title: Text('Claims'),
+              title: Text('Claims').tr(),
             ),
           ),
           Divider(
@@ -359,7 +367,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Icons.person_pin,
                 color: secondaryColor,
               ),
-              title: Text('Profile'),
+              title: Text('Profile').tr(),
             ),
           ),
           Padding(
@@ -367,11 +375,22 @@ class _AccountScreenState extends State<AccountScreen> {
             child: Text(
               'Settings',
               style: boldTextStyle,
-            ),
+            ).tr(),
           ),
           GestureDetector(
             onTap: () {
-              languageBottomSheet(context);
+              // languageBottomSheet(context);
+              if (english) {
+                context.locale = Locale('ar', 'AE');
+                setState(() {
+                  english = false;
+                });
+              } else {
+                context.locale = Locale('en', '');
+                setState(() {
+                  english = true;
+                });
+              }
             },
             child: ListTile(
               tileColor: Colors.white,
@@ -379,9 +398,9 @@ class _AccountScreenState extends State<AccountScreen> {
                 Icons.flag,
                 color: secondaryColor,
               ),
-              title: Text('Language'),
+              title: Text('Language').tr(),
               trailing: Text(
-                'English',
+                english ? 'English' : "Arabic",
                 style: boldTextStyle,
               ),
             ),
@@ -400,7 +419,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Icons.settings_outlined,
                 color: secondaryColor,
               ),
-              title: Text('Preferences'),
+              title: Text('Preferences').tr(),
             ),
           ),
           Padding(
@@ -408,7 +427,7 @@ class _AccountScreenState extends State<AccountScreen> {
             child: Text(
               'Reach Us',
               style: boldTextStyle,
-            ),
+            ).tr(),
           ),
           GestureDetector(
             onTap: () async {
@@ -425,7 +444,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 Icons.help_outline,
                 color: secondaryColor,
               ),
-              title: Text('Help'),
+              title: Text('Help').tr(),
             ),
           ),
           GestureDetector(
@@ -449,7 +468,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text('Sign Out'),
+                    child: Text('Sign Out').tr(),
                   )
                 ],
               ),
@@ -506,14 +525,14 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Text(
                   'Privacy policy',
                   style: TextStyle(fontSize: 12),
-                ),
+                ).tr(),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   'Terms & conditions',
                   style: TextStyle(fontSize: 12),
-                ),
+                ).tr(),
               )
             ],
           ),
@@ -528,7 +547,7 @@ class _AccountScreenState extends State<AccountScreen> {
                     child: Text(
                       'Copyrights',
                       style: TextStyle(fontSize: 12),
-                    ),
+                    ).tr(),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -554,9 +573,9 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  void languageBottomSheet(context) {
+  void languageBottomSheet(con) {
     showModalBottomSheet(
-        context: context,
+        context: con,
         builder: (BuildContext bc) {
           return Container(
             child: Wrap(
@@ -566,7 +585,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   child: Text(
                     'Language',
                     style: boldTextStyle,
-                  ),
+                  ).tr(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(25.0),
@@ -575,21 +594,37 @@ class _AccountScreenState extends State<AccountScreen> {
                       Divider(
                         color: Colors.grey,
                       ),
-                      ListTile(
-                        title: Text('English'),
-                        trailing: Icon(
-                          Icons.check_circle,
-                          color: primaryColor,
+                      GestureDetector(
+                        onTap: () {
+                          con.locale = Locale('en', '');
+                          // setState(() {
+                          //   english = true;
+                          // });
+                        },
+                        child: ListTile(
+                          title: Text('English'),
+                          trailing: Icon(
+                            Icons.check_circle,
+                            color: primaryColor,
+                          ),
                         ),
                       ),
                       Divider(
                         color: Colors.grey,
                       ),
-                      ListTile(
-                        title: Text('Arabic'),
-                        trailing: Icon(
-                          Icons.circle,
-                          color: Colors.grey,
+                      GestureDetector(
+                        onTap: () {
+                          con.locale = Locale('ar', '');
+                          // setState(() {
+                          //   english = false;
+                          // });
+                        },
+                        child: ListTile(
+                          title: Text('Arabic'),
+                          trailing: Icon(
+                            Icons.circle,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ],

@@ -7,14 +7,16 @@ class PostQuestionCubit extends Cubit<ProductState> {
 
   PostQuestionCubit({this.productRepository}) : super(ProductInitialState());
 
-  Future<void> postQuestion(int pid, String qas, int cid) async {
+  Future<bool> postQuestion(int pid, String qas, int cid) async {
     try {
       emit(ProductLoadingState());
       final posted = await productRepository.addQuestion(
           pid: pid, question: qas, cid: cid);
       emit(ProductPostQuestionState(posted: posted));
+      return posted;
     } on Exception {
       emit(ProductErrorState());
+      return false;
     }
   }
 

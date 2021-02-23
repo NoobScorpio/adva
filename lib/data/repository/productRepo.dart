@@ -39,14 +39,14 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<Product> getProductByID(int pid) async {
     try {
-      print('FETCH EVENT CALEED');
+      // print('FETCH EVENT CALEED');
       var response = await http.get(baseURL + "/product/$pid");
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = json.decode(response.body);
-        print(data);
+        // print(data);
         Product product = Product.fromJson(data);
         // print(data);
-        print(product);
+        // print(product);
         return product;
       } else if (response.statusCode == 400) {
         throw UnimplementedError('This data does not exist.');

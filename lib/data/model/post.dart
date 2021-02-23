@@ -2,7 +2,7 @@ import 'package:adva/data/model/comment.dart';
 import 'package:adva/data/model/customer.dart';
 import 'package:adva/data/model/like.dart';
 
-class Post {
+class PostModel {
   int id;
   int customerId;
   String description;
@@ -15,7 +15,7 @@ class Post {
   List<Comments> comments;
   List<Likes> likes;
 
-  Post(
+  PostModel(
       {this.id,
       this.customerId,
       this.description,
@@ -28,7 +28,7 @@ class Post {
       this.comments,
       this.likes});
 
-  Post.fromJson(Map<String, dynamic> json) {
+  PostModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     customerId = json['customer_id'];
     description = json['description'];
@@ -78,15 +78,15 @@ class Post {
 }
 
 class PostResultModel {
-  List<Post> posts;
+  List<PostModel> posts;
 
   PostResultModel({this.posts});
 
   PostResultModel.fromJson(List<dynamic> json) {
     if (json != null) {
-      posts = List<Post>();
+      posts = List<PostModel>();
       json.forEach((v) {
-        posts.add(new Post.fromJson(v));
+        posts.add(new PostModel.fromJson(v));
       });
     }
   }

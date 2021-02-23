@@ -8,7 +8,7 @@ import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/category_bloc/getCategoryCubit.dart';
 import 'package:adva/bloc/category_bloc/getCategoryProductsCubit.dart';
 import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
-import 'package:adva/bloc/gallery_bloc/getPostsCubit.dart';
+import 'package:adva/bloc/gallery_bloc/postCubit.dart';
 import 'package:adva/bloc/offer_bloc/getOffersCubit.dart';
 import 'package:adva/bloc/order_bloc/orderCubit.dart';
 import 'package:adva/bloc/points_bloc/pointsCubit.dart';
@@ -17,6 +17,7 @@ import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/product_bloc/getSortProductCubit.dart';
 import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
 import 'package:adva/bloc/product_bloc/postReviewCubit.dart';
+import 'package:adva/bloc/returnCubit.dart';
 import 'package:adva/bloc/seller_bloc/getSellerCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
@@ -39,13 +40,17 @@ import 'package:adva/data/repository/wishRepo.dart';
 import 'package:adva/ui/screens/bottomNavBar.dart';
 import 'package:adva/ui/screens/splashScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(EasyLocalization(
+      child: MyApp(),
+      supportedLocales: [const Locale('en', ''), const Locale('ar', 'AE')],
+      path: "assets/translations"));
 }
 
 class MyApp extends StatefulWidget {
@@ -86,6 +91,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<GetAdsCubit>(
             create: (context) =>
                 GetAdsCubit(adsRepository: AdsRepositoryImpl())),
+        BlocProvider<ReturnCubit>(
+            create: (context) =>
+                ReturnCubit(orderRepository: OrderRepositoryImpl())),
         BlocProvider<GetOfferCubit>(
             create: (context) =>
                 GetOfferCubit(offerRepository: OfferRepositoryImpl())),
@@ -125,9 +133,9 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<GetSortProductCubit>(
             create: (context) => GetSortProductCubit(
                 productRepository: ProductRepositoryImpl())),
-        BlocProvider<GetPostsCubit>(
+        BlocProvider<PostsCubit>(
             create: (context) =>
-                GetPostsCubit(galleryRepository: GalleryRepositoryImpl())),
+                PostsCubit(galleryRepository: GalleryRepositoryImpl())),
         BlocProvider<UserCubit>(
             create: (context) => UserCubit(
                 initial: user == null ? false : true,

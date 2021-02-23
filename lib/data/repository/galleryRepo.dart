@@ -1,21 +1,26 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:adva/data/model/post.dart';
 import 'package:adva/res/appStrings.dart';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 abstract class GalleryRepository {
-  Future<List<Post>> getPosts({String filter});
+  Future<List<PostModel>> getPosts({String filter});
+  Future<List<PostModel>> postMedia({File image, String desc, int cid});
+  Future<List<PostModel>> postLike({int pid, int cid});
+  Future<bool> postComment({int pid, int cid, String comment});
 }
 
 class GalleryRepositoryImpl implements GalleryRepository {
   @override
-  Future<List<Post>> getPosts({String filter}) async {
+  Future<List<PostModel>> getPosts({String filter}) async {
     var response = await http.get(baseURL + "/posts?filter=$filter");
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
-        List<Post> posts = PostResultModel.fromJson(data).posts;
+        List<PostModel> posts = PostResultModel.fromJson(data).posts;
         return posts;
       } catch (e) {
         // print(e);
@@ -27,6 +32,106 @@ class GalleryRepositoryImpl implements GalleryRepository {
       throw UnimplementedError('Internal server error.');
     } else {
       throw UnimplementedError('Something went wrong');
+    }
+  }
+
+  @override
+  Future<List<PostModel>> postMedia({File image, String desc, int cid}) async {
+    try {
+      // var uri = baseURL;
+      // BaseOptions opts = BaseOptions(
+      //   baseUrl: uri,
+      //   responseType: ResponseType.plain,
+      //   connectTimeout: 30000,
+      //   receiveTimeout: 30000,
+      // );
+      // Dio dio = Dio(opts);
+      // Options options = Options(
+      //   contentType: "application/json", // only for json type api
+      // );
+      // Response response = await dio.post("/media/create/post",
+      //     data: FormData.fromMap({
+      //       "customer_id": "$cid",
+      //       "description": "$desc",
+      //       "image":
+      //
+      //     }),
+      //     options: options);
+      // List<int> imageBytes = image.readAsBytesSync();
+      var base64Image = base64Encode(image.readAsBytesSync());
+      var response = await http.post(baseURL + "/media/create/post", body: {
+        "customer_id": "$cid",
+        "description": "$desc",
+        "image": image.readAsBytesSync().toString()
+      });
+      print("${response.body} ");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // print("${response.statusMessage} ${response.data}");
+        print("${response.body} ");
+        var data = json.decode(response.body);
+        List<PostModel> posts = PostResultModel.fromJson(data).posts;
+        return posts;
+      } else if (response.statusCode == 400) {
+        // print("${response.statusMessage} ${response.data}");
+        // print(response.statusMessage);
+        print("${response.body} ");
+        return null;
+      } else if (response.statusCode == 500) {
+        // print("${response.statusMessage} ${response.data}");
+        print("${response.body} ");
+        return null;
+      } else {
+        // print(response.statusMessage);
+        print("${response.body} ");
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  @override
+  Future<List<PostModel>> postLike({int pid, int cid}) async {
+    var response = await http.post(baseURL + "/customer/like/$pid",
+        body: {"customer_id": cid.toString()});
+    print("GALLERY RESPONSE: ${response.body}");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      try {
+        var data = json.decode(response.body);
+        List<PostModel> posts = PostResultModel.fromJson(data).posts;
+        return posts;
+      } catch (e) {
+        // print(e);
+        return [];
+      }
+    } else if (response.statusCode == 400) {
+      throw UnimplementedError('This data does not exist.');
+    } else if (response.statusCode == 500) {
+      throw UnimplementedError('Internal server error.');
+    } else {
+      throw UnimplementedError('Something went wrong');
+    }
+  }
+
+  @override
+  Future<bool> postComment({int pid, int cid, String comment}) async {
+    var response = await http.post(baseURL + "/media/comment/$pid",
+        body: {"customer_id": cid.toString(), "comment": comment});
+    print("GALLERY RESPONSE: ${response.body}");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      try {
+        return true;
+      } catch (e) {
+        print(e);
+        return false;
+      }
+    } else if (response.statusCode == 400) {
+      return false;
+    } else if (response.statusCode == 500) {
+      return false;
+    } else {
+      return false;
     }
   }
 }

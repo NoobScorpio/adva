@@ -10,10 +10,19 @@ class CartCubit extends Cubit<CartState> {
 
   Future<bool> addItem(CartItem cartItem) async {
     try {
+      dynamic sub = 0.0, total = 0.0, vat = 0.0, discount = 0.0;
       List<CartItem> added = await cartRepository.addItem(cartItem);
-      emit(CartItemAddedState(added: added));
-      List<CartItem> cartItems = await cartRepository.getItems();
-      emit(CartLoadedState(cartItems: cartItems));
+      if (added.length > 0) {
+        for (CartItem cartItem in added) {
+          sub += (cartItem.price ?? 0.0) * (cartItem.qty ?? 0);
+          vat += cartItem.vat ?? 0.0;
+          discount +=
+              (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
+        }
+        total = sub + vat - discount;
+      }
+      emit(CartItemAddedState(added: added, total: total, subTotal: sub));
+      emit(CartLoadedState(cartItems: added, total: total, subTotal: sub));
       return added == null || added.length == 0 ? false : true;
     } on Exception {
       emit(CartErrorState(message: "Could not add item"));
@@ -23,11 +32,20 @@ class CartCubit extends Cubit<CartState> {
 
   Future<bool> removeItem(CartItem cartItem, bool remove) async {
     try {
+      dynamic sub = 0.0, total = 0.0, vat = 0.0, discount = 0.0;
       List<CartItem> removed =
           await cartRepository.removeItem(cartItem, remove);
-      emit(CartItemRemoveState(removed: removed));
-      List<CartItem> cartItems = await cartRepository.getItems();
-      emit(CartLoadedState(cartItems: cartItems));
+      if (removed.length > 0) {
+        for (CartItem cartItem in removed) {
+          sub += (cartItem.price ?? 0.0) * (cartItem.qty ?? 0);
+          vat += cartItem.vat ?? 0.0;
+          discount +=
+              (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
+        }
+        total = sub + vat - discount;
+      }
+      emit(CartItemRemoveState(removed: removed, total: total, subTotal: sub));
+      emit(CartLoadedState(cartItems: removed, total: total, subTotal: sub));
       return removed == null ? false : true;
     } on Exception {
       emit(CartErrorState(message: "Could not add item"));
@@ -37,8 +55,18 @@ class CartCubit extends Cubit<CartState> {
 
   Future<List<CartItem>> getItems() async {
     try {
+      dynamic sub = 0.0, total = 0.0, vat = 0.0, discount = 0.0;
       List<CartItem> cartItems = await cartRepository.getItems();
-      emit(CartLoadedState(cartItems: cartItems));
+      if (cartItems.length > 0) {
+        for (CartItem cartItem in cartItems) {
+          sub += (cartItem.price ?? 0.0) * (cartItem.qty ?? 0);
+          vat += cartItem.vat ?? 0.0;
+          discount +=
+              (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
+        }
+        total = sub + vat - discount;
+      }
+      emit(CartLoadedState(cartItems: cartItems, subTotal: sub, total: total));
       return cartItems;
     } on Exception {
       emit(CartErrorState(message: "Could not add item"));

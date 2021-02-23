@@ -1,44 +1,50 @@
+import 'dart:convert';
+
+import 'package:adva/bloc/gallery_bloc/postCubit.dart';
+import 'package:adva/data/model/post.dart';
+import 'package:adva/data/model/user.dart';
+import 'package:adva/data/repository/galleryRepo.dart';
 import 'package:adva/ui/utils/basic_app_bar.dart';
 import 'package:adva/ui/utils/comment.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeComments.dart';
 import 'package:adva/ui/utils/post.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PostViewScreen extends StatefulWidget {
-  final userImage,
-      userName,
-      date,
-      time,
-      comments,
-      likes,
-      bodyImage,
-      bodyText,
-      commentsList;
-
-  const PostViewScreen({
-    Key key,
-    this.userImage,
-    this.userName,
-    this.date,
-    this.time,
-    this.comments,
-    this.likes,
-    this.bodyImage,
-    this.bodyText,
-    this.commentsList,
-  }) : super(key: key);
+  final PostModel post;
+  final String filter;
+  const PostViewScreen({Key key, this.post, this.filter}) : super(key: key);
   @override
   _PostViewScreenState createState() => _PostViewScreenState();
 }
 
 class _PostViewScreenState extends State<PostViewScreen> {
   List<Widget> comments = [];
+  PostModel post;
+  TextEditingController commentController;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    post = widget.post;
+    comments = makeComments(post.comments);
+    commentController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    commentController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    comments = makeComments(widget.commentsList);
     double sH = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: buildAppBar(context, text: 'Gallery'),
@@ -52,18 +58,14 @@ class _PostViewScreenState extends State<PostViewScreen> {
               child: ListView(
                 children: [
                   Post(
-                      userImage: widget.userImage,
-                      userName: widget.userName,
-                      date: widget.date,
-                      comments: widget.comments,
-                      commentsList: widget.commentsList,
-                      likes: widget.likes,
-                      bodyText: widget.bodyText,
-                      bodyImage: widget.bodyImage),
+                    post: post,
+                    filter: widget.filter,
+                    push: false,
+                  ),
                   SizedBox(
                     height: 20,
                   ),
-                  if (widget.commentsList.length > 0)
+                  if (post.comments.length > 0)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: comments,
@@ -89,14 +91,49 @@ class _PostViewScreenState extends State<PostViewScreen> {
                       decoration: InputDecoration(
                         hintText: 'Type your comment here',
                         suffix: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              comments.add(Comment(
-                                name: "Mobile",
-                                body: "Mobile comment",
-                              ));
-                            });
-                            setState(() {});
+                          onPressed: () async {
+                            showToast("Posting comment", primaryColor);
+                            SharedPreferences sp =
+                                await SharedPreferences.getInstance();
+                            bool loggedIn = sp.getBool('loggedIn');
+
+                            if (loggedIn == null || !loggedIn) {
+                              showToast("Not logged in", primaryColor);
+                            } else {
+                              User user = User.fromJson(
+                                  json.decode(sp.getString('user')));
+                              if (user.id == null)
+                                showToast(
+                                    "Log in again to comment", primaryColor);
+                              else {
+                                if (commentController.text == '') {
+                                  showToast(
+                                      "Write something to post", primaryColor);
+                                } else {
+                                  bool commented = await GalleryRepositoryImpl()
+                                      .postComment(
+                                          pid: post.id,
+                                          cid: user.id,
+                                          comment: commentController.text);
+                                  if (commented) {
+                                    setState(() {
+                                      comments.add(Comment(
+                                        name: user.firstName +
+                                            " " +
+                                            user.lastName,
+                                        body: commentController.text,
+                                      ));
+                                    });
+                                    commentController.text = '';
+                                    BlocProvider.of<PostsCubit>(context)
+                                        .getPosts(widget.filter);
+                                  } else {
+                                    showToast(
+                                        "Something went wrong", primaryColor);
+                                  }
+                                }
+                              }
+                            }
                           },
                           icon: Icon(
                             Icons.send,
@@ -106,7 +143,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                         border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black)),
                       ),
-                      // autofillHints: ['Type your comment here'],
+                      controller: commentController,
                     )),
                   ],
                 ),

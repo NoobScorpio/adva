@@ -4,6 +4,7 @@ import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/data/model/address.dart';
 import 'package:adva/data/model/cartItem.dart';
+import 'package:adva/data/model/checkOut.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/paymentScreen.dart';
 import 'package:adva/ui/screens/addAddressScreen.dart';
@@ -11,6 +12,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
 import 'package:adva/ui/utils/tFContainer.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +26,8 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   bool checkBoxValue = false;
-  String name, email, phone;
+  String name = '', email = '', phone = '';
+  String ads = '', country = '', city = '', postal = '';
   int groupValue = 0;
   @override
   void initState() {
@@ -264,11 +267,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             BlocBuilder<CartCubit, CartState>(builder: (context, state) {
               if (state is CartLoadedState) {
                 if (state.cartItems != null && state.cartItems.length != 0) {
-                  return orderPrices(cartItems: state.cartItems);
+                  return orderPrices(state.total, state.subTotal);
                 }
-                return orderPrices(cartItems: []);
+                return orderPrices(0.0, 0.0);
               }
-              return orderPrices(cartItems: []);
+              return orderPrices(0.0, 0.0);
             })
           ],
         ),
@@ -276,55 +279,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Widget orderPrices({List<CartItem> cartItems}) {
-    double subTotal = 0;
-    double vat = 0;
-    if (cartItems.length > 0) {
-      for (CartItem cartItem in cartItems) {
-        subTotal += cartItem.price * cartItem.qty - cartItem.discount;
-        vat += (cartItem.price * cartItem.qty - cartItem.discount) * 0.1;
-      }
-      return Container(
-        width: double.maxFinite,
-        color: Colors.white,
-        child: Column(
-          children: [
-            PaymentColumn(
-              subTotal: subTotal.toString(),
-              total: (subTotal + vat + 10).toString(),
-              flatShippingRate: 10.toString(),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: MyButton(
-                height: 65,
-                width: double.maxFinite,
-                child: Text('Proceed to payments',
-                    style: TextStyle(fontSize: 15, color: Colors.white)),
-                borderColor: Colors.transparent,
-                innerColor: primaryColor,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              PaymentScreen(user: widget.user)));
-                },
-              ),
-            ),
-          ],
-        ),
-      );
-    }
+  Widget orderPrices(total, subTotal) {
     return Container(
       width: double.maxFinite,
       color: Colors.white,
       child: Column(
         children: [
           PaymentColumn(
-            subTotal: "?",
-            total: "?",
-            flatShippingRate: "?",
+            subTotal: subTotal.toString(),
+            total: (total + 10).toString(),
+            flatShippingRate: 10.toString(),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -336,8 +300,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               borderColor: Colors.transparent,
               innerColor: primaryColor,
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PaymentScreen()));
+                if (name != '' && email != '' && phone != '') {
+                  CheckOutInfo checkout = CheckOutInfo(
+                    address: ads,
+                    city: city,
+                    country: country,
+                    phone: phone,
+                    email: email,
+                    name: name,
+                    postal: postal,
+                  );
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PaymentScreen(
+                              user: widget.user,
+                              checkout: checkout,
+                              total: total,
+                              subTotal: subTotal)));
+                } else
+                  showToast("Please fill all fields", primaryColor);
               },
             ),
           ),
@@ -349,7 +331,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget addresses({List<Address> addresses}) {
     if (addresses.length > 0) {
       List<Widget> widgets = [];
-      for (Address address in addresses) {
+      for (int i = 0; i < addresses.length; i++) {
+        if (i == 0) {
+          ads = addresses[0].address;
+          city = addresses[0].city;
+          country = addresses[0].country;
+          postal = addresses[0].postalCode;
+        }
         widgets.add(Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ListTile(
@@ -357,24 +345,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Address ${address.id}'),
+                Text('Address ${addresses[i].id}'),
                 SizedBox(
                   width: 10,
                 ),
                 Text(
-                  '${address.address} ${address.city}, ${address.country}.',
+                  '${addresses[i].address} ${addresses[i].city}, ${addresses[i].country}.',
                   style: normalTextStyle,
                   maxLines: 3,
                 )
               ],
             ),
             trailing: Radio(
-              value: address.id,
+              value: addresses[i].id,
               groupValue: groupValue,
               activeColor: primaryColor,
               onChanged: (val) {
                 setState(() {
                   groupValue = val;
+                  ads = addresses[i].address;
+                  city = addresses[i].city;
+                  country = addresses[i].country;
+                  postal = addresses[i].postalCode;
+                  print(ads);
                 });
               },
             ),

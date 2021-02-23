@@ -4,6 +4,7 @@ import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/createAccount.dart';
+import 'package:adva/ui/screens/forgetPassScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
@@ -106,11 +107,22 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Text(
-                      'Forget Password?',
-                      style: boldTextStyle,
+                  child: GestureDetector(
+                    onTap: () async {
+                      bool done = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => ForgetPasswordScreen()));
+                      if (done != null && done == true) {
+                        showToast("Password Changed", primaryColor);
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: Text(
+                        'Forget Password?',
+                        style: boldTextStyle,
+                      ),
                     ),
                   ),
                 ),

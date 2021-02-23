@@ -110,7 +110,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 )
               ],
             ),
-            label: 'Category',
+            label: 'Products',
             icon: Column(
               children: [
                 SvgPicture.asset(

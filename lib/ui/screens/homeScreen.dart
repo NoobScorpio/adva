@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:adva/bloc/ads_bloc/adsState.dart';
 import 'package:adva/bloc/ads_bloc/getAdsCubit.dart';
 import 'package:adva/bloc/brand_bloc/getBrandsCubit.dart';
@@ -11,17 +9,13 @@ import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
 import 'package:adva/bloc/offer_bloc/getOffersCubit.dart';
 import 'package:adva/bloc/offer_bloc/offerState.dart';
 import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
-import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
 import 'package:adva/bloc/seller_bloc/getSellerCubit.dart';
 import 'package:adva/bloc/seller_bloc/sellerState.dart';
 import 'package:adva/data/model/ads.dart';
 import 'package:adva/data/model/category.dart';
-import 'package:adva/data/model/featured.dart';
 import 'package:adva/data/model/offer.dart';
+import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/seller.dart';
-import 'package:adva/data/model/user.dart';
-import 'package:adva/data/repository/productRepo.dart';
-import 'file:///C:/Users/CIFER/AndroidStudioProjects/adva/lib/ui/utils/productContainer.dart';
 import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:adva/ui/screens/categoryScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -32,7 +26,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -232,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text(
                 'Offers',
                 style: TextStyle(fontSize: 21),
-              ),
+              ).tr(),
             ),
             //OFFERS
             Padding(
@@ -311,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Text(
                       'Top Sellers',
                       style: TextStyle(fontSize: 21),
-                    ),
+                    ).tr(),
                   ),
                   SizedBox(
                     height: screenHeight * 0.005,
@@ -345,15 +339,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 //     selling.productimages[0].pictureReference);
 
                                 widgets.add(GestureDetector(
-                                  onTap: () {
-                                    BlocProvider.of<GetIDProductCubit>(context)
+                                  onTap: () async {
+                                    Product product = await BlocProvider.of<
+                                            GetIDProductCubit>(context)
                                         .getProduct(selling.id);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 ProductViewScreen(
-                                                    pid: selling.id)));
+                                                    product: product)));
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -406,7 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Text(
                   'Featured products',
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.w300),
-                ),
+                ).tr(),
               ),
             ),
             // Featured products

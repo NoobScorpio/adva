@@ -1,25 +1,59 @@
-import 'package:adva/data/model/comment.dart';
+import 'dart:convert';
+
+import 'package:adva/bloc/gallery_bloc/postCubit.dart';
+import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/data/model/like.dart';
+import 'package:adva/data/model/post.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/postViewScreen.dart';
+import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import 'constants.dart';
-
-class Post extends StatelessWidget {
-  final userImage, userName, date, time, comments, likes, bodyImage, bodyText;
-  final List<Comments> commentsList;
-
+class Post extends StatefulWidget {
+  final PostModel post;
+  final String filter;
+  final bool push;
   const Post({
     Key key,
-    this.userImage,
-    this.userName,
-    this.date,
-    this.time,
-    this.comments,
-    this.likes,
-    this.bodyImage,
-    this.bodyText,
-    this.commentsList,
+    this.post,
+    this.filter,
+    this.push,
   }) : super(key: key);
+
+  @override
+  _PostState createState() => _PostState();
+}
+
+class _PostState extends State<Post> {
+  PostModel post;
+  bool liked = false;
+  int likes = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    post = widget.post;
+    likes = post.likes.length;
+    getLiked();
+  }
+
+  getLiked() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    User user = User.fromJson(json.decode(sp.getString('user')));
+    if (user != null && user.id != null) {
+      for (Likes likes in post.likes) {
+        if (likes.customerId == user.id) {
+          setState(() {
+            liked = true;
+          });
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +65,27 @@ class Post extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: 25.0,
-                    backgroundImage: NetworkImage(
-                      userImage,
+                  if (post.customer.profileImage == null)
+                    CircleAvatar(
+                      radius: 25.0,
+                      backgroundColor: Colors.black,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
+                  if (post.customer.profileImage != null)
+                    CircleAvatar(
+                      radius: 25.0,
+                      backgroundImage: NetworkImage(
+                        post.customer.profileImage,
+                      ),
+                    ),
                   SizedBox(
                     width: 15,
                   ),
                   Text(
-                    userName,
+                    post.customer.firstName + " " + post.customer.lastName,
                     style: boldTextStyle,
                   ),
                 ],
@@ -51,7 +95,7 @@ class Post extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text('$date')],
+                  children: [Text('${post.createdAt}')],
                 ),
               ),
             ],
@@ -62,39 +106,31 @@ class Post extends StatelessWidget {
           //IMAGE
           GestureDetector(
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PostViewScreen(
-                            userImage: userImage,
-                            userName: userName,
-                            date: date,
-                            time: time,
-                            comments: comments,
-                            likes: likes,
-                            bodyImage: bodyImage,
-                            bodyText: bodyText,
-                            commentsList: commentsList,
-                          )));
+              if (widget.push)
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            PostViewScreen(post: post, filter: widget.filter)));
             },
             child: Container(
               height: 265,
               width: double.maxFinite,
-              child:
-                  FittedBox(fit: BoxFit.cover, child: Image.network(bodyImage)),
+              child: FittedBox(
+                  fit: BoxFit.cover, child: Image.network(post.image)),
             ),
           ),
           SizedBox(
             height: 15,
           ),
 
-          if (bodyText != null)
+          if (post.description != null)
             Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: Container(
                 width: double.maxFinite,
                 child: Text(
-                  bodyText,
+                  post.description,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -113,9 +149,18 @@ class Post extends StatelessWidget {
                       width: 10,
                     ),
                     //TODO : SHARE FUNCTIONALITY
-                    Icon(
-                      Icons.share,
-                      color: primaryColor,
+                    GestureDetector(
+                      onTap: () async {
+                        const url =
+                            "whatsapp://send?text=Do check out this amazing post, visit https://advabeauty.com/gallery for more";
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        }
+                      },
+                      child: Icon(
+                        Icons.share,
+                        color: primaryColor,
+                      ),
                     ),
                   ],
                 ),
@@ -131,7 +176,7 @@ class Post extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Comments: $comments'),
+                  Text('Comments: ${post.comments.length}'),
                   SizedBox(
                     width: 10,
                   ),
@@ -161,19 +206,84 @@ class Post extends StatelessWidget {
                       width: 10,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        //TODO : LIKE FUNCTIONALITY
+                      onTap: () async {
+                        User user =
+                            await BlocProvider.of<UserCubit>(context).getUser();
+                        // print("CUSTOEMR ID: ${user.id}");
+                        bool postLiked =
+                            await BlocProvider.of<PostsCubit>(context)
+                                .postLike(post.id, user.id);
+                        if (postLiked) {
+                          if (liked) {
+                            setState(() {
+                              liked = false;
+                              likes--;
+                            });
+                            showToast("UnLiked", primaryColor);
+                          } else if (!liked) {
+                            setState(() {
+                              liked = true;
+                              likes++;
+                            });
+                            showToast("Liked", primaryColor);
+                          }
+                        } else
+                          showToast("Coulnot like", primaryColor);
                       },
-                      child: Icon(
-                        Icons.thumb_up,
-                        color: primaryColor,
-                      ),
-                    ),
+                      child: liked
+                          ? Icon(
+                              Icons.thumb_up,
+                              color: primaryColor,
+                            )
+                          : Icon(
+                              Icons.thumb_up_alt_outlined,
+                              color: primaryColor,
+                            ),
+                    )
                   ],
                 ),
-              ),
+              )
             ],
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class LikeButton extends StatelessWidget {
+  final like, pid, likes;
+
+  const LikeButton({Key key, this.like, this.pid, this.likes})
+      : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Likes: $likes'),
+          SizedBox(
+            width: 10,
+          ),
+          GestureDetector(
+            onTap: () async {
+              User user = await BlocProvider.of<UserCubit>(context).getUser();
+              print("CUSTOEMR ID: ${user.id}");
+              bool liked = await BlocProvider.of<PostsCubit>(context)
+                  .postLike(pid, user.id);
+            },
+            child: like
+                ? Icon(
+                    Icons.thumb_up,
+                    color: primaryColor,
+                  )
+                : Icon(
+                    Icons.thumb_up_alt_outlined,
+                    color: primaryColor,
+                  ),
+          )
         ],
       ),
     );

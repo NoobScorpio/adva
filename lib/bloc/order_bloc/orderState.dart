@@ -1,4 +1,3 @@
-import 'package:adva/data/model/ads.dart';
 import 'package:adva/data/model/orderDetail.dart';
 import 'package:adva/data/model/orderDetails.dart';
 import 'package:equatable/equatable.dart';
@@ -22,6 +21,16 @@ class OrderLoadedState extends OrderState {
   final List<OrderDetails> orderDetails;
 
   OrderLoadedState({@required this.orderDetails});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [orderDetails];
+}
+
+class OrderReturnsState extends OrderState {
+  final List<OrderDetails> orderDetails;
+
+  OrderReturnsState({@required this.orderDetails});
 
   @override
   // TODO: implement props

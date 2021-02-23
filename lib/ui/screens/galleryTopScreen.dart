@@ -1,22 +1,26 @@
 import 'package:adva/bloc/gallery_bloc/galleryState.dart';
-import 'package:adva/bloc/gallery_bloc/getPostsCubit.dart';
+import 'package:adva/bloc/gallery_bloc/postCubit.dart';
+import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/post.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class GalleryTopScreen extends StatefulWidget {
+class PostsScreen extends StatefulWidget {
+  final String filter;
+
+  const PostsScreen({Key key, this.filter}) : super(key: key);
   @override
-  _GalleryTopScreenState createState() => _GalleryTopScreenState();
+  _PostsScreenState createState() => _PostsScreenState();
 }
 
-class _GalleryTopScreenState extends State<GalleryTopScreen> {
+class _PostsScreenState extends State<PostsScreen> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<GetPostsCubit>(context).getPosts('top');
+    BlocProvider.of<PostsCubit>(context).getPosts(widget.filter);
   }
 
   @override
@@ -28,7 +32,7 @@ class _GalleryTopScreenState extends State<GalleryTopScreen> {
           SizedBox(
             height: 20,
           ),
-          BlocBuilder<GetPostsCubit, GalleryState>(builder: (context, state) {
+          BlocBuilder<PostsCubit, GalleryState>(builder: (context, state) {
             if (state is GalleryInitialState) {
               return buildLoading();
             } else if (state is GalleryLoadingState) {
@@ -44,6 +48,7 @@ class _GalleryTopScreenState extends State<GalleryTopScreen> {
                 List<Widget> widts = [];
                 print("POSTS ${posts.length} ");
                 for (int i = 0; i < posts.length; i++) {
+                  print("profile ");
                   widts.add(Container(
                     height: 430,
                     width: double.maxFinite,
@@ -52,17 +57,7 @@ class _GalleryTopScreenState extends State<GalleryTopScreen> {
                       elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Post(
-                            userImage: posts[i].customer.profileImage,
-                            userName: posts[i].customer.firstName +
-                                ' ' +
-                                posts[i].customer.lastName,
-                            date: posts[i].createdAt,
-                            comments: posts[i].comments.length,
-                            commentsList: posts[i].comments,
-                            likes: posts[i].likes.length,
-                            bodyText: posts[i].description,
-                            bodyImage: posts[i].image),
+                        child: Post(post: posts[i], filter: 'top', push: true),
                       ),
                     ),
                   ));
@@ -78,7 +73,7 @@ class _GalleryTopScreenState extends State<GalleryTopScreen> {
                 );
               }
             } else if (state is GalleryErrorState) {
-              return buildErrorUi(state.message);
+              return buildErrorUi(state.message ?? "");
             } else {
               return buildErrorUi('Could not load data.');
             }

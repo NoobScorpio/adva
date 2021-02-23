@@ -1,7 +1,14 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/galleryRecentScreen.dart';
 import 'package:adva/ui/screens/galleryTopScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:images_picker/images_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'createPostScreen.dart';
 
@@ -19,6 +26,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
           title: Text(
             'Gallery',
             style: TextStyle(color: Colors.black),
@@ -45,14 +53,33 @@ class _GalleryScreenState extends State<GalleryScreen> {
           children: [
             // Icon(Icons.directions_car),
             // Icon(Icons.directions_transit),
-            GalleryTopScreen(),
-            GalleryRecentScreen(),
+            PostsScreen(filter: "top"),
+            PostsScreen(filter: "recent"),
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (_) => CreatePostScreen()));
+          onPressed: () async {
+            try {
+              SharedPreferences sp = await SharedPreferences.getInstance();
+              List<Media> res = await ImagesPicker.pick(
+                count: 1,
+                pickType: PickType.image,
+              );
+              if (res != null && res.length > 0) {
+                File image = File(res[0].path);
+                User user = User.fromJson(json.decode(sp.getString('user')));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            CreatePostScreen(image: image, user: user)));
+
+                print("UPDATED");
+              }
+            } catch (e) {
+              print(e);
+              showToast("Something went wrong", primaryColor);
+            }
           },
           backgroundColor: primaryColor,
           child: Icon(Icons.add),

@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:adva/data/model/user.dart';
-import 'package:adva/data/model/wishlist.dart';
 import 'package:adva/res/appStrings.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http_parser/http_parser.dart';
 
 abstract class UserRepository {
   Future<User> logIn({String email, String password});
@@ -21,6 +19,9 @@ abstract class UserRepository {
       String phone,
       String pass,
       String cPass});
+  Future<int> sendForgetPasswordCodeVerifyRequest(String email, String code);
+  Future<bool> sendForgetPasswordNewRequest(String email);
+  Future<bool> resetPassword({int cid, String pass});
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -172,7 +173,7 @@ class UserRepositoryImpl implements UserRepository {
       // );
       // var response = await request.send();
       var response = await http.post(
-          baseURL + "/customer/profile/update/${user.id}",
+          baseURL + "/customer/basedecode/profile/update/${user.id}",
           body: {"profile_image": base64Encode(await profile.readAsBytes())});
       print("IMAGE RESPONSE ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -205,6 +206,69 @@ class UserRepositoryImpl implements UserRepository {
       }
     } catch (e) {
       print(e);
+      return false;
+    }
+  }
+
+  @override
+  Future<int> sendForgetPasswordCodeVerifyRequest(
+      String email, String code) async {
+    print("sendForgetPasswordCodeVerifyRequest : ");
+    var response = await http.post(baseURL + "/customer/verifycode",
+        body: {"email": email, "code": code});
+    print("createAccount : ${response.body}");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      int id = json.decode(response.body)['id'];
+      return id;
+    } else if (response.statusCode == 400) {
+      print('This data does not exist.');
+      return null;
+    } else if (response.statusCode == 500) {
+      print('Internal server error.');
+      return null;
+    } else {
+      print('Something went wrong');
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> sendForgetPasswordNewRequest(String email) async {
+    var response = await http
+        .post(baseURL + "/customer/recoverpassword", body: {"email": email});
+    print("createAccount : ${response.body}");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else if (response.statusCode == 400) {
+      print('This data does not exist.');
+      return false;
+    } else if (response.statusCode == 500) {
+      print('Internal server error.');
+      return false;
+    } else {
+      print('Something went wrong');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> resetPassword({int cid, String pass}) async {
+    var response = await http.post(baseURL + "/customer/resetpassword", body: {
+      "customer_id": cid.toString(),
+      "password": pass,
+      "confirm_password": pass
+    });
+    print("createAccount : ${response.body}");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else if (response.statusCode == 400) {
+      print('This data does not exist.');
+      return false;
+    } else if (response.statusCode == 500) {
+      print('Internal server error.');
+      return false;
+    } else {
+      print('Something went wrong');
       return false;
     }
   }
