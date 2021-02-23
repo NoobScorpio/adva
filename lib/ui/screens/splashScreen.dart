@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:adva/bloc/ads_bloc/getAdsCubit.dart';
 import 'package:adva/bloc/brand_bloc/getBrandsCubit.dart';
 import 'package:adva/bloc/category_bloc/getCategoryCubit.dart';
@@ -6,6 +7,8 @@ import 'package:adva/bloc/category_bloc/getCategoryProductsCubit.dart';
 import 'package:adva/bloc/offer_bloc/getOffersCubit.dart';
 import 'package:adva/bloc/seller_bloc/getSellerCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/bottomNavBar.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -44,12 +47,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
       BlocProvider.of<UserCubit>(context).setStatus(false);
     } else {
-      if (sharedPreferences.getBool('loggedIn')) {
-        // await BlocProvider.of<WishCubit>(context).getWishLists(
-        //     User.fromJson(json.decode(sharedPreferences.getString('user'))).id);
-        sharedPreferences.setBool('loggedIn', true);
-        BlocProvider.of<UserCubit>(context).setStatus(true);
-      }
+      await BlocProvider.of<WishCubit>(context).getWishLists(
+          User.fromJson(json.decode(sharedPreferences.getString('user'))).id);
+      sharedPreferences.setBool('loggedIn', true);
+      BlocProvider.of<UserCubit>(context).setStatus(true);
     }
   }
 

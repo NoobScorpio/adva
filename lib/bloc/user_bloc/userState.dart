@@ -4,11 +4,9 @@ import 'package:equatable/equatable.dart';
 abstract class UserState extends Equatable {}
 
 class UserInitialState extends UserState {
-  final bool loggedIn;
-  final User user;
-  UserInitialState({this.user, this.loggedIn});
+  UserInitialState();
   @override
-  List<Object> get props => [this.loggedIn, this.user];
+  List<Object> get props => [];
 }
 
 class UserLoadingState extends UserState {

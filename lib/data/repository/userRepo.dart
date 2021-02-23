@@ -38,6 +38,7 @@ class UserRepositoryImpl implements UserRepository {
         var data = json.decode(response.body);
         User user = User.fromJson(data);
         sharedPreferences.setString('user', json.encode(user.toJson()));
+        sharedPreferences.setBool('loggedIn', true);
         return user;
       } catch (e) {
         return null;

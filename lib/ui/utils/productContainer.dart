@@ -203,10 +203,15 @@ class _ProductContainerState extends State<ProductContainer> {
                                 const EdgeInsets.only(right: 5.0, top: 5.0),
                             child: GestureDetector(
                               onTap: () async {
+                                showToast("Adding product", primaryColor);
                                 if (!wish) {
                                   // setState(() {});
                                   sp = await SharedPreferences.getInstance();
-                                  if (sp.getBool('loggedIn')) {
+                                  if (sp.getBool('loggedIn') == null ||
+                                      sp.getBool('loggedIn') == false) {
+                                    showToast(
+                                        "You are not logged in", primaryColor);
+                                  } else {
                                     int response =
                                         await BlocProvider.of<WishCubit>(
                                                 context)
@@ -228,15 +233,26 @@ class _ProductContainerState extends State<ProductContainer> {
                                             primaryColor);
                                       }
                                     });
-                                  } else
-                                    showToast(
-                                        "You are not logged in", primaryColor);
+                                  }
                                 } else
                                   showToast("Item already added", primaryColor);
                               },
-                              child: Text(
-                                'Add to Wishlist',
-                                style: TextStyle(color: primaryColor),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Icon(
+                                      Icons.favorite_border,
+                                      color: primaryColor,
+                                      size: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Add to Wishlist',
+                                    style: TextStyle(color: primaryColor),
+                                  ),
+                                ],
                               ),
                             )),
                       ),
@@ -402,10 +418,24 @@ class _ProductContainerState extends State<ProductContainer> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 30,
+                                      height: 10,
                                     ),
                                     Container(
-                                      width: screenHeight * 0.25,
+                                      height: 40,
+                                      width: screenHeight * 0.22,
+                                      child: Text(
+                                        '${widget.description}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      width: screenHeight * 0.22,
                                       // color: Colors.grey,
                                       child: Row(
                                         mainAxisAlignment:

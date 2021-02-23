@@ -73,7 +73,9 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                       return buildLoading();
                     else if (state is PointsLoadedState) {
                       if (state.aDVAPoints != null) {
-                        promo = state.aDVAPoints.promo.promoCode;
+                        promo = state.aDVAPoints.promo == null
+                            ? "No code"
+                            : state.aDVAPoints.promo.promoCode;
                         return Text(
                           'PTS ${state.aDVAPoints.total}',
                           style: TextStyle(
@@ -121,7 +123,8 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                     else if (state is PointsLoadingState)
                       return buildLoading();
                     else if (state is PointsLoadedState) {
-                      if (state.aDVAPoints != null)
+                      if (state.aDVAPoints != null &&
+                          state.aDVAPoints.promo != null)
                         return Text(
                           '${state.aDVAPoints.promo.promoCode}',
                           style: TextStyle(

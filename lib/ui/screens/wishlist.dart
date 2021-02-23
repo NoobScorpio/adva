@@ -65,11 +65,18 @@ class _WishListScreenState extends State<WishListScreen> {
                                   child: Container(
                                     height: 70,
                                     width: 70,
-                                    child: FittedBox(
-                                      fit: BoxFit.cover,
-                                      child: Image.network(wish.product
-                                          .productimages[0].pictureReference),
-                                    ),
+                                    child: wish.product == null
+                                        ? Icon(
+                                            Icons.image,
+                                            color: Colors.grey,
+                                          )
+                                        : FittedBox(
+                                            fit: BoxFit.cover,
+                                            child: Image.network(wish
+                                                .product
+                                                .productimages[0]
+                                                .pictureReference),
+                                          ),
                                   ),
                                 ),
                                 Column(
@@ -82,19 +89,21 @@ class _WishListScreenState extends State<WishListScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${wish.product.productName}',
+                                          '${wish.product == null ? "Name" : wish.product.productName}',
                                           style: boldTextStyle,
                                         ),
                                         Text(
-                                            'Price: SAR. ${wish.product.price}'),
+                                            'Price: SAR. ${wish.product == null ? "??" : wish.product.price}'),
                                       ],
                                     ),
                                     SizedBox(
                                       height: 15,
                                     ),
-                                    Text(wish.product.quantity > 0
-                                        ? 'In Stock'
-                                        : "Out of stock")
+                                    Text(wish.product == null
+                                        ? "Stock"
+                                        : wish.product.quantity > 0
+                                            ? 'In Stock'
+                                            : "Out of stock")
                                   ],
                                 )
                               ],

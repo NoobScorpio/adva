@@ -57,7 +57,11 @@ class _PostsScreenState extends State<PostsScreen> {
                       elevation: 5,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Post(post: posts[i], filter: 'top', push: true),
+                        child: Post(
+                            post: posts[i],
+                            filter: 'top',
+                            push: true,
+                            like: null),
                       ),
                     ),
                   ));

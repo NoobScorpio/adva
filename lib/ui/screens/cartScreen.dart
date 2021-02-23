@@ -72,6 +72,7 @@ class _CartScreenState extends State<CartScreen> {
                   print(cartItem.price);
 
                   widgets.add(ProductCartContainer(
+                      pid: cartItem.pid,
                       cartItem: cartItem,
                       screenHeight: screenHeight,
                       screenWidth: screenWidth));
@@ -166,12 +167,12 @@ class _CartScreenState extends State<CartScreen> {
                       );
                     } else {
                       return Column(
-                        children: [Text('You may also like.')],
+                        children: [Text('')],
                       );
                     }
                   } else {
                     return Column(
-                      children: [Text('You may also like.')],
+                      children: [Text('')],
                     );
                   }
                 }),

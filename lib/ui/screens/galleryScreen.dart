@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/galleryRecentScreen.dart';
-import 'package:adva/ui/screens/galleryTopScreen.dart';
+import 'package:adva/ui/screens/postsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';

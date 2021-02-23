@@ -16,12 +16,13 @@ import 'package:url_launcher/url_launcher.dart';
 class Post extends StatefulWidget {
   final PostModel post;
   final String filter;
-  final bool push;
+  final bool push, like;
   const Post({
     Key key,
     this.post,
     this.filter,
     this.push,
+    this.like,
   }) : super(key: key);
 
   @override
@@ -53,6 +54,10 @@ class _PostState extends State<Post> {
         }
       }
     }
+    if (widget.like != null)
+      setState(() {
+        liked = widget.like;
+      });
   }
 
   @override
@@ -110,8 +115,8 @@ class _PostState extends State<Post> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            PostViewScreen(post: post, filter: widget.filter)));
+                        builder: (context) => PostViewScreen(
+                            post: post, filter: widget.filter, liked: liked)));
             },
             child: Container(
               height: 265,
@@ -207,28 +212,35 @@ class _PostState extends State<Post> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        User user =
-                            await BlocProvider.of<UserCubit>(context).getUser();
-                        // print("CUSTOEMR ID: ${user.id}");
-                        bool postLiked =
-                            await BlocProvider.of<PostsCubit>(context)
-                                .postLike(post.id, user.id);
-                        if (postLiked) {
-                          if (liked) {
-                            setState(() {
-                              liked = false;
-                              likes--;
-                            });
-                            showToast("UnLiked", primaryColor);
-                          } else if (!liked) {
-                            setState(() {
-                              liked = true;
-                              likes++;
-                            });
-                            showToast("Liked", primaryColor);
-                          }
-                        } else
-                          showToast("Coulnot like", primaryColor);
+                        SharedPreferences sp =
+                            await SharedPreferences.getInstance();
+                        bool loggedIn = sp.getBool('loggedIn');
+                        if (loggedIn == null || loggedIn == false) {
+                          showToast("Not logged in", primaryColor);
+                        } else {
+                          User user = await BlocProvider.of<UserCubit>(context)
+                              .getUser();
+                          // print("CUSTOEMR ID: ${user.id}");
+                          bool postLiked =
+                              await BlocProvider.of<PostsCubit>(context)
+                                  .postLike(post.id, user.id);
+                          if (postLiked) {
+                            if (liked) {
+                              setState(() {
+                                liked = false;
+                                likes--;
+                              });
+                              showToast("Unliked", primaryColor);
+                            } else if (!liked) {
+                              setState(() {
+                                liked = true;
+                                likes++;
+                              });
+                              showToast("Liked", primaryColor);
+                            }
+                          } else
+                            showToast("Coulnot like", primaryColor);
+                        }
                       },
                       child: liked
                           ? Icon(

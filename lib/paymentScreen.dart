@@ -138,11 +138,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 padding: const EdgeInsets.all(13),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                AddCardScreen(user: widget.user)));
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) =>
+                    //             AddCardScreen(user: widget.user)));
                   },
                   child: Container(
                     height: screenHeight * 0.085,
@@ -336,10 +336,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               borderColor: Colors.transparent,
                               innerColor: Colors.black,
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => PaymentScreen()));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => PaymentScreen()));
                               },
                             ),
                           ),

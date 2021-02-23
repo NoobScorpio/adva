@@ -453,6 +453,7 @@ class _AccountScreenState extends State<AccountScreen> {
               SharedPreferences sp = await SharedPreferences.getInstance();
               sp.setString('user', null);
               sp.setString('cart', null);
+              sp.setBool('loggedIn', false);
               BlocProvider.of<UserCubit>(context).setStatus(false);
               BlocProvider.of<UserCubit>(context).logOut();
               // setState(() {});

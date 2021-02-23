@@ -1064,40 +1064,51 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                         width: screenWidth / 1.8,
                         child: RaisedButton(
                           onPressed: () async {
-                            showToast("Adding product", primaryColor);
-                            SharedPreferences sp =
-                                await SharedPreferences.getInstance();
-                            var user = User.fromJson(
-                                json.decode(sp.getString('user')));
-                            if (user != null && user.id != null) {
-                              print(qtySelected.split(' ')[1]);
-                              CartItem cartItem = CartItem();
-                              cartItem.pName = pName;
-                              cartItem.price = price;
-                              cartItem.image = image;
-                              cartItem.desc = desc;
-                              cartItem.pid = product.id;
-                              cartItem.discount = discount;
-                              cartItem.vat = vat;
-                              cartItem.size = size;
-                              cartItem.sizeID = sizeValue;
-                              cartItem.categoryID = categoryID;
-                              cartItem.category = category;
-                              cartItem.qty =
-                                  int.parse(qtySelected.split(' ')[1]);
-                              cartItem.color = colorValue;
-                              //TODO: CART ITEM ADD
-                              bool added =
-                                  await BlocProvider.of<CartCubit>(context)
-                                      .addItem(cartItem);
-                              if (added)
-                                showToast(
-                                    "Product Added to cart", primaryColor);
-                              else
-                                showToast(
-                                    'Could not add to cart', primaryColor);
+                            if (product.quantity == 0) {
+                              showToast("Product out of stock", primaryColor);
                             } else {
-                              showToast("You are not logged in", primaryColor);
+                              showToast("Adding product", primaryColor);
+                              SharedPreferences sp =
+                                  await SharedPreferences.getInstance();
+
+                              bool loggedIn = sp.getBool('loggedIn');
+                              if (loggedIn == null || loggedIn == false) {
+                                showToast("Not logged in", primaryColor);
+                              } else {
+                                var user = User.fromJson(
+                                    json.decode(sp.getString('user')));
+                                if (user != null && user.id != null) {
+                                  print(qtySelected.split(' ')[1]);
+                                  CartItem cartItem = CartItem();
+                                  cartItem.pName = pName;
+                                  cartItem.price = price;
+                                  cartItem.image = image;
+                                  cartItem.desc = desc;
+                                  cartItem.pid = product.id;
+                                  cartItem.discount = discount;
+                                  cartItem.vat = vat;
+                                  cartItem.size = size;
+                                  cartItem.sizeID = sizeValue;
+                                  cartItem.categoryID = categoryID;
+                                  cartItem.category = category;
+                                  cartItem.qty =
+                                      int.parse(qtySelected.split(' ')[1]);
+                                  cartItem.color = colorValue;
+                                  //TODO: CART ITEM ADD
+                                  bool added =
+                                      await BlocProvider.of<CartCubit>(context)
+                                          .addItem(cartItem);
+                                  if (added)
+                                    showToast(
+                                        "Product Added to cart", primaryColor);
+                                  else
+                                    showToast(
+                                        'Could not add to cart', primaryColor);
+                                } else {
+                                  showToast(
+                                      "You are not logged in", primaryColor);
+                                }
+                              }
                             }
                           },
                           color: primaryColor,

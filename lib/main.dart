@@ -75,11 +75,6 @@ class _MyAppState extends State<MyApp> {
     if (loggedIn == null) {
       await sharedPreferences.setBool('loggedIn', false);
     }
-    String u = sharedPreferences.getString('user');
-    if (u == null)
-      user = User();
-    else
-      user = User.fromJson(json.decode(u));
   }
 
   @override
@@ -137,10 +132,8 @@ class _MyAppState extends State<MyApp> {
             create: (context) =>
                 PostsCubit(galleryRepository: GalleryRepositoryImpl())),
         BlocProvider<UserCubit>(
-            create: (context) => UserCubit(
-                initial: user == null ? false : true,
-                user: user,
-                userRepository: UserRepositoryImpl())),
+            create: (context) =>
+                UserCubit(userRepository: UserRepositoryImpl())),
         BlocProvider<WishCubit>(
             create: (context) =>
                 WishCubit(wishRepository: WishRepositoryImpl())),

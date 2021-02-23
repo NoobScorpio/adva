@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
+import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
 import 'package:adva/data/model/cartItem.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Widget emptyCart() {
   return Column(
@@ -62,14 +68,17 @@ class ProductCartContainer extends StatelessWidget {
       {Key key,
       @required this.screenHeight,
       @required this.screenWidth,
-      this.cartItem})
+      this.cartItem,
+      this.pid})
       : super(key: key);
 
   final double screenHeight;
   final double screenWidth;
   final CartItem cartItem;
+  final int pid;
   @override
   Widget build(BuildContext context) {
+    bool wish = false;
     return Container(
       // height: screenHeight * 0.2,
       child: Padding(
@@ -160,28 +169,63 @@ class ProductCartContainer extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.favorite_outline,
-                              color: cartTextColor,
-                            ),
-                            Text(
-                              'Move to whishlist',
-                              style: TextStyle(color: cartTextColor),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: screenWidth * 0.015),
-                              child: SizedBox(
-                                width: 1,
-                                child: Container(
-                                  height: 15,
-                                  color: cartTextColor,
+                        GestureDetector(
+                          onTap: () async {
+                            showToast("Adding product", primaryColor);
+                            if (!wish) {
+                              SharedPreferences sp =
+                                  await SharedPreferences.getInstance();
+                              if (sp.getBool('loggedIn') == null ||
+                                  sp.getBool('loggedIn') == false) {
+                                showToast(
+                                    "You are not logged in", primaryColor);
+                              } else {
+                                int response =
+                                    await BlocProvider.of<WishCubit>(context)
+                                        .addWishListItem(
+                                            User.fromJson(json.decode(
+                                                    sp.getString('user')))
+                                                .id,
+                                            pid);
+                                print('WISH ADDED $response');
+
+                                if (response == 200) {
+                                  wish = true;
+                                  showToast("Added to wish list", primaryColor);
+                                } else if (response == 400) {
+                                  wish = true;
+                                  showToast("Added to wish list", primaryColor);
+                                } else if (response == 500) {
+                                  showToast(
+                                      "Not added to wish list", primaryColor);
+                                }
+                              }
+                            } else
+                              showToast("Item already added", primaryColor);
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.favorite_outline,
+                                color: cartTextColor,
+                              ),
+                              Text(
+                                'Move to whishlist',
+                                style: TextStyle(color: cartTextColor),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: screenWidth * 0.015),
+                                child: SizedBox(
+                                  width: 1,
+                                  child: Container(
+                                    height: 15,
+                                    color: cartTextColor,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         GestureDetector(
                           onTap: () {

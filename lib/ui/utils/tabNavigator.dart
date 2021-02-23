@@ -1,6 +1,6 @@
 import 'package:adva/ui/screens/cartScreen.dart';
 import 'package:adva/ui/screens/categoriesScreen.dart';
-import 'package:adva/ui/screens/galleryTabScreen.dart';
+import 'package:adva/ui/screens/galleryScreen.dart';
 import 'package:adva/ui/screens/homeScreen.dart';
 import 'package:adva/ui/screens/userScreen.dart';
 import 'package:flutter/cupertino.dart';

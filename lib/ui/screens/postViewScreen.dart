@@ -18,7 +18,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PostViewScreen extends StatefulWidget {
   final PostModel post;
   final String filter;
-  const PostViewScreen({Key key, this.post, this.filter}) : super(key: key);
+  final bool liked;
+  const PostViewScreen({Key key, this.post, this.filter, this.liked})
+      : super(key: key);
   @override
   _PostViewScreenState createState() => _PostViewScreenState();
 }
@@ -61,6 +63,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     post: post,
                     filter: widget.filter,
                     push: false,
+                    like: widget.liked,
                   ),
                   SizedBox(
                     height: 20,

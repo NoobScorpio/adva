@@ -7,10 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserCubit extends Cubit<UserState> {
   final UserRepository userRepository;
-  final bool initial;
-  final User user;
-  UserCubit({this.user, this.initial, this.userRepository})
-      : super(UserInitialState(loggedIn: initial, user: user));
+  // final bool initial;
+  // final User user;
+  UserCubit({this.userRepository}) : super(UserInitialState());
 
   Future<bool> loginUser(String email, String pass) async {
     try {
