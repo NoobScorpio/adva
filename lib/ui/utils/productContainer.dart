@@ -44,12 +44,10 @@ class _ProductContainerState extends State<ProductContainer> {
   List<WishList> wishes = [];
   SharedPreferences sp;
   pressed() async {
-    Product product = await BlocProvider.of<GetIDProductCubit>(context)
-        .getProduct(widget.pid);
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ProductViewScreen(product: product)));
+            builder: (context) => ProductViewScreen(pid: widget.pid)));
   }
 
   @override

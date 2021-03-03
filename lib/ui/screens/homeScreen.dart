@@ -12,12 +12,15 @@ import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/seller_bloc/getSellerCubit.dart';
 import 'package:adva/bloc/seller_bloc/sellerState.dart';
 import 'package:adva/data/model/ads.dart';
+import 'package:adva/data/model/bundle.dart';
 import 'package:adva/data/model/category.dart';
 import 'package:adva/data/model/offer.dart';
 import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/seller.dart';
+import 'package:adva/data/repository/offerRepo.dart';
 import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:adva/ui/screens/categoryScreen.dart';
+import 'package:adva/ui/screens/productsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeProducts.dart';
 import 'package:adva/ui/utils/myButton.dart';
@@ -27,6 +30,7 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:list_wheel_scroll_view_x/list_wheel_scroll_view_x.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -38,6 +42,15 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    BlocProvider.of<GetAdsCubit>(context).getAds();
+    BlocProvider.of<GetCategoryCubit>(context).getCategories();
+    BlocProvider.of<GetOfferCubit>(context).getOffers();
+    BlocProvider.of<GetSellerCubit>(context).getSellers();
+    BlocProvider.of<GetFeaturedCubit>(context).getSellers();
+    BlocProvider.of<GetBrandsCubit>(context).getBrands();
+    BlocProvider.of<GetCategoryProductsCubit>(context)
+        .getCategoryProducts("Makeup");
   }
 
   @override
@@ -179,12 +192,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         for (Category cat in cats) {
                           widgets.add(Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: MyButton(
-                              height: 40,
-                              width: 150,
-                              innerColor: Colors.white,
-                              borderColor: Colors.grey[300],
-                              onPressed: () {
+                            child: GestureDetector(
+                              onTap: () {
                                 BlocProvider.of<GetCategoryProductsCubit>(
                                         context)
                                     .getCategoryProducts(cat.id.toString());
@@ -199,9 +208,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                               brand: false,
                                             )));
                               },
-                              child: Text(
-                                '${cat.categoryName}',
-                                style: TextStyle(color: Colors.black),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                height: 40,
+                                width: 150,
+                                child: Center(
+                                  child: Text(
+                                    '${cat.categoryName}',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ),
                               ),
                             ),
                           ));
@@ -240,40 +262,84 @@ class _HomeScreenState extends State<HomeScreen> {
                     } else if (state is OfferLoadingState) {
                       return buildLoading();
                     } else if (state is OfferLoadedState) {
-                      if (state.offer == null) {
-                        return Center(
-                            child: CircularProgressIndicator(
-                          backgroundColor: primaryColor,
-                        ));
+                      if (state.offer == null && state.bundle == null) {
+                        return buildErrorUi("No offers Available");
+                      }
+                      if (state.offer == null || state.offer.length == 0) {
+                        return buildErrorUi("No offers Available");
                       } else {
                         List<Offer> offers = state.offer;
+                        List<Bundle> bundles = state.bundle;
                         List<Widget> widgets = [
                           SizedBox(
                             width: 10,
                           )
                         ];
                         for (Offer offer in offers) {
-                          widgets.add(Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color:
-                                      Colors.grey[300], // red as border color
+                          widgets.add(GestureDetector(
+                            onTap: () async {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ProductsScreen(oid: offer.id)));
+                            },
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color:
+                                        Colors.grey[300], // red as border color
+                                  ),
                                 ),
-                              ),
-                              height: 150,
-                              width: 150,
-                              child: FittedBox(
-                                fit: BoxFit.cover,
-                                child: Image.network(
-                                  offer.image,
+                                height: 150,
+                                width: 150,
+                                child: FittedBox(
+                                  fit: BoxFit.cover,
+                                  child: Image.network(
+                                    offer.image,
+                                  ),
                                 ),
                               ),
                             ),
                           ));
                         }
-
+                        if (bundles != null)
+                          for (Bundle bundle in bundles) {
+                            widgets.add(GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProductViewScreen(
+                                              pid: bundle.id,
+                                            )));
+                              },
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors
+                                          .grey[300], // red as border color
+                                    ),
+                                  ),
+                                  height: 150,
+                                  width: 150,
+                                  child: FittedBox(
+                                    fit: BoxFit.cover,
+                                    child: Image.network(
+                                      bundle
+                                          .productimages.first.pictureReference,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ));
+                          }
                         return ListView(
                           scrollDirection: Axis.horizontal,
                           children: widgets,
@@ -293,7 +359,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             //TOP SELLERS
             Container(
-              height: 170,
+              height: 300,
               color: Color(0xFFF6EDE8),
               child: Column(
                 children: [
@@ -313,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 15),
                     child: Container(
-                      height: 100,
+                      height: 200,
                       child: BlocBuilder<GetSellerCubit, SellerState>(
                         builder: (context, state) {
                           if (state is SellerInitialState) {
@@ -328,11 +394,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ));
                             } else {
                               List<Seller> selling = state.seller;
-                              List<Widget> widgets = [
-                                SizedBox(
-                                  width: 10,
-                                )
-                              ];
+                              List<Widget> widgets = [];
                               // print(sellings.length);
                               for (Seller selling in selling) {
                                 // print(
@@ -340,44 +402,52 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                 widgets.add(GestureDetector(
                                   onTap: () async {
-                                    Product product = await BlocProvider.of<
-                                            GetIDProductCubit>(context)
-                                        .getProduct(selling.id);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 ProductViewScreen(
-                                                    product: product)));
+                                                    pid: selling.id)));
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors
-                                              .grey[300], // red as border color
-                                        ),
-                                      ),
-                                      height: 100,
-                                      width: 100,
-                                      child: FittedBox(
-                                        fit: BoxFit.cover,
-                                        child: Image.network(
-                                          selling.productimages[0]
-                                              .pictureReference,
-                                        ),
-                                      ),
+                                          image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: NetworkImage(selling
+                                                .productimages[0]
+                                                .pictureReference),
+                                          ),
+                                          border: Border.all(
+                                            color: Colors.grey[
+                                                300], // red as border color
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20))),
+                                      // height: 120,
+                                      width: 160,
+                                      // child: FittedBox(
+                                      //   fit: BoxFit.cover,
+                                      //   child: Image.network(
+                                      //     selling.productimages[0]
+                                      //         .pictureReference,
+                                      //   ),
+                                      // ),
                                     ),
                                   ),
                                 ));
                               }
 
-                              return ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: widgets,
-                              );
+                              return ListWheelScrollViewX(
+                                  diameterRatio: 2.5,
+                                  scrollDirection: Axis.horizontal,
+                                  // magnification: 1.2,
+                                  // useMagnifier: true,
+                                  itemExtent: 180,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  children: widgets);
                             }
                           } else if (state is SellerErrorState) {
                             return buildErrorUi(state.message);
@@ -415,7 +485,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
                 builder: (context, state) {
-                  print('INSIDE BRAND');
+                  // print('INSIDE BRAND');
                   if (state is FeaturedInitialState) {
                     return buildLoading();
                   } else if (state is FeaturedLoadingState) {

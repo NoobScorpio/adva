@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/res/appStrings.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -173,9 +176,12 @@ class UserRepositoryImpl implements UserRepository {
       //   ),
       // );
       // var response = await request.send();
+      String baseEncoded = base64Encode(await profile.readAsBytes());
       var response = await http.post(
           baseURL + "/customer/basedecode/profile/update/${user.id}",
-          body: {"profile_image": base64Encode(await profile.readAsBytes())});
+          body: {"profile_image": baseEncoded});
+      print(baseEncoded);
+      // debugPrint(response.body, wrapWidth: 1024);
       print("IMAGE RESPONSE ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         // SharedPreferences sp=await SharedPreferences.getInstance();

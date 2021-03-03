@@ -2,17 +2,16 @@ import 'package:adva/bloc/offer_bloc/offerState.dart';
 import 'package:adva/data/repository/offerRepo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class GetOfferCubit extends Cubit<OfferState> {
+class GetOfferProductsCubit extends Cubit<OfferState> {
   final OfferRepository offerRepository;
 
-  GetOfferCubit({this.offerRepository}) : super(OfferInitialState());
+  GetOfferProductsCubit({this.offerRepository}) : super(OfferInitialState());
 
-  Future<void> getOffers() async {
+  Future<void> getOfferProducts() async {
     try {
-      // emit(OfferLoadingState());
-      final offers = await offerRepository.getOffers();
+      emit(OfferLoadingState());
       final bundles = await offerRepository.getOffersBundle();
-      emit(OfferLoadedState(offer: offers, bundle: bundles));
+      emit(OfferProductsLoadedState(products: bundles));
     } on Exception {
       emit(OfferErrorState());
     }

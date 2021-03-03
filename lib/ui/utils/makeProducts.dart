@@ -1,12 +1,13 @@
 import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/data/model/featured.dart';
 import 'package:adva/data/model/product.dart';
+import 'package:adva/data/model/products.dart';
 import 'file:///C:/Users/CIFER/AndroidStudioProjects/adva/lib/ui/utils/productContainer.dart';
 import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Widget makeProducts(screenHeight, products, box, context) {
+Widget makeProducts(screenHeight, products, box, context, {message}) {
   List<Widget> widgets = [];
   if (products.length > 0) {
     if (products[0].runtimeType == Product) {
@@ -45,8 +46,12 @@ Widget makeProducts(screenHeight, products, box, context) {
               shrinkWrap: true,
               children: widgets,
             ))
-      : Center(
-          child: Text('No product in this Category'),
+      : Padding(
+          padding: const EdgeInsets.only(top: 150.0),
+          child: Center(
+            child:
+                Text(message == null ? 'No product in this Category' : message),
+          ),
         );
 }
 

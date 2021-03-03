@@ -33,6 +33,8 @@ dependencies:
   google_fonts: ^1.1.2
   flutter_slidable: ^0.5.7
   font_awesome_flutter: ^8.11.0
+  ff_navigation_bar: ^0.1.5
+  rive: ^0.6.8
   google_maps_flutter: ^1.2.0
   pinput: ^1.0.0
   flutter_rating_bar: ^3.2.0+1
@@ -47,6 +49,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   easy_localization:
   dio: ^3.0.10
+  list_wheel_scroll_view_x: ^0.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -69,6 +72,7 @@ flutter:
     - assets/socialmedia/
     - assets/icons/
     - assets/translations/
+    - assets/rive/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

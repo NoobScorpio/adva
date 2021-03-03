@@ -1,3 +1,5 @@
+import 'package:adva/data/model/products.dart';
+
 class Offer {
   int id;
   String name;
@@ -8,6 +10,7 @@ class Offer {
   String offerOn;
   String createdAt;
   String updatedAt;
+  List<Products> products;
 
   Offer(
       {this.id,
@@ -18,7 +21,8 @@ class Offer {
       this.image,
       this.offerOn,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.products});
 
   Offer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,6 +34,12 @@ class Offer {
     offerOn = json['offer_on'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    if (json['products'] != null) {
+      products = new List<Products>();
+      json['products'].forEach((v) {
+        products.add(new Products.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -43,6 +53,9 @@ class Offer {
     data['offer_on'] = this.offerOn;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    if (this.products != null) {
+      data['products'] = this.products.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

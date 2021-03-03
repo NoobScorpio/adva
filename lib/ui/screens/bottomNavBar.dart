@@ -7,6 +7,7 @@ import 'package:adva/ui/screens/categoriesScreen.dart';
 import 'package:adva/ui/screens/galleryScreen.dart';
 import 'package:adva/ui/screens/homeScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
+import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -59,147 +60,174 @@ class _BottomNavBarState extends State<BottomNavBar> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            activeIcon: Column(
-              children: [
-                // Icon(
-                //   Icons.home_filled,
-                //   color: primaryColor,
-                // ),
-                SvgPicture.asset(
-                  'assets/icons/Home-active.svg',
-                ),
-                // Image.asset('assets/icons/Home-active.svg'),
-                Text(
-                  'Home',
-                  style: TextStyle(color: primaryColor),
-                )
-              ],
-            ),
+      bottomNavigationBar: FFNavigationBar(
+        theme: FFNavigationBarTheme(
+          barBackgroundColor: Colors.white,
+          selectedItemBorderColor: Colors.white,
+          selectedItemBackgroundColor: primaryColor,
+          selectedItemIconColor: Colors.white,
+          selectedItemLabelColor: Colors.black,
+        ),
+        // type: BottomNavigationBarType.fixed,
+        // showSelectedLabels: false,
+        // showUnselectedLabels: false,
+        items: <FFNavigationBarItem>[
+          FFNavigationBarItem(
+            iconData: Icons.home,
             label: 'Home',
-            icon: Column(
-              children: [
-                // Icon(
-                //   Icons.home_filled,
-                // ),
-                SvgPicture.asset(
-                  'assets/icons/Home-grey.svg',
-                ),
-
-                Text(
-                  'Home',
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
-            ),
           ),
-          BottomNavigationBarItem(
-            activeIcon: Column(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/Categories-active.svg',
-                ),
-                Text(
-                  'Categories',
-                  style: TextStyle(color: primaryColor),
-                )
-              ],
-            ),
-            label: 'Products',
-            icon: Column(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/Categories-grey.svg',
-                ),
-                Text(
-                  'Products',
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
-            ),
+          FFNavigationBarItem(
+            iconData: Icons.category,
+            label: 'Category',
           ),
-          BottomNavigationBarItem(
-            activeIcon: CircleAvatar(
-              backgroundColor: primaryColor,
-              radius: 25,
-              child: SvgPicture.asset(
-                'assets/icons/Cart-icon.svg',
-                height: 25,
-                width: 25,
-              ),
-            ),
+          FFNavigationBarItem(
+            iconData: Icons.shopping_cart_outlined,
             label: 'Cart',
-            icon: CircleAvatar(
-              backgroundColor: primaryColor,
-              radius: 25,
-              child: SvgPicture.asset(
-                'assets/icons/Cart-icon.svg',
-                height: 30,
-                width: 30,
-              ),
-            ),
           ),
-          BottomNavigationBarItem(
-            activeIcon: Column(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/Gallery-active.svg',
-                ),
-                Text(
-                  'Gallery',
-                  style: TextStyle(color: primaryColor),
-                )
-              ],
-            ),
+          FFNavigationBarItem(
+            iconData: Icons.image_outlined,
             label: 'Gallery',
-            icon: Column(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/Gallery-grey.svg',
-                ),
-                Text(
-                  'Gallery',
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
-            ),
           ),
-          BottomNavigationBarItem(
-            activeIcon: Column(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/Accounts-active.svg',
-                ),
-                Text(
-                  'Account',
-                  style: TextStyle(color: primaryColor),
-                )
-              ],
-            ),
+          FFNavigationBarItem(
+            iconData: Icons.person_outlined,
             label: 'Account',
-            icon: Column(
-              children: [
-                SvgPicture.asset(
-                  'assets/icons/Accounts-grey.svg',
-                ),
-                Text(
-                  'Account',
-                  style: TextStyle(color: Colors.grey),
-                )
-              ],
-            ),
           ),
+          // FFNavigationBarItem(
+          //   activeIcon: Column(
+          //     children: [
+          //       // Icon(
+          //       //   Icons.home_filled,
+          //       //   color: primaryColor,
+          //       // ),
+          //       SvgPicture.asset(
+          //         'assets/icons/Home-active.svg',
+          //       ),
+          //       // Image.asset('assets/icons/Home-active.svg'),
+          //       Text(
+          //         'Home',
+          //         style: TextStyle(color: primaryColor),
+          //       )
+          //     ],
+          //   ),
+          //   label: 'Home',
+          //   icon: Column(
+          //     children: [
+          //       // Icon(
+          //       //   Icons.home_filled,
+          //       // ),
+          //       SvgPicture.asset(
+          //         'assets/icons/Home-grey.svg',
+          //       ),
+          //
+          //       Text(
+          //         'Home',
+          //         style: TextStyle(color: Colors.grey),
+          //       )
+          //     ],
+          //   ),
+          // ),
+          // FFNavigationBarItem(
+          //   activeIcon: Column(
+          //     children: [
+          //       SvgPicture.asset(
+          //         'assets/icons/Categories-active.svg',
+          //       ),
+          //       Text(
+          //         'Categories',
+          //         style: TextStyle(color: primaryColor),
+          //       )
+          //     ],
+          //   ),
+          //   label: 'Products',
+          //   icon: Column(
+          //     children: [
+          //       SvgPicture.asset(
+          //         'assets/icons/Categories-grey.svg',
+          //       ),
+          //       Text(
+          //         'Products',
+          //         style: TextStyle(color: Colors.grey),
+          //       )
+          //     ],
+          //   ),
+          // ),
+          // FFNavigationBarItem(
+          //   activeIcon: CircleAvatar(
+          //     backgroundColor: primaryColor,
+          //     radius: 25,
+          //     child: SvgPicture.asset(
+          //       'assets/icons/Cart-icon.svg',
+          //       height: 25,
+          //       width: 25,
+          //     ),
+          //   ),
+          //   label: 'Cart',
+          //   icon: CircleAvatar(
+          //     backgroundColor: primaryColor,
+          //     radius: 25,
+          //     child: SvgPicture.asset(
+          //       'assets/icons/Cart-icon.svg',
+          //       height: 30,
+          //       width: 30,
+          //     ),
+          //   ),
+          // ),
+          // FFNavigationBarItem(
+          //   activeIcon: Column(
+          //     children: [
+          //       SvgPicture.asset(
+          //         'assets/icons/Gallery-active.svg',
+          //       ),
+          //       Text(
+          //         'Gallery',
+          //         style: TextStyle(color: primaryColor),
+          //       )
+          //     ],
+          //   ),
+          //   label: 'Gallery',
+          //   icon: Column(
+          //     children: [
+          //       SvgPicture.asset(
+          //         'assets/icons/Gallery-grey.svg',
+          //       ),
+          //       Text(
+          //         'Gallery',
+          //         style: TextStyle(color: Colors.grey),
+          //       )
+          //     ],
+          //   ),
+          // ),
+          // FFNavigationBarItem(
+          //   activeIcon: Column(
+          //     children: [
+          //       SvgPicture.asset(
+          //         'assets/icons/Accounts-active.svg',
+          //       ),
+          //       Text(
+          //         'Account',
+          //         style: TextStyle(color: primaryColor),
+          //       )
+          //     ],
+          //   ),
+          //   label: 'Account',
+          //   icon: Column(
+          //     children: [
+          //       SvgPicture.asset(
+          //         'assets/icons/Accounts-grey.svg',
+          //       ),
+          //       Text(
+          //         'Account',
+          //         style: TextStyle(color: Colors.grey),
+          //       )
+          //     ],
+          //   ),
+          // ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: primaryColor,
-        onTap: _onItemTapped,
-        backgroundColor: Color(0xffffffff),
-        unselectedItemColor: Colors.grey,
+        selectedIndex: _selectedIndex,
+        // selectedItemColor: primaryColor,
+        onSelectTab: _onItemTapped,
+        // backgroundColor: Color(0xffffffff),
+        // unselectedItemColor: Colors.grey,
       ),
     );
   }

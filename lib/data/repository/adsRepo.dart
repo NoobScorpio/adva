@@ -23,11 +23,14 @@ class AdsRepositoryImpl implements AdsRepository {
         return [];
       }
     } else if (response.statusCode == 400) {
-      throw UnimplementedError('This data does not exist.');
+      print("ADS 400");
+      return null;
     } else if (response.statusCode == 500) {
-      throw UnimplementedError('Internal server error.');
+      print("ADS 400");
+      return null;
     } else {
-      throw UnimplementedError('Something went wrong');
+      print("ADS UNKNOWN");
+      return null;
     }
   }
 }

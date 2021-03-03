@@ -26,11 +26,14 @@ class CategoryRepositoryImpl implements CategoryRepository {
         return [];
       }
     } else if (response.statusCode == 400) {
-      throw UnimplementedError('This data does not exist.');
+      print("BRANDS 400");
+      return null;
     } else if (response.statusCode == 500) {
-      throw UnimplementedError('Internal server error.');
+      print("BRANDS 500");
+      return null;
     } else {
-      throw UnimplementedError('Something went wrong');
+      print("BRANDS UNKNOWN");
+      return null;
     }
   }
 
@@ -47,11 +50,14 @@ class CategoryRepositoryImpl implements CategoryRepository {
 
       return products;
     } else if (response.statusCode == 400) {
-      throw UnimplementedError('This data does not exist.');
+      print("CATEGORY 400");
+      return null;
     } else if (response.statusCode == 500) {
-      throw UnimplementedError('Internal server error.');
+      print("CATEGORY 500");
+      return null;
     } else {
-      throw UnimplementedError('Something went wrong');
+      print("CATEGORY UNKNOWN");
+      return null;
     }
   }
 }

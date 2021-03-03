@@ -1,4 +1,6 @@
+import 'package:adva/data/model/bundle.dart';
 import 'package:adva/data/model/offer.dart';
+import 'package:adva/data/model/products.dart';
 import 'package:equatable/equatable.dart';
 
 //////////////////////    STATES     /////////////////////
@@ -19,12 +21,22 @@ class OfferLoadingState extends OfferState {
 
 class OfferLoadedState extends OfferState {
   final List<Offer> offer;
-
-  OfferLoadedState({this.offer});
+  final List<Bundle> bundle;
+  OfferLoadedState({this.offer, this.bundle});
 
   @override
   // TODO: implement props
-  List<Object> get props => [offer];
+  List<Object> get props => [offer, bundle];
+}
+
+class OfferProductsLoadedState extends OfferState {
+  final List<Bundle> products;
+
+  OfferProductsLoadedState({this.products});
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [products];
 }
 
 class OfferErrorState extends OfferState {

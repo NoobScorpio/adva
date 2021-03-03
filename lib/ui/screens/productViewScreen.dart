@@ -17,6 +17,7 @@ import 'package:adva/data/model/qas.dart';
 import 'package:adva/data/model/relatedProduct.dart';
 import 'package:adva/data/model/review.dart';
 import 'package:adva/data/model/user.dart';
+import 'package:adva/data/repository/productRepo.dart';
 import 'package:adva/ui/screens/questionsScreen.dart';
 import 'package:adva/ui/screens/reviewScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -32,9 +33,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductViewScreen extends StatefulWidget {
-  final Product product;
+  final int pid;
 
-  const ProductViewScreen({Key key, this.product}) : super(key: key);
+  const ProductViewScreen({Key key, this.pid}) : super(key: key);
   @override
   _ProductViewScreenState createState() => _ProductViewScreenState();
 }
@@ -43,7 +44,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
   double _rating = 3.5;
   List<String> qtyValue = ["QTY 1", "QTY 2", "QTY 3", "QTY 4", "QTY 5"];
   String qtySelected = "QTY 1";
-
+  bool isLoading = true;
   int colorValue;
   int sizeValue;
   String pName, image, desc;
@@ -71,64 +72,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    quesController = TextEditingController();
-    product = widget.product;
-
-    haveSizes = product.sizes == [] ||
-            product.sizes == null ||
-            product.sizes.length == 0
-        ? false
-        : true;
-
-    if (haveSizes) {
-      sizeValue = product.sizes[0].id;
-      for (var si in product.sizes) {
-        if (si.size.toString() != ' ') {
-          sizesIntValues.add(si.id);
-          sizesStringValues.add(si.size);
-          sizesMap[si.id] = si.size;
-          print("IDS : ${si.id}");
-        }
-      }
-    }
-    haveColors = product.colors == [] ||
-            product.colors == null ||
-            product.colors.length == 0
-        ? false
-        : true;
-
-    if (haveColors) {
-      colorValue = product.colors[0].id;
-      for (var clr in product.colors) {
-        if (clr.color.toString() != ' ') {
-          print("COLOR: 1${clr.color.toString()}1");
-          String color = '0xFF' +
-              clr.color
-                  .toString()
-                  .substring(1, clr.color.toString().length - 1);
-          print(color);
-          colors.add(DropdownMenuItem(
-            child: Container(
-              color: Colors.grey[300],
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Container(
-                  height: 20,
-                  width: 80,
-                  color: Color(int.parse(color)),
-                ),
-              ),
-            ),
-            value: clr.id,
-          ));
-        }
-      }
-    }
-    for (Reviews rev in product.reviews) {
-      if (!(reviews.length > 0)) {
-        reviewAvg += rev.stars.toDouble();
-      }
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => settings());
   }
 
   Widget getCarousel(screenWidth, screenHeight) {
@@ -908,6 +852,91 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
     );
   }
 
+  settings() async {
+    quesController = TextEditingController();
+    product = await ProductRepositoryImpl().getProductByID(widget.pid);
+    print("PRODUCT ID: ${widget.pid}");
+    haveSizes = product.sizes == [] ||
+            product.sizes == null ||
+            product.sizes.length == 0
+        ? false
+        : true;
+
+    if (haveSizes) {
+      sizeValue = product.sizes[0].id;
+      for (var si in product.sizes) {
+        if (si.size.toString() != ' ') {
+          sizesIntValues.add(si.id);
+          sizesStringValues.add(si.size);
+          sizesMap[si.id] = si.size;
+          print("IDS : ${si.id}");
+        }
+      }
+    }
+    haveColors = product.colors == [] ||
+            product.colors == null ||
+            product.colors.length == 0
+        ? false
+        : true;
+
+    if (haveColors) {
+      colorValue = product.colors[0].id;
+      for (var clr in product.colors) {
+        if (clr.color.toString() != ' ') {
+          print("COLOR: 1${clr.color.toString()}1");
+          String color = '0xFF' +
+              clr.color
+                  .toString()
+                  .substring(1, clr.color.toString().length - 1);
+          print(color);
+          colors.add(DropdownMenuItem(
+            child: Text('${clr.color}'),
+            value: clr.id,
+          ));
+        }
+      }
+    }
+    for (Reviews rev in product.reviews) {
+      if (!(reviews.length > 0)) {
+        reviewAvg += rev.stars.toDouble();
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Widget getRelatedProducts() {
+    List<RelatedProducts> related = product.relatedProducts;
+    List<Widget> widgets = [];
+    for (RelatedProducts rp in related) {
+      widgets.add(GestureDetector(
+        onTap: () async {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ProductViewScreen(pid: rp.id)));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+              width: 200,
+              height: 200,
+              child: FittedBox(
+                  fit: BoxFit.cover,
+                  child: Image.network(rp.productimages[0].pictureReference))),
+        ),
+      ));
+    }
+    return Container(
+        height: 220,
+        width: double.maxFinite,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: widgets,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -917,220 +946,174 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: ListView(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //carousel
-                    getCarousel(screenWidth, screenHeight),
-                    //INFO
-                    getDetails(screenWidth, screenHeight),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    //  REVIEWS:QUESTIONS
-                    getReviewsAndQuestions(screenWidth, screenHeight),
-                    //YOU MAY ALSO LIKE
-                    Container(
-                        width: double.maxFinite,
-                        child: Card(
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text(
-                                  'You may also like',
-                                  style: boldTextStyle,
-                                ),
-                              ),
-                              BlocBuilder<GetIDProductCubit, ProductState>(
-                                  builder: (context, state) {
-                                // print("PRODUCT STATE: $state");
-                                if (state is ProductInitialState) {
-                                  return buildLoading();
-                                } else if (state is ProductLoadingState) {
-                                  return buildLoading();
-                                } else if (state is ProductLoadedState) {
-                                  // print("INSIDE $state");
-                                  if (state.product == null) {
-                                    return Center(
-                                        child: CircularProgressIndicator(
-                                      backgroundColor: primaryColor,
-                                    ));
-                                  } else {
-                                    List<RelatedProducts> related =
-                                        state.product.relatedProducts;
-                                    List<Widget> widgets = [];
-                                    for (RelatedProducts rp in related) {
-                                      widgets.add(GestureDetector(
-                                        onTap: () async {
-                                          Product product = await BlocProvider
-                                                  .of<GetIDProductCubit>(
-                                                      context)
-                                              .getProduct(rp.id);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProductViewScreen(
-                                                          product: product)));
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                              width: 200,
-                                              height: 200,
-                                              child: FittedBox(
-                                                  fit: BoxFit.cover,
-                                                  child: Image.network(rp
-                                                      .productimages[0]
-                                                      .pictureReference))),
-                                        ),
-                                      ));
-                                    }
-                                    return Container(
-                                        height: 220,
-                                        width: double.maxFinite,
-                                        child: ListView(
-                                          scrollDirection: Axis.horizontal,
-                                          children: widgets,
-                                        ));
-                                  }
-                                } else if (state is ProductErrorState) {
-                                  return buildErrorUi(state.message);
-                                } else {
-                                  return buildErrorUi('LAST ELSE');
-                                }
-                              })
-                            ],
-                          ),
-                        ))
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      height: 55,
-                      width: screenWidth / 3,
-                      color: primaryColor,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Container(
-                          color: Colors.white,
+          if (!isLoading)
+            Expanded(
+              child: ListView(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //carousel
+                      getCarousel(screenWidth, screenHeight),
+                      //INFO
+                      getDetails(screenWidth, screenHeight),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      //  REVIEWS:QUESTIONS
+                      getReviewsAndQuestions(screenWidth, screenHeight),
+                      //YOU MAY ALSO LIKE
+                      Container(
                           width: double.maxFinite,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: primaryColor,
+                          child: Card(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(
+                                    'You may also like',
+                                    style: boldTextStyle,
+                                  ),
+                                ),
+                                getRelatedProducts()
+                              ],
+                            ),
+                          ))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          if (!isLoading)
+            Container(
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 55,
+                        width: screenWidth / 3,
+                        color: primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: Container(
+                            color: Colors.white,
+                            width: double.maxFinite,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: primaryColor,
+                                ),
+                                iconSize: 42,
+                                value: qtySelected,
+                                focusColor: primaryColor,
+                                items: qtyValue.map((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text('$value'),
+                                  );
+                                }).toList(),
+                                onChanged: (_) {
+                                  setState(() {
+                                    qtySelected = _;
+                                    print(qtySelected);
+                                  });
+                                },
                               ),
-                              iconSize: 42,
-                              value: qtySelected,
-                              focusColor: primaryColor,
-                              items: qtyValue.map((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: new Text('$value'),
-                                );
-                              }).toList(),
-                              onChanged: (_) {
-                                setState(() {
-                                  qtySelected = _;
-                                  print(qtySelected);
-                                });
-                              },
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    BlocListener<CartCubit, CartState>(
-                      listener: (context, state) {},
-                      child: Container(
-                        height: 55,
-                        width: screenWidth / 1.8,
-                        child: RaisedButton(
-                          onPressed: () async {
-                            if (product.quantity == 0) {
-                              showToast("Product out of stock", primaryColor);
-                            } else {
-                              showToast("Adding product", primaryColor);
-                              SharedPreferences sp =
-                                  await SharedPreferences.getInstance();
-
-                              bool loggedIn = sp.getBool('loggedIn');
-                              if (loggedIn == null || loggedIn == false) {
-                                showToast("Not logged in", primaryColor);
+                      BlocListener<CartCubit, CartState>(
+                        listener: (context, state) {},
+                        child: Container(
+                          height: 55,
+                          width: screenWidth / 1.8,
+                          child: RaisedButton(
+                            onPressed: () async {
+                              if (product.quantity == 0) {
+                                showToast("Product out of stock", primaryColor);
                               } else {
-                                var user = User.fromJson(
-                                    json.decode(sp.getString('user')));
-                                if (user != null && user.id != null) {
-                                  print(qtySelected.split(' ')[1]);
-                                  CartItem cartItem = CartItem();
-                                  cartItem.pName = pName;
-                                  cartItem.price = price;
-                                  cartItem.image = image;
-                                  cartItem.desc = desc;
-                                  cartItem.pid = product.id;
-                                  cartItem.discount = discount;
-                                  cartItem.vat = vat;
-                                  cartItem.size = size;
-                                  cartItem.sizeID = sizeValue;
-                                  cartItem.categoryID = categoryID;
-                                  cartItem.category = category;
-                                  cartItem.qty =
-                                      int.parse(qtySelected.split(' ')[1]);
-                                  cartItem.color = colorValue;
-                                  //TODO: CART ITEM ADD
-                                  bool added =
-                                      await BlocProvider.of<CartCubit>(context)
-                                          .addItem(cartItem);
-                                  if (added)
-                                    showToast(
-                                        "Product Added to cart", primaryColor);
-                                  else
-                                    showToast(
-                                        'Could not add to cart', primaryColor);
+                                showToast("Adding product", primaryColor);
+                                SharedPreferences sp =
+                                    await SharedPreferences.getInstance();
+
+                                bool loggedIn = sp.getBool('loggedIn');
+                                if (loggedIn == null || loggedIn == false) {
+                                  showToast("Not logged in", primaryColor);
                                 } else {
-                                  showToast(
-                                      "You are not logged in", primaryColor);
+                                  var user = User.fromJson(
+                                      json.decode(sp.getString('user')));
+                                  if (user != null && user.id != null) {
+                                    print(qtySelected.split(' ')[1]);
+                                    CartItem cartItem = CartItem();
+                                    cartItem.pName = pName;
+                                    cartItem.price = price;
+                                    cartItem.image = image;
+                                    cartItem.desc = desc;
+                                    cartItem.pid = product.id;
+                                    cartItem.discount = discount;
+                                    cartItem.vat = vat;
+                                    cartItem.size = size;
+                                    cartItem.sizeID = sizeValue;
+                                    cartItem.categoryID = categoryID;
+                                    cartItem.category = category;
+                                    cartItem.qty =
+                                        int.parse(qtySelected.split(' ')[1]);
+                                    cartItem.color = colorValue;
+                                    //TODO: CART ITEM ADD
+                                    bool added =
+                                        await BlocProvider.of<CartCubit>(
+                                                context)
+                                            .addItem(cartItem);
+                                    if (added)
+                                      showToast("Product Added to cart",
+                                          primaryColor);
+                                    else
+                                      showToast('Could not add to cart',
+                                          primaryColor);
+                                  } else {
+                                    showToast(
+                                        "You are not logged in", primaryColor);
+                                  }
                                 }
                               }
-                            }
-                          },
-                          color: primaryColor,
-                          child: Text(
-                            'Add to Cart',
-                            style: TextStyle(color: Colors.white),
+                            },
+                            color: primaryColor,
+                            child: Text(
+                              'Add to Cart',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          )
+          if (isLoading)
+            Padding(
+              padding: const EdgeInsets.only(top: 158.0),
+              child: Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: primaryColor,
+                ),
+              ),
+            ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     Navigator.pop(context);
+      //   },
+      // ),
     );
   }
 }

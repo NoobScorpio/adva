@@ -19,11 +19,14 @@ class FeaturedRepositoryImpl implements FeaturedRepository {
       // print(featured);
       return featured;
     } else if (response.statusCode == 400) {
-      throw UnimplementedError('This data does not exist.');
+      print("FEATURED 400");
+      return null;
     } else if (response.statusCode == 500) {
-      throw UnimplementedError('Internal server error.');
+      print("FEATURED 500");
+      return null;
     } else {
-      throw UnimplementedError('Something went wrong');
+      print("FEATURED UNKNOWN");
+      return null;
     }
   }
 }

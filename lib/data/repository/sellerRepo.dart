@@ -19,11 +19,14 @@ class SellerRepositoryImpl implements SellerRepository {
       // print(sellings);
       return sellings;
     } else if (response.statusCode == 400) {
-      throw UnimplementedError('This data does not exist.');
+      print("SELLER 400");
+      return null;
     } else if (response.statusCode == 500) {
-      throw UnimplementedError('Internal server error.');
+      print("SELLER 500");
+      return null;
     } else {
-      throw UnimplementedError('Something went wrong');
+      print("SELLER UNKNOWN");
+      return null;
     }
   }
 }
