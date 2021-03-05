@@ -10,6 +10,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddAddressScreen extends StatefulWidget {
   final User user;
@@ -74,7 +75,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           title: Text(
             '${widget.edit == null || widget.edit == false ? "Add" : "Edit"} address',
             style: TextStyle(color: Colors.black),
-          ),
+          ).tr(),
           leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -94,12 +95,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                 child: Text(
                   'Address',
                   style: normalTextStyle,
-                ),
+                ).tr(),
               ),
               TextField(
                 controller: adCont,
                 decoration: InputDecoration(
-                  hintText: 'Enter full address',
+                  hintText: 'Enter full address'.tr(),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
@@ -112,12 +113,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                 child: Text(
                   'City',
                   style: normalTextStyle,
-                ),
+                ).tr(),
               ),
               TextField(
                 controller: cityCont,
                 decoration: InputDecoration(
-                  hintText: 'Enter city name',
+                  hintText: 'Enter city name'.tr(),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
@@ -130,12 +131,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                 child: Text(
                   'Country',
                   style: normalTextStyle,
-                ),
+                ).tr(),
               ),
               TextField(
                 controller: countCont,
                 decoration: InputDecoration(
-                  hintText: 'Enter country name',
+                  hintText: 'Enter country name'.tr(),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
@@ -148,12 +149,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                 child: Text(
                   'Postal Code',
                   style: normalTextStyle,
-                ),
+                ).tr(),
               ),
               TextField(
                 controller: postalCont,
                 decoration: InputDecoration(
-                  hintText: 'Enter postal code',
+                  hintText: 'Enter postal code'.tr(),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
@@ -190,7 +191,6 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                             await BlocProvider.of<AddressCubit>(context)
                                 .updateAddress(addressObj);
                         if (updated) {
-                          // rint('INSIDE EDIT ADDRESS');
                           showToast("Address Updated", primaryColor);
                           Navigator.pop(context);
                         } else {
@@ -214,7 +214,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                   child: Text(
                     '${widget.edit == null || widget.edit == false ? "Add" : "Edit"} Address',
                     style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
+                  ).tr(),
                 ),
               )
             ],
@@ -255,7 +255,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               child: Text(
                 'Confirm Location',
                 style: TextStyle(color: Colors.white),
-              ),
+              ).tr(),
             ),
           )
         ],

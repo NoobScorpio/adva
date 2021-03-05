@@ -1,5 +1,6 @@
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TileProductContainer extends StatefulWidget {
   @override
@@ -48,7 +49,7 @@ class _TileProductContainerState extends State<TileProductContainer> {
                     style: TextStyle(
                       fontSize: 20,
                     ),
-                  ),
+                  ).tr(),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10, left: 12, right: 12),
@@ -71,14 +72,14 @@ class _TileProductContainerState extends State<TileProductContainer> {
                         style: TextStyle(
                           fontSize: 18,
                         ),
-                      ),
+                      ).tr(),
                       Row(
                         children: [
                           Text(
                             'SAR  ',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold),
-                          ),
+                          ).tr(),
                           Text(
                             '75.00',
                             style: TextStyle(

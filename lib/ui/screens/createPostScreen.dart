@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:adva/bloc/gallery_bloc/postCubit.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -7,6 +6,7 @@ import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CreatePostScreen extends StatefulWidget {
   final File image;
@@ -38,7 +38,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         title: Text(
           'Create Post',
           style: TextStyle(color: Colors.black),
-        ),
+        ).tr(),
         backgroundColor: Colors.white,
       ),
       body: SafeArea(
@@ -54,14 +54,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   TextField(
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: 'Description',
+                      hintText: 'Description'.tr(),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                     ),
                     onChanged: (val) {
                       desc = val;
                     },
-                    // autofillHints: ['Type your comment here'],
                   ),
                   SizedBox(
                     height: 30,
@@ -84,7 +83,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     child: Text(
                       'Post',
                       style: TextStyle(color: Colors.white),
-                    ),
+                    ).tr(),
                     onPressed: () async {
                       if (desc != '') {
                         bool posted = await BlocProvider.of<PostsCubit>(context)

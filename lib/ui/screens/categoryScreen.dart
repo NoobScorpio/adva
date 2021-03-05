@@ -18,6 +18,7 @@ import 'package:adva/ui/utils/notFound.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ShopCategoryScreen extends StatefulWidget {
   final cid;
@@ -32,8 +33,8 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
   bool box = true;
   bool brand;
   bool filter = false;
-  List<String> sortValues = ['Sort by', 'High to Low', 'Low to High'];
-  String sortVal = 'Sort by';
+  List<String> sortValues = ['Sort by'.tr(), 'High to Low'.tr(), 'Low to High'.tr()];
+  String sortVal = 'Sort by'.tr();
   bool sort = false;
   _ShopCategoryScreenState(this.brand);
   @override
@@ -93,7 +94,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                 child: Text(
                                   'Filter',
                                   style: TextStyle(fontSize: 15),
-                                ),
+                                ).tr(),
                               ),
                             ),
                             Icon(Icons.filter_list_outlined),
@@ -125,7 +126,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                             items: sortValues.map((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
-                                child: new Text('$value'),
+                                child: new Text('$value').tr(),
                               );
                             }).toList(),
                             onChanged: (_) {
@@ -189,7 +190,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                         Text(
                           'Shop by brand',
                           style: TextStyle(fontSize: 16),
-                        ),
+                        ).tr(),
                         SizedBox(height: screenHeight * 0.015),
                         Container(
                           height: screenHeight * 0.08,
@@ -259,7 +260,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                             'Shop by category',
                             style:
                                 TextStyle(color: Colors.black, fontSize: 14.5),
-                          ),
+                          ).tr(),
                         ),
                         SizedBox(
                           height: 10,

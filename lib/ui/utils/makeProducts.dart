@@ -2,10 +2,11 @@ import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/data/model/featured.dart';
 import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/products.dart';
-import 'file:///C:/Users/CIFER/AndroidStudioProjects/adva/lib/ui/utils/productContainer.dart';
 import 'package:adva/ui/screens/productViewScreen.dart';
+import 'package:adva/ui/utils/productContainer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 Widget makeProducts(screenHeight, products, box, context, {message}) {
   List<Widget> widgets = [];
@@ -50,7 +51,7 @@ Widget makeProducts(screenHeight, products, box, context, {message}) {
           padding: const EdgeInsets.only(top: 150.0),
           child: Center(
             child:
-                Text(message == null ? 'No product in this Category' : message),
+                Text(message == null ? 'No product in this Category' : message).tr(),
           ),
         );
 }

@@ -7,6 +7,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class UserOrdersScreen extends StatefulWidget {
   final User user;
@@ -63,13 +64,13 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
                   child: Text(
                     'Orders',
                     style: boldTextStyle,
-                  ),
+                  ).tr(),
                 ),
                 Container(
                   height: 60,
                   child: TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Enter order id',
+                      hintText: 'Enter order id'.tr(),
                       suffix: IconButton(
                         onPressed: () {},
                         icon: Icon(
@@ -121,19 +122,19 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('ID'),
+            Text('ID').tr(),
             SizedBox(
               width: 15,
             ),
-            Expanded(child: Center(child: Text('Date'))),
+            Expanded(child: Center(child: Text('Date').tr())),
             Expanded(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('Status'),
+                Text('Status').tr(),
               ],
             )),
-            Text('Total'),
+            Text('Total').tr(),
           ],
         ),
       ));
@@ -196,7 +197,7 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
                             SizedBox(
                               width: 5,
                             ),
-                            Text('${order.status}'),
+                            Text('${order.status}').tr(),
                           ],
                         )),
                         Text('SAR. ${order.total}'),
@@ -219,7 +220,7 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
           child: Text(
             'You don\'t have any Orders',
             style: TextStyle(color: Colors.grey),
-          ),
+          ).tr(),
         ),
       );
     }

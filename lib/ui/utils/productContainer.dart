@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/product_bloc/productBloc.dart';
 import 'package:adva/bloc/product_bloc/productEvent.dart';
@@ -162,7 +162,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                   style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold),
-                                ),
+                                ).tr(),
                                 Text(
                                   '${widget.price}',
                                   style: TextStyle(
@@ -249,7 +249,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                   Text(
                                     'Add to Wishlist',
                                     style: TextStyle(color: primaryColor),
-                                  ),
+                                  ).tr(),
                                 ],
                               ),
                             )),
@@ -444,7 +444,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                             style: TextStyle(
                                               fontSize: 17,
                                             ),
-                                          ),
+                                          ).tr(),
                                           Row(
                                             children: [
                                               Text(
@@ -453,7 +453,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                                     fontSize: 15,
                                                     fontWeight:
                                                         FontWeight.bold),
-                                              ),
+                                              ).tr(),
                                               Text(
                                                 '${widget.price}',
                                                 style: TextStyle(

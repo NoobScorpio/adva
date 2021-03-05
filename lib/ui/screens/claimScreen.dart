@@ -1,5 +1,6 @@
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ClaimScreen extends StatefulWidget {
   @override
@@ -50,7 +51,7 @@ class _ClaimScreenState extends State<ClaimScreen> {
                   fontSize: 18,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500),
-            ),
+            ).tr(),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -60,7 +61,7 @@ class _ClaimScreenState extends State<ClaimScreen> {
                   fontSize: 14,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500),
-            ),
+            ).tr(),
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
@@ -78,7 +79,7 @@ class _ClaimScreenState extends State<ClaimScreen> {
                 child: Text(
                   'Make claim request',
                   style: TextStyle(color: Colors.white),
-                ),
+                ).tr(),
               ),
             ),
           )

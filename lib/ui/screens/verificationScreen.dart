@@ -5,6 +5,7 @@ import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class VerificationScreen extends StatefulWidget {
   final email;
@@ -47,7 +48,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
             style: TextStyle(
               color: Colors.black,
             ),
-          ),
+          ).tr(),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15.0),
@@ -58,7 +59,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   child: Text(
                 'Verification',
                 style: boldTextStyle,
-              )),
+              ).tr()
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -78,14 +80,16 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   child: Text(
                 'Verification code',
                 style: boldTextStyle,
-              )),
+              ).tr()
+              ),
             ),
             Center(
                 child: Text(
               'Please enter the 4 digit verification code we have just sent you',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey),
-            )),
+            ).tr()
+            ),
             SizedBox(
               height: 15,
             ),
@@ -115,11 +119,11 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 children: [
                   Text(
                     'Didn\'t receive the code? ',
-                  ),
+                  ).tr(),
                   Text(
                     'Resend',
                     style: TextStyle(color: primaryColor),
-                  ),
+                  ).tr(),
                 ],
               )),
             ),
@@ -136,7 +140,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                 child: Text(
                   'Submit',
                   style: TextStyle(color: Colors.white),
-                ),
+                ).tr(),
                 onPressed: () async {
                   showToast("Verifying", primaryColor);
                   int verify = await UserRepositoryImpl()
@@ -166,7 +170,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   child: Text(
                     'Cancel',
                     style: TextStyle(color: primaryColor),
-                  ),
+                  ).tr(),
                 ),
               ),
             )

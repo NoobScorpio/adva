@@ -5,6 +5,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class UserReturnsScreen extends StatefulWidget {
   final User user;
@@ -61,13 +62,13 @@ class _UserReturnsScreenState extends State<UserReturnsScreen> {
                   child: Text(
                     'Returns',
                     style: boldTextStyle,
-                  ),
+                  ).tr(),
                 ),
                 Container(
                   height: 60,
                   child: TextFormField(
                     decoration: InputDecoration(
-                      hintText: 'Enter order id',
+                      hintText: 'Enter order id'.tr(),
                       suffix: IconButton(
                         onPressed: () {},
                         icon: Icon(
@@ -115,19 +116,19 @@ class _UserReturnsScreenState extends State<UserReturnsScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text('ID'),
+            Text('ID').tr(),
             SizedBox(
               width: 15,
             ),
-            Expanded(child: Text('Date')),
+            Expanded(child: Text('Date').tr()),
             Expanded(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('Return Reason'),
+                Text('Return Reason').tr(),
               ],
             )),
-            Text('Return Status'),
+            Text('Return Status').tr(),
           ],
         ),
       ));
@@ -192,7 +193,7 @@ class _UserReturnsScreenState extends State<UserReturnsScreen> {
           child: Text(
             'You don\'t have any order returns.',
             style: TextStyle(color: Colors.grey),
-          ),
+          ).tr(),
         ),
       );
     }

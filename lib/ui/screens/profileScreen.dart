@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/changePasswordScreen.dart';
@@ -10,6 +9,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProfileScreen extends StatefulWidget {
   final User user;
@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Text(
                           'Personal Information',
                           style: boldTextStyle,
-                        ),
+                        ).tr(),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 color: primaryColor),
-                          ),
+                          ).tr(),
                         ),
                       )
                     ],
@@ -184,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.grey,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
-                    ),
+                    ).tr(),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
@@ -202,7 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.grey,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
-                    ),
+                    ).tr(),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
@@ -220,7 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.grey,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
-                    ),
+                    ).tr(),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0),
@@ -243,7 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Text(
                   'Change Password',
                   style: TextStyle(color: primaryColor),
-                ),
+                ).tr(),
                 onPressed: () {
                   Navigator.push(
                       context,

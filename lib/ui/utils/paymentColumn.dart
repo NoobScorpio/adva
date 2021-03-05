@@ -2,6 +2,7 @@ import 'package:adva/ui/screens/cartScreen.dart';
 import 'package:adva/ui/utils/cartWidgets.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PaymentColumn extends StatelessWidget {
   const PaymentColumn({
@@ -24,7 +25,8 @@ class PaymentColumn extends StatelessWidget {
               Text('Flat Shipping Rate',
                   style: TextStyle(
                     fontSize: 15,
-                  )),
+                  )
+              ).tr(),
               Text('SAR. ${flatShippingRate ?? ""}',
                   style: TextStyle(
                     fontSize: 15,
@@ -40,7 +42,7 @@ class PaymentColumn extends StatelessWidget {
               Text('Sub Total',
                   style: TextStyle(
                     fontSize: 15,
-                  )),
+                  )).tr(),
               Text('SAR. ${subTotal ?? ""}',
                   style: TextStyle(
                     fontSize: 15,
@@ -54,9 +56,9 @@ class PaymentColumn extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Total(Inc. Vat)',
-                  style: TextStyle(fontSize: 15, color: primaryColor)),
+                  style: TextStyle(fontSize: 15, color: primaryColor)).tr(),
               Text('SAR. ${total ?? ""}',
-                  style: TextStyle(fontSize: 15, color: primaryColor)),
+                  style: TextStyle(fontSize: 15, color: primaryColor)).tr(),
             ],
           ),
         ),

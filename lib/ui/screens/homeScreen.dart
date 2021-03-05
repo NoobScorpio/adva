@@ -31,6 +31,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:list_wheel_scroll_view_x/list_wheel_scroll_view_x.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -147,7 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             width: 0.1,
                                           ),
                                         ),
-                                        hintText: 'Search',
+                                        hintText: 'Search'.tr(),
                                         contentPadding: EdgeInsets.only(
                                             top: screenHeight * 0.01,
                                             left: screenWidth * 0.03),
@@ -332,8 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: FittedBox(
                                     fit: BoxFit.cover,
                                     child: Image.network(
-                                      bundle
-                                          .productimages.first.pictureReference,
+                                      bundle.productimages.first.pictureReference,
                                     ),
                                   ),
                                 ),

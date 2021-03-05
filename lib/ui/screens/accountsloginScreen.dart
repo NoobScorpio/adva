@@ -11,7 +11,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'bottomNavBar.dart';
 
 class AccountsLoginScreen extends StatefulWidget {
@@ -40,7 +40,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
         title: Text(
           'Accounts',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
-        ),
+        ).tr(),
       ),
       body: ListView(
         children: [
@@ -56,7 +56,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                         child: Text(
                           'Login',
                           style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
+                        ).tr(),
                       ),
                     ),
                     Divider(
@@ -69,7 +69,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Enter Email or Phone no',
+                          hintText: 'Enter Email or Phone no'.tr(),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                         ),
@@ -93,7 +93,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                               },
                               icon: Icon(Icons.remove_red_eye),
                             ),
-                            hintText: 'Password',
+                            hintText: 'Password'.tr(),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
                           ),
@@ -122,7 +122,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                       child: Text(
                         'Forget Password?',
                         style: boldTextStyle,
-                      ),
+                      ).tr(),
                     ),
                   ),
                 ),
@@ -139,7 +139,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                     child: Text(
                       'SIGN IN',
                       style: TextStyle(color: Colors.white),
-                    ),
+                    ).tr(),
                     onPressed: () async {
                       if (username != '' && pass != '') {
                         bool loggedIn =
@@ -167,12 +167,12 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                   child: Text(
                     'or',
                     style: TextStyle(color: Colors.black, fontSize: 15),
-                  ),
+                  ).tr(),
                 ),
                 Text(
                   'Login with',
                   style: TextStyle(color: Colors.black, fontSize: 14),
-                ),
+                ).tr(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -202,7 +202,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                       decoration: TextDecoration.underline,
                       decorationColor: Colors.black,
                     ),
-                  ),
+                  ).tr(),
                 ),
               ],
             ),

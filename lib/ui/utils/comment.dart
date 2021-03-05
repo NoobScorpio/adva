@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'constants.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Comment extends StatelessWidget {
   final image, name, body;
@@ -44,7 +44,7 @@ class Comment extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name ?? "Anonymous",
+                    name ?? "Anonymous".tr(),
                     style: boldTextStyle,
                   ),
                   SizedBox(

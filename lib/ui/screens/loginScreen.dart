@@ -2,6 +2,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Text(
             'Accounts',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
-          ),
+          ).tr(),
         )),
       ),
       body: ListView(
@@ -34,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Text(
               'Login',
               style: TextStyle(color: Colors.black, fontSize: 16),
-            ),
+            ).tr(),
           ),
           Padding(
             padding: EdgeInsets.only(
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 60,
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Enter Email or Phone no.',
+                  hintText: 'Enter Email or Phone no.'.tr(),
                   suffix: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -61,7 +62,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
-                // autofillHints: ['Type your comment here'],
               ),
             ),
           ),
@@ -71,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 60,
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Password',
+                  hintText: 'Password'.tr(),
                   suffix: IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -82,7 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
-                // autofillHints: ['Type your comment here'],
               ),
             ),
           ),
@@ -90,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [Text('Forget password?')],
+              children: [Text('Forget password?').tr()],
             ),
           ),
           SizedBox(
@@ -106,18 +105,18 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
                 'SIGN IN',
                 style: TextStyle(color: Colors.white),
-              ),
+              ).tr(),
               onPressed: () {},
             ),
           ),
           SizedBox(
             height: 15,
           ),
-          Center(child: Text('or')),
+          Center(child: Text('or').tr()),
           SizedBox(
             height: 5,
           ),
-          Center(child: Text('Login with')),
+          Center(child: Text('Login with').tr()),
           SizedBox(
             height: 15,
           ),
@@ -151,7 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
             'Create New Account',
             style: TextStyle(color: primaryColor),
-          )),
+          ).tr()
+          ),
         ],
       ),
     );

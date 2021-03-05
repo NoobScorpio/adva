@@ -7,6 +7,7 @@ import 'package:adva/ui/utils/questionWidget.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class QuestionsScreen extends StatefulWidget {
   final bool appBar;
@@ -58,7 +59,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
               title: Text(
                 'Questions & Answers',
                 style: TextStyle(color: Colors.black),
-              ),
+              ).tr(),
             ),
             body: body(context))
         : Scaffold(
@@ -102,7 +103,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                                 fontWeight: FontWeight.bold,
                                 color: primaryColor,
                                 decoration: TextDecoration.underline),
-                          ),
+                          ).tr(),
                         ),
                       ),
                     ),
@@ -125,7 +126,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                   child: TextField(
                     controller: questionController,
                     decoration: InputDecoration(
-                      hintText: 'Type your question(s) here',
+                      hintText: 'Type your question(s) here'.tr(),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                     ),
@@ -174,7 +175,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                           child: Text(
                             'Ask Question',
                             style: TextStyle(color: Colors.white),
-                          ),
+                          ).tr(),
                         ),
                       ),
                     ),

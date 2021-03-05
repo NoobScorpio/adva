@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/galleryRecentScreen.dart';
 import 'package:adva/ui/screens/postsScreen.dart';
@@ -9,7 +8,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'createPostScreen.dart';
 
 class GalleryScreen extends StatefulWidget {
@@ -30,7 +29,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           title: Text(
             'Gallery',
             style: TextStyle(color: Colors.black),
-          ),
+          ).tr(),
           bottom: TabBar(
             indicatorColor: Colors.black,
             tabs: [
@@ -38,13 +37,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
                 child: Text(
                   'Top',
                   style: boldTextStyle,
-                ),
+                ).tr(),
               ),
               Tab(
                 child: Text(
                   'Recent',
                   style: boldTextStyle,
-                ),
+                ).tr(),
               ),
             ],
           ),
@@ -53,8 +52,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
           children: [
             // Icon(Icons.directions_car),
             // Icon(Icons.directions_transit),
-            PostsScreen(filter: "top"),
-            PostsScreen(filter: "recent"),
+            PostsScreen(filter: "top".tr()),
+            PostsScreen(filter: "recent".tr()),
           ],
         ),
         floatingActionButton: FloatingActionButton(

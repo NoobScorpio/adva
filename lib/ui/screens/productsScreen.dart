@@ -4,6 +4,7 @@ import 'package:adva/data/repository/offerRepo.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeProducts.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProductsScreen extends StatefulWidget {
   final int oid;
@@ -41,7 +42,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
         title: Text(
           'Offer Products',
           style: TextStyle(color: Colors.black),
-        ),
+        ).tr(),
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -65,7 +66,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
           if (!isLoading)
             makeProducts(
                 MediaQuery.of(context).size.height, products, true, context,
-                message: "No products in this offer"),
+                message: "No products in this offer".tr()),
         ],
       ),
     );

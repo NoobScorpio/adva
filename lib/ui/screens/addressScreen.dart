@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:adva/bloc/address_bloc/addressCubit.dart';
 import 'package:adva/bloc/address_bloc/addressState.dart';
 import 'package:adva/data/model/address.dart';
@@ -11,6 +10,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddressScreen extends StatefulWidget {
   final User user;
@@ -30,7 +30,7 @@ class _AddressScreenState extends State<AddressScreen> {
         title: Text(
           'Addresses',
           style: TextStyle(color: Colors.black),
-        ),
+        ).tr(),
         backgroundColor: Colors.white,
         leading: GestureDetector(
           onTap: () {
@@ -85,7 +85,7 @@ class _AddressScreenState extends State<AddressScreen> {
               child: Text(
                 'Add new address',
                 style: TextStyle(color: Colors.white),
-              ),
+              ).tr(),
               onPressed: () {
                 Navigator.push(
                     context,
@@ -124,7 +124,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Details'),
+                    Text('Details').tr(),
                     Row(
                       children: [
                         GestureDetector(
@@ -150,7 +150,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                   Icons.edit,
                                   color: Colors.grey,
                                 ),
-                                Text('Edit')
+                                Text('Edit').tr(),
                               ],
                             ),
                           ),
@@ -178,7 +178,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                   Icons.delete,
                                   color: Colors.grey,
                                 ),
-                                Text('Remove')
+                                Text('Remove').tr(),
                               ],
                             ),
                           ),
@@ -194,7 +194,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 Text(
                   'Address',
                   style: boldTextStyle,
-                ),
+                ).tr(),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text('${address.address}'),
@@ -209,7 +209,7 @@ class _AddressScreenState extends State<AddressScreen> {
       );
     } else
       return Center(
-        child: Text('No Address saved'),
+        child: Text('No Address saved').tr(),
       );
   }
 }

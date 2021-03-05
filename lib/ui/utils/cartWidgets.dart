@@ -9,6 +9,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 Widget emptyCart() {
   return Column(
@@ -25,7 +26,7 @@ Widget emptyCart() {
         child: Text(
           '       Your cart is empty \nAdd items in cart to display',
           style: TextStyle(fontSize: 21, color: cartTextColor),
-        ),
+        ).tr(),
       ),
     ],
   );
@@ -212,7 +213,7 @@ class ProductCartContainer extends StatelessWidget {
                               Text(
                                 'Move to whishlist',
                                 style: TextStyle(color: cartTextColor),
-                              ),
+                              ).tr(),
                               Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: screenWidth * 0.015),
@@ -244,7 +245,7 @@ class ProductCartContainer extends StatelessWidget {
                               Text(
                                 'Remove',
                                 style: TextStyle(color: cartTextColor),
-                              ),
+                              ).tr(),
                             ],
                           ),
                         )

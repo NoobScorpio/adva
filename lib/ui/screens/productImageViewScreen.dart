@@ -1,5 +1,6 @@
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProductImageViewScreen extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _ProductImageViewScreenState extends State<ProductImageViewScreen> {
                 child: Text(
                   'Cancel',
                   style: boldTextStyle,
-                ),
+                ).tr(),
               ),
             ),
           )

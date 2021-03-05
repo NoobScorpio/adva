@@ -4,6 +4,7 @@ import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class OrderReturnScreen extends StatefulWidget {
   final User user;
@@ -42,7 +43,7 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
             fontSize: 22,
             fontWeight: FontWeight.w400,
           ),
-        ),
+        ).tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -60,7 +61,7 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                     child: Text(
                       'Order ID: ${orderDetail.id}',
                       style: TextStyle(color: primaryColor),
-                    ),
+                    ).tr(),
                   ),
                   getProducts(orderDetail),
                   SizedBox(
@@ -73,7 +74,7 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                   Text(
                     'Return Reason',
                     style: TextStyle(color: primaryColor),
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 15,
                   ),
@@ -103,7 +104,7 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                 child: Text(
                   'Confirm',
                   style: TextStyle(color: Colors.white),
-                ),
+                ).tr(),
               ),
             )
           ],
@@ -173,12 +174,12 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                           Text(
                             "${orderDetail.cart[i].product.productName}",
                             style: boldTextStyle,
-                          ),
+                          ).tr(),
                           SizedBox(
                             height: 5,
                           ),
                           Text(
-                              "${orderDetail.cart[i].product != null && orderDetail.cart[i].product.category != null ? orderDetail.cart[i].product.category.categoryName : "Category"} / ${orderDetail.cart[i].size ?? "Size"}"),
+                              "${orderDetail.cart[i].product != null && orderDetail.cart[i].product.category != null ? orderDetail.cart[i].product.category.categoryName : "Category"} / ${orderDetail.cart[i].size ?? "Size"}").tr(),
                         ],
                       ),
                       SizedBox(
@@ -190,12 +191,12 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                           Text(
                             "SAR. ${orderDetail.cart[i].total}",
                             style: boldTextStyle,
-                          ),
+                          ).tr(),
                           SizedBox(
                             height: 5,
                           ),
                           Text(
-                              "Quantity ${orderDetail.cart[i].quantity ?? "?"}"),
+                              "Quantity ${orderDetail.cart[i].quantity ?? "?"}").tr(),
                         ],
                       ),
                       SizedBox(

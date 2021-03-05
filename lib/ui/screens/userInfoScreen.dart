@@ -4,6 +4,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class UserInfoScreen extends StatefulWidget {
   final User user;
@@ -49,7 +50,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 child: Text(
                   'Cancel',
                   style: boldTextStyle,
-                ),
+                ).tr(),
               ),
             ),
           )
@@ -69,7 +70,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 Text(
                   'First Name',
                   style: boldTextStyle,
-                ),
+                ).tr(),
                 SizedBox(
                   height: 5,
                 ),
@@ -86,7 +87,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 Text(
                   'Last Name',
                   style: boldTextStyle,
-                ),
+                ).tr(),
                 SizedBox(
                   height: 5,
                 ),
@@ -103,7 +104,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 Text(
                   'Receive Communication in',
                   style: boldTextStyle,
-                ),
+                ).tr(),
                 SizedBox(
                   height: 5,
                 ),
@@ -173,7 +174,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   child: Text(
                     'Save',
                     style: TextStyle(color: Colors.white),
-                  ),
+                  ).tr(),
                 ),
               ),
             )

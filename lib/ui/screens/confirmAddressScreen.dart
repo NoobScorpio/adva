@@ -1,6 +1,7 @@
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ConfirmAddressScreen extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                         child: Text(
                           'Cancel',
                           style: boldTextStyle,
-                        ),
+                        ).tr(),
                       ),
                     )
                   ],
@@ -53,7 +54,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                 child: Text(
                   'Location Information',
                   style: boldTextStyle,
-                ),
+                ).tr(),
               ),
               Container(
                 width: double.maxFinite,
@@ -76,7 +77,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                                     width:
                                         MediaQuery.of(context).size.width / 1.6,
                                     child: Text(
-                                      '3585 - Al Batraji - AZ Zahra District - Jeddah - Makkah Makkah Province',
+                                      '3585 - Al Batraji - AZ Zahra District - Jeddah - Makkah Makkah Province'.tr(),
                                       style: boldTextStyle,
                                       maxLines: 4,
                                     ),
@@ -89,7 +90,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                               child: Text(
                                 'Al Qatar',
                                 style: TextStyle(fontSize: 16),
-                              ),
+                              ).tr(),
                             )
                           ],
                         ),
@@ -112,7 +113,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                                   Text(
                                     'Edit',
                                     style: TextStyle(color: Colors.blue),
-                                  ),
+                                  ).tr(),
                                 ],
                               ),
                             ),
@@ -129,7 +130,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text('Additional Label (Optional)'),
+                      child: Text('Additional Label (Optional)').tr(),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -137,7 +138,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Chip(
-                            label: Text('Home'),
+                            label: Text('Home').tr(),
                             backgroundColor: Colors.white,
                             shadowColor: primaryColor,
                             elevation: 5,
@@ -146,7 +147,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Chip(
-                            label: Text('Office'),
+                            label: Text('Office').tr(),
                             backgroundColor: Colors.white,
                             // shadowColor: primaryColor,
                             elevation: 5,
@@ -172,7 +173,7 @@ class _ConfirmAddressScreenState extends State<ConfirmAddressScreen> {
               child: Text(
                 'Save Address',
                 style: TextStyle(color: Colors.white),
-              ),
+              ).tr(),
             ),
           )
         ],

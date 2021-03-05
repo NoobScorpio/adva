@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:adva/data/model/points.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ADVAPointsScreen extends StatefulWidget {
   final User user;
@@ -64,7 +65,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                 Text(
                   'Wallet balance',
                   style: TextStyle(color: Colors.grey),
-                ),
+                ).tr(),
                 BlocBuilder<PointsCubit, PointsState>(
                   builder: (context, state) {
                     if (state is PointsInitialState)
@@ -90,7 +91,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.w600),
-                        );
+                        ).tr();
                     } else if (state is PointsErrorState)
                       return Text(
                         'PTS 0.00',
@@ -98,7 +99,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                             color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.w600),
-                      );
+                      ).tr();
                     else
                       return Text(
                         'PTS 0.00',
@@ -106,7 +107,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                             color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.w600),
-                      );
+                      ).tr();
                   },
                 ),
                 SizedBox(
@@ -115,7 +116,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                 Text(
                   'Promo Code',
                   style: TextStyle(color: Colors.grey),
-                ),
+                ).tr(),
                 BlocBuilder<PointsCubit, PointsState>(
                   builder: (context, state) {
                     if (state is PointsInitialState)
@@ -139,7 +140,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.w600),
-                        );
+                        ).tr();
                     } else if (state is PointsErrorState)
                       return Text(
                         'No Code',
@@ -147,7 +148,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                             color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.w600),
-                      );
+                      ).tr();
                     else
                       return Text(
                         'No Code',
@@ -155,7 +156,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                             color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.w600),
-                      );
+                      ).tr();
                   },
                 ),
                 SizedBox(
@@ -180,7 +181,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                             child: Text(
                               'Copy Code',
                               style: TextStyle(color: primaryColor),
-                            ),
+                            ).tr(),
                           ),
                         ),
                       )),
@@ -191,7 +192,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                 Text(
                   'Share this promo code and get reward',
                   style: TextStyle(color: Colors.grey),
-                ),
+                ).tr(),
                 SizedBox(
                   height: 75,
                 ),
@@ -231,14 +232,14 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
       widgets.add(Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Expanded(child: Text('ID')),
-          Expanded(child: Center(child: Text('Date'))),
-          Expanded(child: Center(child: Text('Origin'))),
+          Expanded(child: Text('ID').tr()),
+          Expanded(child: Center(child: Text('Date').tr())),
+          Expanded(child: Center(child: Text('Origin').tr())),
           Expanded(
               child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('Points'),
+              Text('Points').tr(),
             ],
           )),
         ],
@@ -305,7 +306,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
           Text(
             'You don\'t have any Adva points',
             style: TextStyle(color: Colors.grey),
-          ),
+          ).tr(),
         ],
       );
     }

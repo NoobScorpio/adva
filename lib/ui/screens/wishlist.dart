@@ -10,6 +10,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class WishListScreen extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _WishListScreenState extends State<WishListScreen> {
         title: Text(
           'Wish list',
           style: TextStyle(color: Colors.black),
-        ),
+        ).tr(),
         backgroundColor: Colors.white,
         leading: GestureDetector(
           onTap: () {
@@ -91,9 +92,9 @@ class _WishListScreenState extends State<WishListScreen> {
                                         Text(
                                           '${wish.product == null ? "Name" : wish.product.productName}',
                                           style: boldTextStyle,
-                                        ),
+                                        ).tr(),
                                         Text(
-                                            'Price: SAR. ${wish.product == null ? "??" : wish.product.price}'),
+                                            'Price: SAR. ${wish.product == null ? "??" : wish.product.price}').tr(),
                                       ],
                                     ),
                                     SizedBox(
@@ -103,7 +104,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                         ? "Stock"
                                         : wish.product.quantity > 0
                                             ? 'In Stock'
-                                            : "Out of stock")
+                                            : "Out of stock").tr()
                                   ],
                                 )
                               ],

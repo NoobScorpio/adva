@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Post extends StatefulWidget {
   final PostModel post;
@@ -149,7 +150,7 @@ class _PostState extends State<Post> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Share'),
+                    Text('Share').tr(),
                     SizedBox(
                       width: 10,
                     ),
@@ -181,7 +182,7 @@ class _PostState extends State<Post> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Comments: ${post.comments.length}'),
+                  Text('Comments: ${post.comments.length}').tr(),
                   SizedBox(
                     width: 10,
                   ),
@@ -206,7 +207,7 @@ class _PostState extends State<Post> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Likes: $likes'),
+                    Text('Likes: $likes').tr(),
                     SizedBox(
                       width: 10,
                     ),
@@ -230,7 +231,7 @@ class _PostState extends State<Post> {
                                 liked = false;
                                 likes--;
                               });
-                              showToast("Unliked", primaryColor);
+                              showToast("Un liked", primaryColor);
                             } else if (!liked) {
                               setState(() {
                                 liked = true;
@@ -239,7 +240,7 @@ class _PostState extends State<Post> {
                               showToast("Liked", primaryColor);
                             }
                           } else
-                            showToast("Coulnot like", primaryColor);
+                            showToast("Could not like", primaryColor);
                         }
                       },
                       child: liked
@@ -275,7 +276,7 @@ class LikeButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Likes: $likes'),
+          Text('Likes: $likes').tr(),
           SizedBox(
             width: 10,
           ),

@@ -6,6 +6,7 @@ import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   @override
@@ -30,7 +31,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
         title: Text(
           'Accounts',
           style: TextStyle(color: Colors.black),
-        ),
+        ).tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -42,7 +43,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   child: Text(
                 'Forgot Password',
                 style: boldTextStyle,
-              )),
+              ).tr()
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -62,13 +64,15 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   child: Text(
                 'Verification code will be send to you',
                 style: boldTextStyle,
-              )),
+              ).tr()
+              ),
             ),
             Center(
                 child: Text(
-              'don\'t worry we are just making sure that its you',
+              'Don\'t worry we are just making sure that its you',
               style: TextStyle(color: Colors.grey),
-            )),
+            ).tr()
+            ),
             SizedBox(
               height: 15,
             ),
@@ -76,7 +80,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Enter Email or Phone no',
+                  hintText: 'Enter Email or Phone no'.tr(),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
@@ -114,7 +118,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 child: Text(
                   'Continue',
                   style: TextStyle(color: Colors.white),
-                ),
+                ).tr(),
               ),
             ),
             SizedBox(
@@ -128,7 +132,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 child: Text(
                   'Go back to Login',
                   style: TextStyle(color: primaryColor),
-                ),
+                ).tr(),
               ),
             )
           ],

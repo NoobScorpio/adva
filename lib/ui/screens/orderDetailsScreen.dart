@@ -12,7 +12,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
 import 'package:adva/ui/utils/statesUi.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -70,7 +70,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             fontSize: 22,
             fontWeight: FontWeight.w400,
           ),
-        ),
+        ).tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -88,7 +88,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       child: Text(
                         'Summary',
                         style: TextStyle(color: primaryColor),
-                      ),
+                      ).tr(),
                     ),
                     //ORDER DETAILS
                     if (!(widget.cart))
@@ -143,7 +143,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       child: Text(
                         'Personal Information',
                         style: TextStyle(color: primaryColor),
-                      ),
+                      ).tr(),
                     ),
                     //PERSONAL INFORMATION
                     if (!(widget.cart))
@@ -176,7 +176,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       child: Text(
                         'Shipping',
                         style: TextStyle(color: primaryColor),
-                      ),
+                      ).tr(),
                     ),
                     if (!(widget.cart))
                       BlocBuilder<OrderCubit, OrderState>(
@@ -244,7 +244,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           child: Text(
                             'Next',
                             style: TextStyle(color: Colors.white),
-                          ),
+                          ).tr(),
                           onPressed: () {
                             showDialog<void>(
                                 context: context,
@@ -259,7 +259,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                         child: Column(
                                           children: [
                                             Center(
-                                              child: Text('Success'),
+                                              child: Text('Success').tr(),
                                             ),
                                             Padding(
                                               padding:
@@ -280,7 +280,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                                 ),
                                               ),
                                             ),
-                                            Text('Your order is on your way'),
+                                            Text('Your order is on your way').tr(),
                                             SizedBox(
                                                 height: screenHeight * 0.04),
                                             MyButton(
@@ -294,7 +294,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                                 'Go to Home',
                                                 style: TextStyle(
                                                     color: Colors.white),
-                                              ),
+                                              ).tr(),
                                               innerColor: primaryColor,
                                               borderColor: Colors.transparent,
                                             )
@@ -347,12 +347,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${cart.pName ?? ""}'),
+                  Text('${cart.pName ?? ""}').tr(),
                   Text(
                       '${cart != null ? cart.category : "No Category"} / ${cart.size == "" || cart.size == null ? "No Size" : cart.size}',
                       style: TextStyle(
                         color: cartTextColor,
-                      ))
+                      )).tr()
                 ],
               ),
             ),
@@ -362,11 +362,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 Text('Sar ${cart.price ?? 0.0}',
                     style: TextStyle(
                       color: cartTextColor,
-                    )),
+                    )).tr(),
                 Text('Quantity: ${cart.qty ?? 1}',
                     style: TextStyle(
                       color: cartTextColor,
-                    ))
+                    )).tr()
               ],
             ),
           ],
@@ -377,7 +377,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     }
 
     return Center(
-      child: Text("No item in this order"),
+      child: Text("No item in this order").tr(),
     );
   }
 
@@ -413,12 +413,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${cart.product.productName}'),
+                  Text('${cart.product.productName}').tr(),
                   Text(
                       '${cart.product.category != null ? cart.product.category.categoryName : "No Category"} / ${cart.size ?? "No Size"}',
                       style: TextStyle(
                         color: cartTextColor,
-                      ))
+                      )).tr()
                 ],
               ),
             ),
@@ -428,11 +428,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 Text('Sar ${cart.price}',
                     style: TextStyle(
                       color: cartTextColor,
-                    )),
+                    )).tr(),
                 Text('Quantity: ${cart.quantity}',
                     style: TextStyle(
                       color: cartTextColor,
-                    ))
+                    )).tr()
               ],
             ),
           ],
@@ -443,7 +443,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     }
 
     return Center(
-      child: Text("No item in this order"),
+      child: Text("No item in this order").tr(),
     );
   }
 
@@ -459,11 +459,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Text('Full Name'),
+                Text('Full Name').tr(),
                 Text(
                   '${orderDetail.firstName ?? "Unknown"} ${orderDetail.lastName ?? ""}',
                   style: TextStyle(color: cartTextColor),
-                ),
+                ).tr(),
                 SizedBox(
                   height: 10,
                 ),
@@ -472,11 +472,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('E-mail address'),
+                        Text('E-mail address').tr(),
                         Text(
                           '${orderDetail.email ?? "no email"}',
                           style: TextStyle(color: cartTextColor),
-                        ),
+                        ).tr(),
                       ],
                     ),
                     SizedBox(
@@ -485,11 +485,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Phone No.'),
+                        Text('Phone No.').tr(),
                         Text(
                           '${orderDetail.phone ?? "no phone"}',
                           style: TextStyle(color: cartTextColor),
-                        ),
+                        ).tr(),
                       ],
                     ),
                   ],
@@ -501,7 +501,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       );
     }
     return Center(
-      child: Text("No personal information available"),
+      child: Text("No personal information available").tr(),
     );
   }
 
@@ -517,11 +517,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                Text('Full Name'),
+                Text('Full Name').tr(),
                 Text(
                   '${widget.personal.name ?? ""}',
                   style: TextStyle(color: cartTextColor),
-                ),
+                ).tr(),
                 SizedBox(
                   height: 10,
                 ),
@@ -530,11 +530,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('E-mail address'),
+                        Text('E-mail address').tr(),
                         Text(
                           '${widget.personal.email ?? "no email"}',
                           style: TextStyle(color: cartTextColor),
-                        ),
+                        ).tr(),
                       ],
                     ),
                     SizedBox(
@@ -543,11 +543,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Phone No.'),
+                        Text('Phone No.').tr(),
                         Text(
                           '${widget.personal.phone ?? "no phone"}',
                           style: TextStyle(color: cartTextColor),
-                        ),
+                        ).tr(),
                       ],
                     ),
                   ],
@@ -559,7 +559,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       );
     }
     return Center(
-      child: Text("No personal information available"),
+      child: Text("No personal information available").tr(),
     );
   }
 
@@ -589,11 +589,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text('Address'),
+                    Text('Address').tr(),
                     Text(
                       '${orderDetail.address ?? "No address"}',
                       style: TextStyle(color: cartTextColor),
-                    ),
+                    ).tr(),
                     SizedBox(
                       height: 10,
                     ),
@@ -602,11 +602,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Country'),
+                            Text('Country').tr(),
                             Text(
                               '${orderDetail.country ?? "No country"}',
                               style: TextStyle(color: cartTextColor),
-                            ),
+                            ).tr(),
                           ],
                         ),
                         SizedBox(
@@ -615,11 +615,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('City'),
+                            Text('City').tr(),
                             Text(
                               '${orderDetail.city ?? "No city"}',
                               style: TextStyle(color: cartTextColor),
-                            ),
+                            ).tr(),
                           ],
                         ),
                       ],
@@ -627,11 +627,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text('Postal Code'),
+                    Text('Postal Code').tr(),
                     Text(
                       '${orderDetail.postalCode ?? "No postal code"}',
                       style: TextStyle(color: cartTextColor),
-                    ),
+                    ).tr(),
                     Divider(
                       color: Colors.grey,
                     ),
@@ -644,7 +644,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               child: Text(
                 'Payment',
                 style: TextStyle(color: primaryColor),
-              ),
+              ).tr(),
             ),
             Card(
                 child: Padding(
@@ -654,11 +654,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text('Payment method'),
+                  Text('Payment method').tr(),
                   Text(
                     '${orderDetail.paymentMethod ?? "No selected"}',
                     style: TextStyle(color: cartTextColor),
-                  ),
+                  ).tr(),
                   Divider(
                     color: Colors.grey,
                   ),
@@ -692,7 +692,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         color: primaryColor,
                         fontSize: 18,
                         decoration: TextDecoration.underline),
-                  ),
+                  ).tr(),
                 ),
               )
           ],
@@ -700,7 +700,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       );
     }
     return Center(
-      child: Text("No shipping & pricing information available"),
+      child: Text("No shipping & pricing information available").tr(),
     );
   }
 
@@ -719,11 +719,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text('Address'),
+                    Text('Address').tr(),
                     Text(
                       '${widget.personal.address ?? "No address"}',
                       style: TextStyle(color: cartTextColor),
-                    ),
+                    ).tr(),
                     SizedBox(
                       height: 10,
                     ),
@@ -732,11 +732,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Country'),
+                            Text('Country').tr(),
                             Text(
                               '${widget.personal.country ?? "No country"}',
                               style: TextStyle(color: cartTextColor),
-                            ),
+                            ).tr(),
                           ],
                         ),
                         SizedBox(
@@ -745,11 +745,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('City'),
+                            Text('City').tr(),
                             Text(
                               '${widget.personal.city ?? "No city"}',
                               style: TextStyle(color: cartTextColor),
-                            ),
+                            ).tr(),
                           ],
                         ),
                       ],
@@ -757,11 +757,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     SizedBox(
                       height: 10,
                     ),
-                    Text('Postal Code'),
+                    Text('Postal Code').tr(),
                     Text(
                       '${widget.personal.postal ?? "No postal code"}',
                       style: TextStyle(color: cartTextColor),
-                    ),
+                    ).tr(),
                     Divider(
                       color: Colors.grey,
                     ),
@@ -770,16 +770,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       child: Text(
                         'Payment',
                         style: TextStyle(color: primaryColor),
-                      ),
+                      ).tr(),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    Text('Payment method'),
+                    Text('Payment method'.tr()),
                     Text(
                       '${widget.personal.paymentMethod ?? "No selected"}',
                       style: TextStyle(color: cartTextColor),
-                    ),
+                    ).tr(),
                     Divider(
                       color: Colors.grey,
                     ),
@@ -797,7 +797,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       );
     }
     return Center(
-      child: Text("No shipping & pricing information available"),
+      child: Text("No shipping & pricing information available").tr(),
     );
   }
 }

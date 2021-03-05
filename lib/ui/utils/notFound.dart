@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 Widget buildNotFound() {
   return Center(
@@ -8,7 +9,7 @@ Widget buildNotFound() {
           padding: const EdgeInsets.all(8.0),
           child: Icon(Icons.hourglass_bottom),
         ),
-        Text('No item found in filter')
+        Text('No item found in filter').tr(),
       ],
     ),
   );

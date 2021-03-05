@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MyPaymentScreen extends StatefulWidget {
   @override
@@ -45,12 +46,12 @@ class _MyPaymentScreenState extends State<MyPaymentScreen> {
             'You do not have any saved',
             style: TextStyle(
                 fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
-          ),
+          ).tr(),
           Text(
             'payment methods ',
             style: TextStyle(
                 fontSize: 18, color: Colors.grey, fontWeight: FontWeight.w500),
-          ),
+          ).tr(),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
@@ -59,7 +60,7 @@ class _MyPaymentScreenState extends State<MyPaymentScreen> {
                   fontSize: 14,
                   color: Colors.grey,
                   fontWeight: FontWeight.w500),
-            ),
+            ).tr(),
           ),
         ],
       ),

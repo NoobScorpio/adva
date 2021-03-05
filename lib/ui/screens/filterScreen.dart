@@ -10,6 +10,7 @@ import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class FilterScreen extends StatefulWidget {
   @override
@@ -49,7 +50,7 @@ class _FilterScreenState extends State<FilterScreen> {
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
                             fontSize: 18),
-                      ),
+                      ).tr(),
                       GestureDetector(
                           onTap: () {
                             Navigator.pop(context, false);
@@ -76,7 +77,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                   color: Colors.black,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 18),
-                            ),
+                            ).tr(),
                           ),
                           BlocBuilder<GetCategoryCubit, CategoryState>(
                               builder: (context, state) {
@@ -116,7 +117,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                   color: Colors.black,
                                   fontWeight: FontWeight.w400,
                                   fontSize: 18),
-                            ),
+                            ).tr(),
                           ),
                           BlocBuilder<GetBrandsCubit, BrandState>(
                               builder: (context, state) {
@@ -154,7 +155,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                 borderColor: primaryColor,
                                 height: 52,
                                 // width: double.maxFinite,
-                                child: Text('Clear'),
+                                child: Text('Clear').tr(),
                                 onPressed: () {
                                   Navigator.pop(context, false);
                                 },
@@ -169,7 +170,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                 borderColor: Colors.transparent,
                                 height: 55,
                                 // width: double.maxFinite,
-                                child: Text('Apply'),
+                                child: Text('Apply').tr(),
                                 onPressed: () {
                                   BlocProvider.of<GetFilterProductCubit>(
                                           context)

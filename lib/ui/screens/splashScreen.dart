@@ -68,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     Timer(
-        Duration(seconds: 5),
+        Duration(seconds: 7),
         () => Navigator.of(context).push(PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   BottomNavBar(),
@@ -118,12 +118,16 @@ class _SplashScreenState extends State<SplashScreen> {
             Align(
               alignment: Alignment.center,
               child: AnimatedContainer(
-                duration: Duration(seconds: 2),
+                duration: Duration(seconds: 10),
                 height: height,
                 width: width,
-                child: SvgPicture.asset(
-                  'assets/images/logo.svg',
-                ),
+                child:
+                FittedBox(
+                    fit: BoxFit.contain,
+                    child: Image.asset('assets/images/newadva.gif',))
+                // SvgPicture.asset(
+                //   'assets/images/logo.svg',
+                // ),
               ),
             ),
             // if (!show)

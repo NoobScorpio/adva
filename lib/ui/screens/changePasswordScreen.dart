@@ -5,6 +5,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final User user;
@@ -39,7 +40,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: Text(
                     'Cancel',
                     style: boldTextStyle,
-                  ),
+                  ).tr(),
                 ),
               ),
             )
@@ -59,13 +60,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Text(
                     'Current Password',
                     style: boldTextStyle,
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 5,
                   ),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Enter your current password',
+                      hintText: 'Enter your current password'.tr(),
                       suffixIcon: Icon(Icons.remove_red_eye),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
@@ -80,13 +81,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Text(
                     'New Password',
                     style: boldTextStyle,
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 5,
                   ),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Enter your new password',
+                      hintText: 'Enter your new password'.tr(),
                       suffixIcon: Icon(Icons.remove_red_eye),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
@@ -101,13 +102,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   Text(
                     'Confirm Password',
                     style: boldTextStyle,
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 5,
                   ),
                   TextField(
                     decoration: InputDecoration(
-                      hintText: 'Confirm your Password ',
+                      hintText: 'Confirm your Password '.tr(),
                       suffixIcon: Icon(Icons.remove_red_eye),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
@@ -146,7 +147,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   child: Text(
                     'Change Password',
                     style: TextStyle(color: Colors.white),
-                  ),
+                  ).tr(),
                 ),
               )
             ],

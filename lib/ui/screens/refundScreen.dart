@@ -1,5 +1,6 @@
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RefundScreen extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _RefundScreenState extends State<RefundScreen> {
                 child: Text(
                   'Cancel',
                   style: boldTextStyle,
-                ),
+                ).tr(),
               ),
             ),
           )
@@ -47,7 +48,7 @@ class _RefundScreenState extends State<RefundScreen> {
             child: Text(
               'Refund Preferences',
               style: boldTextStyle,
-            ),
+            ).tr(),
           ),
           Container(
             color: Colors.white,
@@ -65,7 +66,7 @@ class _RefundScreenState extends State<RefundScreen> {
                         Text(
                           'Wallet Refund',
                           style: boldTextStyle,
-                        ),
+                        ).tr(),
                         Text(
                             'Lorem ipsum dolor sit amet, consetetur sadipscig elitr, sed diam nonumy')
                       ],
@@ -87,7 +88,7 @@ class _RefundScreenState extends State<RefundScreen> {
                         Text(
                           'Card Refund',
                           style: boldTextStyle,
-                        ),
+                        ).tr(),
                         Text(
                             'Lorem ipsum dolor sit amet, consetetur sadipscig elitr, sed diam nonumy')
                       ],

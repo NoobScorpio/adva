@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/product_bloc/postReviewCubit.dart';
 import 'package:adva/bloc/product_bloc/productBloc.dart';
@@ -14,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:images_picker/images_picker.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ReviewScreen extends StatefulWidget {
   final bool appBar, AddImage;
@@ -146,7 +146,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
               title: Text(
                 'Reviews',
                 style: TextStyle(color: Colors.black),
-              ),
+              ).tr(),
             ),
             body: body(context))
         : Scaffold(
@@ -183,9 +183,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   width: double.maxFinite,
                   child: TextField(
                     controller: controller, autofocus: true,
-
                     decoration: InputDecoration(
-                      hintText: 'Type here',
+                      hintText: 'Type here'.tr(),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                     ),
@@ -219,7 +218,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             Text(
                               'Add Image',
                               style: TextStyle(color: primaryColor),
-                            ),
+                            ).tr(),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 8.0),
@@ -303,7 +302,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             child: Text(
                               'Submit Review',
                               style: TextStyle(color: Colors.white),
-                            ),
+                            ).tr(),
                           ),
                         ),
                       ),

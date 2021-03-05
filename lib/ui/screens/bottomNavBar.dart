@@ -11,6 +11,7 @@ import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -74,23 +75,23 @@ class _BottomNavBarState extends State<BottomNavBar> {
         items: <FFNavigationBarItem>[
           FFNavigationBarItem(
             iconData: Icons.home,
-            label: 'Home',
+            label: 'Home'.tr(),
           ),
           FFNavigationBarItem(
             iconData: Icons.category,
-            label: 'Category',
+            label: 'Category'.tr(),
           ),
           FFNavigationBarItem(
             iconData: Icons.shopping_cart_outlined,
-            label: 'Cart',
+            label: 'Cart'.tr(),
           ),
           FFNavigationBarItem(
             iconData: Icons.image_outlined,
-            label: 'Gallery',
+            label: 'Gallery'.tr(),
           ),
           FFNavigationBarItem(
             iconData: Icons.person_outlined,
-            label: 'Account',
+            label: 'Account'.tr(),
           ),
           // FFNavigationBarItem(
           //   activeIcon: Column(

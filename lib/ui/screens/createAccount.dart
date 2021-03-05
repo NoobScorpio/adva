@@ -6,6 +6,7 @@ import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CreateAccount extends StatefulWidget {
   @override
@@ -25,7 +26,7 @@ class _CreateAccountState extends State<CreateAccount> {
         backgroundColor: Colors.white,
         // toolbarHeight: screenHeight * 0.09,
         title: Text(
-          'Accounts',
+          'Accounts'.tr(),
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
         ),
       ),
@@ -43,7 +44,7 @@ class _CreateAccountState extends State<CreateAccount> {
                         child: Text(
                           'Create Account',
                           style: TextStyle(fontSize: 16, color: Colors.black),
-                        ),
+                        ).tr(),
                       ),
                     ),
                     Divider(
@@ -56,7 +57,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'First Name',
+                          hintText: 'First Name'.tr(),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                         ),
@@ -69,7 +70,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Last Name',
+                          hintText: 'Last Name'.tr(),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                         ),
@@ -82,7 +83,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Email',
+                          hintText: 'Email'.tr(),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                         ),
@@ -95,7 +96,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Phone Number',
+                          hintText: 'Phone Number'.tr(),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                         ),
@@ -119,7 +120,7 @@ class _CreateAccountState extends State<CreateAccount> {
                               },
                               icon: Icon(Icons.remove_red_eye),
                             ),
-                            hintText: 'Password',
+                            hintText: 'Password'.tr(),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
                           ),
@@ -144,7 +145,7 @@ class _CreateAccountState extends State<CreateAccount> {
                               },
                               icon: Icon(Icons.remove_red_eye),
                             ),
-                            hintText: 'Confirm Password',
+                            hintText: 'Confirm Password'.tr(),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black)),
                           ),
@@ -169,7 +170,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     child: Text(
                       'CREATE',
                       style: TextStyle(color: Colors.white),
-                    ),
+                    ).tr(),
                     onPressed: () async {
                       if (pass == cPass) {
                         if (fName == '' ||
@@ -212,7 +213,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           color: Colors.black87,
                           fontSize: 14,
                         ),
-                      ),
+                      ).tr(),
                       SizedBox(
                         width: 15,
                       ),
@@ -224,7 +225,7 @@ class _CreateAccountState extends State<CreateAccount> {
                           decoration: TextDecoration.underline,
                           decorationColor: Colors.black,
                         ),
-                      ),
+                      ).tr(),
                     ],
                   ),
                 ),

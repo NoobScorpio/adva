@@ -1,6 +1,7 @@
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ReviewWidget extends StatelessWidget {
   final profile,
@@ -51,7 +52,7 @@ class ReviewWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 8.0, vertical: 8.0),
                   child: Text(
-                      '${firstName == null ? '' : firstName} ${lastName == null ? '' : lastName}'),
+                      '${firstName == null ? '' : firstName} ${lastName == null ? '' : lastName}').tr(),
                 ),
                 RatingBarIndicator(
                   rating: rating == null ? 4.0 : rating.toDouble(),

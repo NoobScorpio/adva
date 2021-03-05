@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:adva/bloc/gallery_bloc/postCubit.dart';
 import 'package:adva/data/model/post.dart';
 import 'package:adva/data/model/user.dart';
@@ -14,6 +13,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PostViewScreen extends StatefulWidget {
   final PostModel post;
@@ -92,7 +92,7 @@ class _PostViewScreenState extends State<PostViewScreen> {
                     Expanded(
                         child: TextField(
                       decoration: InputDecoration(
-                        hintText: 'Type your comment here',
+                        hintText: 'Type your comment here'.tr(),
                         suffix: IconButton(
                           onPressed: () async {
                             showToast("Posting comment", primaryColor);

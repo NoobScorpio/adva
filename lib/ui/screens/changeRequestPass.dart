@@ -3,6 +3,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ChangeRequestPasswordScreen extends StatefulWidget {
   final int cid;
@@ -33,7 +34,7 @@ class _ChangeRequestPasswordScreenState
         title: Text(
           'Accounts',
           style: TextStyle(color: Colors.black),
-        ),
+        ).tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -45,7 +46,8 @@ class _ChangeRequestPasswordScreenState
                   child: Text(
                 'Change Password',
                 style: boldTextStyle,
-              )),
+              ).tr()
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -65,13 +67,15 @@ class _ChangeRequestPasswordScreenState
                   child: Text(
                 'Make new password',
                 style: boldTextStyle,
-              )),
+              ).tr()
+              ),
             ),
             Center(
                 child: Text(
               'Enter your password for next time login',
               style: TextStyle(color: Colors.grey),
-            )),
+            ).tr()
+            ),
             SizedBox(
               height: 15,
             ),
@@ -79,7 +83,7 @@ class _ChangeRequestPasswordScreenState
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Enter New Password',
+                  hintText: 'Enter New Password'.tr(),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
@@ -92,7 +96,7 @@ class _ChangeRequestPasswordScreenState
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: 'Confirm New Password',
+                  hintText: 'Confirm New Password'.tr(),
                   border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.black)),
                 ),
@@ -120,7 +124,7 @@ class _ChangeRequestPasswordScreenState
                 child: Text(
                   'Save and Continue',
                   style: TextStyle(color: Colors.white),
-                ),
+                ).tr(),
               ),
             ),
             SizedBox(

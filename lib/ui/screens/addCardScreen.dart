@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class AddCardScreen extends StatefulWidget {
   final User user;
@@ -22,8 +23,8 @@ class AddCardScreen extends StatefulWidget {
 class _AddCardScreenState extends State<AddCardScreen> {
   int _groupValue = 1;
 
-  List<String> cards = ['Visa', 'Master', 'Mada'];
-  String cardName = 'Visa';
+  List<String> cards = ['Visa'.tr(), 'Master'.tr(), 'Mada'.tr()];
+  String cardName = 'Visa'.tr();
   String number = '', exp = '', code = '', name = '';
   bool save = false;
   @override
@@ -45,7 +46,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
             fontSize: 22,
             fontWeight: FontWeight.w400,
           ),
-        ),
+        ).tr(),
       ),
       body: ListView(
         children: [
@@ -66,7 +67,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   Text(
                     'Payment Method',
                     style: TextStyle(color: primaryColor, fontSize: 18),
-                  ),
+                  ).tr(),
                   Padding(
                     padding: EdgeInsets.only(
                         top: screenHeight * 0.017, bottom: screenHeight * 0.01),
@@ -84,7 +85,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                               child:
                                   Image.asset('assets/images/mastercard2.png'),
                             ),
-                            Text('Card Payment'),
+                            Text('Card Payment').tr(),
                             SizedBox(
                               width: screenWidth * 0.18,
                             ),
@@ -119,14 +120,14 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   Text(
                     'Details',
                     style: TextStyle(color: primaryColor, fontSize: 18),
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
                     'Card Name',
                     style: TextStyle(fontSize: 14, color: Colors.black),
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 10,
                   ),
@@ -170,7 +171,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   Text(
                     'Card Number',
                     style: TextStyle(fontSize: 14, color: Colors.black),
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 10,
                   ),
@@ -195,7 +196,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   Text(
                     'Name on card',
                     style: TextStyle(fontSize: 14, color: Colors.black),
-                  ),
+                  ).tr(),
                   SizedBox(
                     height: 10,
                   ),
@@ -238,7 +239,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                           Text(
                             'Expiry date',
                             style: TextStyle(fontSize: 14, color: Colors.black),
-                          ),
+                          ).tr(),
                           Expanded(
                             child: Container(
                               height: 50,
@@ -264,7 +265,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                           Text(
                             'Security Code',
                             style: TextStyle(fontSize: 14, color: Colors.black),
-                          ),
+                          ).tr(),
                           Expanded(
                             child: Container(
                               height: 50,
@@ -297,12 +298,12 @@ class _AddCardScreenState extends State<AddCardScreen> {
                             setState(() {
                               save = newValue;
                             });
-                            Text('Remember me');
+                            Text('Remember me').tr();
                           }),
                       Text(
                         'Save payment method',
                         style: TextStyle(fontSize: 15, color: Colors.black),
-                      ),
+                      ).tr(),
                     ],
                   ),
                 ],
@@ -315,7 +316,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
             child: Text(
               'Or',
               style: TextStyle(fontSize: 19, color: Colors.black),
-            ),
+            ).tr(),
           )),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 10),
@@ -329,7 +330,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                     child: Text(
                   'Scan Card',
                   style: TextStyle(color: primaryColor),
-                )),
+                ).tr()),
               ),
             ),
           ),
@@ -371,7 +372,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   child: Text(
                 'Save',
                 style: TextStyle(color: Colors.white),
-              )),
+              ).tr()
+              ),
             ),
           ),
         ],

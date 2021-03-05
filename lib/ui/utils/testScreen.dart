@@ -4,6 +4,7 @@ import 'package:adva/bloc/ads_bloc/adsState.dart';
 import 'package:adva/data/model/ads.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TestScreen extends StatefulWidget {
   @override
@@ -103,8 +104,8 @@ class _TestScreenState extends State<TestScreen> {
                   ),
                 ),
               ),
-              title: Text("${ads[pos].id}"),
-              subtitle: Text(ads[pos].type),
+              title: Text("${ads[pos].id}").tr(),
+              subtitle: Text(ads[pos].type).tr(),
             ),
             // onTap: () {
             //   navigateToArticleDetailPage(context, articles[pos]);

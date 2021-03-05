@@ -9,6 +9,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CartScreen extends StatefulWidget {
   final cartItems;
@@ -49,7 +50,7 @@ class _CartScreenState extends State<CartScreen> {
           'My Cart',
           style: TextStyle(
               color: Colors.black, fontSize: 22, fontWeight: FontWeight.w400),
-        ),
+        ).tr(),
       ),
       body: SafeArea(
         child: Column(
@@ -66,7 +67,7 @@ class _CartScreenState extends State<CartScreen> {
                     child: Padding(
                       padding: EdgeInsets.only(
                           left: screenWidth * 0.03, top: screenHeight * 0.017),
-                      child: Text('Items ${state.cartItems.length}'),
+                      child: Text('Items ${state.cartItems.length}').tr(),
                     )));
                 for (CartItem cartItem in state.cartItems) {
                   print(cartItem.price);
@@ -90,20 +91,20 @@ class _CartScreenState extends State<CartScreen> {
                             txt: Text('Sub - Total',
                                 style: TextStyle(
                                   fontSize: 18,
-                                )),
+                                )).tr(),
                             txt1: Text('SAR. ${state.subTotal}',
                                 style: TextStyle(
                                   fontSize: 18,
-                                ))),
+                                )).tr()),
                         CartRow(
                             screenHeight: screenHeight,
                             screenWidth: screenWidth,
                             txt: Text('Total (Inc VAT)',
                                 style: TextStyle(
-                                    fontSize: 18, color: cartTextColor)),
+                                    fontSize: 18, color: cartTextColor)).tr(),
                             txt1: Text('SAR. ${state.total}',
                                 style: TextStyle(
-                                    fontSize: 18, color: cartTextColor))),
+                                    fontSize: 18, color: cartTextColor)).tr()),
                       ],
                     ),
                   ),
@@ -151,7 +152,7 @@ class _CartScreenState extends State<CartScreen> {
                           child: Center(
                             child: Text('Buy item(s) for SAR ${state.total}',
                                 style: TextStyle(
-                                    fontSize: 15, color: Colors.white)),
+                                    fontSize: 15, color: Colors.white)).tr(),
                           ),
                           onPressed: () async {
                             User user =

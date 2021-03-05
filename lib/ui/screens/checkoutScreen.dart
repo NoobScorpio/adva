@@ -15,6 +15,7 @@ import 'package:adva/ui/utils/tFContainer.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final User user;
@@ -53,7 +54,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             fontSize: 22,
             fontWeight: FontWeight.w400,
           ),
-        ),
+        ).tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
@@ -67,18 +68,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: Text(
                     'Personal Information',
                     style: boldTextStyle,
-                  ),
+                  ).tr(),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                     'Full Name',
                     style: normalTextStyle,
-                  ),
+                  ).tr(),
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter your full name',
+                    hintText: 'Enter your full name'.tr(),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                   ),
@@ -91,11 +92,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: Text(
                     'E-mail address',
                     style: normalTextStyle,
-                  ),
+                  ).tr(),
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter your email',
+                    hintText: 'Enter your email'.tr(),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                   ),
@@ -112,9 +113,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           setState(() {
                             checkBoxValue = newValue;
                           });
-                          Text('Remember me');
+                          Text('Remember me').tr();
                         }),
-                    Text('Keep me up date with exclusive offers'),
+                    Text('Keep me up date with exclusive offers').tr(),
                   ],
                 ),
                 Padding(
@@ -122,11 +123,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   child: Text(
                     'Phone no',
                     style: normalTextStyle,
-                  ),
+                  ).tr(),
                 ),
                 TextField(
                   decoration: InputDecoration(
-                    hintText: 'Enter Phone no',
+                    hintText: 'Enter Phone no'.tr(),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                   ),
@@ -155,7 +156,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Text(
                         'Shipping Address',
-                      ),
+                      ).tr(),
                     ),
                     BlocConsumer<AddressCubit, AddressState>(
                         listener: (context, state) {
@@ -255,7 +256,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             Text(
                               'Add Address',
                               style: TextStyle(color: primaryColor),
-                            ),
+                            ).tr(),
                           ],
                         ),
                       ),
@@ -296,7 +297,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               height: 65,
               width: double.maxFinite,
               child: Text('Proceed to payments',
-                  style: TextStyle(fontSize: 15, color: Colors.white)),
+                  style: TextStyle(fontSize: 15, color: Colors.white)).tr(),
               borderColor: Colors.transparent,
               innerColor: primaryColor,
               onPressed: () {
@@ -345,7 +346,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Address ${addresses[i].id}'),
+                Text('Address ${addresses[i].id}').tr(),
                 SizedBox(
                   width: 10,
                 ),
@@ -384,7 +385,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('You have no address added.'),
+        child: Text('You have no address added.').tr(),
       ),
     );
   }
