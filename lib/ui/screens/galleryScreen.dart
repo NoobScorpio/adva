@@ -66,14 +66,17 @@ class _GalleryScreenState extends State<GalleryScreen> {
               );
               if (res != null && res.length > 0) {
                 File image = File(res[0].path);
-                User user = User.fromJson(json.decode(sp.getString('user')));
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) =>
-                            CreatePostScreen(image: image, user: user)));
-
-                print("UPDATED");
+                List<int> imageBytes = image.readAsBytesSync();
+                String baseImage = base64Encode(imageBytes);
+                print(baseImage.split('/'));
+                // User user = User.fromJson(json.decode(sp.getString('user')));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (_) =>
+                //             CreatePostScreen(image: image, user: user)));
+                //
+                // print("UPDATED");
               }
             } catch (e) {
               print(e);

@@ -38,31 +38,12 @@ class GalleryRepositoryImpl implements GalleryRepository {
   @override
   Future<List<PostModel>> postMedia({File image, String desc, int cid}) async {
     try {
-      // var uri = baseURL;
-      // BaseOptions opts = BaseOptions(
-      //   baseUrl: uri,
-      //   responseType: ResponseType.plain,
-      //   connectTimeout: 30000,
-      //   receiveTimeout: 30000,
-      // );
-      // Dio dio = Dio(opts);
-      // Options options = Options(
-      //   contentType: "application/json", // only for json type api
-      // );
-      // Response response = await dio.post("/media/create/post",
-      //     data: FormData.fromMap({
-      //       "customer_id": "$cid",
-      //       "description": "$desc",
-      //       "image":
-      //
-      //     }),
-      //     options: options);
-      // List<int> imageBytes = image.readAsBytesSync();
-      var base64Image = base64Encode(image.readAsBytesSync());
+      List<int> imageBytes = image.readAsBytesSync();
+      String baseImage = base64Encode(imageBytes);
       var response = await http.post(baseURL + "/media/create/post", body: {
         "customer_id": "$cid",
         "description": "$desc",
-        "image": image.readAsBytesSync().toString()
+        "image": baseImage
       });
       print("${response.body} ");
       if (response.statusCode == 200 || response.statusCode == 201) {

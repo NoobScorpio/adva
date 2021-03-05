@@ -31,6 +31,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
+    BlocProvider.of<GetAdsCubit>(context).getAds();
+    BlocProvider.of<GetCategoryCubit>(context).getCategories();
+    BlocProvider.of<GetOfferCubit>(context).getOffers();
+    BlocProvider.of<GetSellerCubit>(context).getSellers();
+    BlocProvider.of<GetFeaturedCubit>(context).getSellers();
+    BlocProvider.of<GetBrandsCubit>(context).getBrands();
+    BlocProvider.of<GetCategoryProductsCubit>(context)
+        .getCategoryProducts("Makeup");
     getPrefs();
   }
 

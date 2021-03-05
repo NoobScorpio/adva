@@ -31,7 +31,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:list_wheel_scroll_view_x/list_wheel_scroll_view_x.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -43,27 +42,73 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    BlocProvider.of<GetAdsCubit>(context).getAds();
-    BlocProvider.of<GetCategoryCubit>(context).getCategories();
-    BlocProvider.of<GetOfferCubit>(context).getOffers();
-    BlocProvider.of<GetSellerCubit>(context).getSellers();
-    BlocProvider.of<GetFeaturedCubit>(context).getSellers();
-    BlocProvider.of<GetBrandsCubit>(context).getBrands();
-    BlocProvider.of<GetCategoryProductsCubit>(context)
-        .getCategoryProducts("Makeup");
   }
+
+  ScrollController _scrollController = ScrollController();
+
+  // _scrollToBottom() {
+  //   _scrollController.animateTo(150,
+  //       duration: Duration(seconds: 1), curve: Curves.easeIn);
+  // }
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
+    // WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: ListView(
           shrinkWrap: true,
           children: [
+            Container(
+              height: screenHeight * 0.09,
+              width: screenWidth,
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/advalogo.png',
+                      scale: 2,
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.03,
+                    ),
+                    Expanded(
+                      child: Form(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              top: screenHeight * 0.001,
+                              right: screenWidth * 0.03),
+                          child: Container(
+                            height: screenHeight * 0.06,
+                            child: TextFormField(
+                              autovalidateMode: AutovalidateMode.always,
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      width: 0.1,
+                                    ),
+                                  ),
+                                  hintText: 'Search',
+                                  contentPadding: EdgeInsets.only(
+                                      top: screenHeight * 0.01,
+                                      left: screenWidth * 0.03),
+                                  suffixIcon:
+                                      Image.asset('assets/images/search.png')),
+                              onSaved: (String value) {},
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             //ADS
             Container(
               width: screenWidth,
@@ -101,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
 
                             return Carousel(
-                              autoplayDuration: Duration(seconds: 10),
+                              autoplayDuration: Duration(seconds: 25),
                               boxFit: BoxFit.contain,
                               dotBgColor: Colors.transparent,
                               overlayShadowColors: Color(0xFF00000029),
@@ -116,54 +161,37 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  Container(
-                    height: screenHeight * 0.09,
-                    width: screenWidth,
-                    color: Colors.white.withOpacity(0.9),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            'assets/images/advalogo.png',
-                            scale: 2,
+                  Positioned(
+                      bottom: 0.0,
+                      child: Container(
+                        height: 100,
+                        width: 250,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.5),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(100),
                           ),
-                          SizedBox(
-                            width: screenWidth * 0.03,
-                          ),
-                          Expanded(
-                            child: Form(
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    top: screenHeight * 0.001,
-                                    right: screenWidth * 0.03),
-                                child: Container(
-                                  height: screenHeight * 0.06,
-                                  child: TextFormField(
-                                    autovalidateMode: AutovalidateMode.always,
-                                    decoration: InputDecoration(
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            width: 0.1,
-                                          ),
-                                        ),
-                                        hintText: 'Search'.tr(),
-                                        contentPadding: EdgeInsets.only(
-                                            top: screenHeight * 0.01,
-                                            left: screenWidth * 0.03),
-                                        suffixIcon: Image.asset(
-                                            'assets/images/search.png')),
-                                    onSaved: (String value) {},
-                                  ),
-                                ),
-                              ),
+                        ),
+                        child: Center(
+                            child: Column(
+                          children: [
+                            Text(
+                              "Header Text",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                            Text(
+                              "Sub Title Text",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        )),
+                      ))
                 ],
               ),
             ),
@@ -333,7 +361,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: FittedBox(
                                     fit: BoxFit.cover,
                                     child: Image.network(
-                                      bundle.productimages.first.pictureReference,
+                                      bundle
+                                          .productimages.first.pictureReference,
                                     ),
                                   ),
                                 ),
@@ -442,11 +471,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               return ListWheelScrollViewX(
                                   diameterRatio: 2.5,
+                                  // controller: _scrollController,
                                   scrollDirection: Axis.horizontal,
                                   // magnification: 1.2,
                                   // useMagnifier: true,
                                   itemExtent: 180,
-                                  physics: NeverScrollableScrollPhysics(),
                                   children: widgets);
                             }
                           } else if (state is SellerErrorState) {

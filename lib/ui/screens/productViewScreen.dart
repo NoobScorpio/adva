@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:adva/bloc/cart_bloc/cartBloc.dart';
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/cart_bloc/cartEvent.dart';
@@ -30,7 +31,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class ProductViewScreen extends StatefulWidget {
   final int pid;
@@ -131,7 +131,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                       width: 0.1,
                                     ),
                                   ),
-                                  hintText: 'Search'.tr(),
+                                  hintText: 'Search',
                                   contentPadding: EdgeInsets.only(
                                       top: screenHeight * 0.01,
                                       left: screenWidth * 0.03),
@@ -212,7 +212,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                     fontSize: 14),
-              ).tr(),
+              ),
               Text(
                 'SAR. ${product.price}',
                 style: TextStyle(
@@ -312,19 +312,19 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
             children: [
               Row(
                 children: [
-                  Text('Availability:').tr(),
+                  Text('Availability:'),
                   SizedBox(
                     width: 10,
                   ),
                   Text(
                     product.quantity > 0 ? 'In Stock' : 'Out of Stock',
                     style: TextStyle(fontWeight: FontWeight.w600),
-                  ).tr()
+                  )
                 ],
               ),
               Row(
                 children: [
-                  Text('Items Remaining:').tr(),
+                  Text('Items Remaining:'),
                   SizedBox(
                     width: 10,
                   ),
@@ -349,7 +349,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     Text(
                       'Colors:',
                       style: TextStyle(fontWeight: FontWeight.w500),
-                    ).tr(),
+                    ),
                     SizedBox(
                       width: 10,
                     ),
@@ -385,7 +385,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     Text(
                       'Sizes:',
                       style: TextStyle(fontWeight: FontWeight.w500),
-                    ).tr(),
+                    ),
                     SizedBox(
                       width: 10,
                     ),
@@ -495,11 +495,11 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         if (!(questions.length > 0)) {
           questions.add(Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text('No Questions available').tr(),
+            child: Text('No Questions available'),
           ));
           questionsNext.add(Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text('No Questions available').tr(),
+            child: Text('No Questions available'),
           ));
         }
       }
@@ -534,14 +534,14 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                         'Reviews',
                         style: TextStyle(
                             fontWeight: FontWeight.w600, color: primaryColor),
-                      ).tr(),
+                      ),
                     ),
                     Tab(
                       child: Text(
                         'Questions&Answers',
                         style: TextStyle(
                             fontWeight: FontWeight.w600, color: primaryColor),
-                      ).tr(),
+                      ),
                     ),
                   ],
                 ),
@@ -581,7 +581,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
                                   decoration: TextDecoration.underline),
-                            ).tr(),
+                            ),
                           ),
                         ),
                       ),
@@ -610,7 +610,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   width: double.maxFinite,
                                   child: TextField(
                                     decoration: InputDecoration(
-                                      hintText: 'Type here'.tr(),
+                                      hintText: 'Type here',
                                       border: OutlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black)),
@@ -673,7 +673,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                             'Add Image',
                                             style:
                                                 TextStyle(color: primaryColor),
-                                          ).tr(),
+                                          ),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 8.0),
@@ -716,7 +716,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                         child: Text(
                                           'Submit Review',
                                           style: TextStyle(color: Colors.white),
-                                        ).tr(),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -752,7 +752,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                 child: TextField(
                                   controller: quesController,
                                   decoration: InputDecoration(
-                                    hintText: 'Type your question(s) here'.tr(),
+                                    hintText: 'Type your question(s) here',
                                     border: OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.black)),
@@ -806,7 +806,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                       child: Text(
                                         'Ask Question',
                                         style: TextStyle(color: Colors.white),
-                                      ).tr(),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -837,7 +837,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
                                   decoration: TextDecoration.underline),
-                            ).tr(),
+                            ),
                           ),
                         ),
                       ),
@@ -973,7 +973,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   child: Text(
                                     'You may also like',
                                     style: boldTextStyle,
-                                  ).tr(),
+                                  ),
                                 ),
                                 getRelatedProducts()
                               ],
@@ -1089,7 +1089,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                             child: Text(
                               'Add to Cart',
                               style: TextStyle(color: Colors.white),
-                            ).tr(),
+                            ),
                           ),
                         ),
                       ),
