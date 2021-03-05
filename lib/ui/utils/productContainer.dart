@@ -89,11 +89,11 @@ class _ProductContainerState extends State<ProductContainer> {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 border: Border.all(width: 0.6, color: primaryColor)),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: screenHeight * 0.30,
+                  height: screenHeight * 0.25,
                   width: double.maxFinite,
                   child: Stack(
                     children: [
@@ -200,56 +200,63 @@ class _ProductContainerState extends State<ProductContainer> {
                     ],
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: pressed,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
-                      child: Text(
-                        '${widget.name}',
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: pressed,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 10, left: 12, right: 15, bottom: 11),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Price   ',
-                          style: TextStyle(
-                            fontSize: 18,
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: pressed,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5, left: 12, right: 5),
+                            child: Text(
+                              '${widget.name}',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
                           ),
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              'SAR  ',
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              '${widget.price}',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                      ),
+                      GestureDetector(
+                        onTap: pressed,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10, left: 12, right: 15, bottom: 11),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Price   ',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
                               ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'SAR  ',
+                                    style: TextStyle(
+                                        fontSize: 14, fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    '${widget.price}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                )
               ],
             ),
           )

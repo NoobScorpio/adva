@@ -1,4 +1,5 @@
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/ui/screens/accountsloginScreen.dart';
 import 'package:adva/ui/screens/bottomNavBar.dart';
 import 'package:adva/ui/screens/userScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -202,7 +203,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 SizedBox(height: 30),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountsLoginScreen()));
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

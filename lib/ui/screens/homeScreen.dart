@@ -88,17 +88,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: TextFormField(
                               autovalidateMode: AutovalidateMode.always,
                               decoration: InputDecoration(
+
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       width: 0.1,
                                     ),
                                   ),
-                                  hintText: 'Search',
+
+                                  hintText: 'Search'.tr(),
                                   contentPadding: EdgeInsets.only(
                                       top: screenHeight * 0.01,
                                       left: screenWidth * 0.03),
                                   suffixIcon:
-                                      Image.asset('assets/images/search.png')),
+                                      Icon(Icons.search,color:Colors.black)),
                               onSaved: (String value) {},
                             ),
                           ),

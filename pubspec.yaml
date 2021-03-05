@@ -47,7 +47,7 @@ dependencies:
   images_picker: ^0.0.7
   permission_handler: ^5.1.0+2
   shared_preferences: ^0.5.12+4
-  easy_localization:
+  easy_localization: ^2.3.3
   dio: ^3.0.10
   list_wheel_scroll_view_x: ^0.0.2
 dev_dependencies:

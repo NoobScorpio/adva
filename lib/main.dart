@@ -41,6 +41,7 @@ import 'package:adva/ui/screens/bottomNavBar.dart';
 import 'package:adva/ui/screens/splashScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,6 +51,7 @@ void main() {
   runApp(EasyLocalization(
       child: MyApp(),
       supportedLocales: [const Locale('en', ''), const Locale('ar', 'AE')],
+
       path: "assets/translations"));
 }
 
@@ -156,6 +158,9 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
         home: SplashScreen(),
         // home: TestScreen(),
       ),

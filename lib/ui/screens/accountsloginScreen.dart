@@ -34,7 +34,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: GestureDetector(onTap: (){Navigator.pop(context);}, child: Icon(Icons.arrow_back_ios,color: Colors.black,)),
         backgroundColor: Colors.white,
         // toolbarHeight: screenHeight * 0.09,
         title: Text(
@@ -142,17 +142,19 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                     ).tr(),
                     onPressed: () async {
                       if (username != '' && pass != '') {
+                        showToast("Logging In", primaryColor);
                         bool loggedIn =
                             await BlocProvider.of<UserCubit>(context)
                                 .loginUser(username, pass);
                         print("USER LOGGED IN $loggedIn");
                         if (loggedIn) {
                           sharedPreferences.setBool('loggedIn', true);
-                          BlocProvider.of<UserCubit>(context).setStatus(true);
-                          BlocProvider.of<WishCubit>(context).getWishLists(
+                          await BlocProvider.of<UserCubit>(context).setStatus(true);
+                          await BlocProvider.of<WishCubit>(context).getWishLists(
                               User.fromJson(json.decode(
                                       sharedPreferences.getString('user')))
                                   .id);
+                          Navigator.pop(context);
                         } else {
                           sharedPreferences.setBool('loggedIn', false);
                           BlocProvider.of<UserCubit>(context).setStatus(false);

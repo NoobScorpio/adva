@@ -31,7 +31,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class ProductViewScreen extends StatefulWidget {
   final int pid;
 
@@ -42,8 +42,8 @@ class ProductViewScreen extends StatefulWidget {
 
 class _ProductViewScreenState extends State<ProductViewScreen> {
   double _rating = 3.5;
-  List<String> qtyValue = ["QTY 1", "QTY 2", "QTY 3", "QTY 4", "QTY 5"];
-  String qtySelected = "QTY 1";
+  List<String> qtyValue = ["QTY".tr()+" 1", "QTY".tr()+" 2", "QTY".tr()+" 3", "QTY".tr()+" 4", "QTY".tr()+" 5"];
+  String qtySelected = "QTY".tr()+" 1";
   bool isLoading = true;
   int colorValue;
   int sizeValue;
@@ -195,7 +195,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            product.productName,
+             product.productName,
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20),
           ),
@@ -212,16 +212,16 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                     fontSize: 14),
-              ),
+              ).tr(),
               Text(
-                'SAR. ${product.price}',
+                'SAR.'.tr()+' ${product.price}',
                 style: TextStyle(
                     decorationColor: Colors.red,
                     decoration: TextDecoration.lineThrough,
                     color: Colors.black,
                     fontWeight: FontWeight.w400,
                     fontSize: 14),
-              ),
+              ).tr(),
               Text(
                 '-${product.discountedAmount}%',
                 style: TextStyle(
@@ -230,19 +230,18 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     fontSize: 14),
               ),
               Text(
-                'SAR. ${product.price - product.discountedAmount}',
+                'SAR.'.tr()+' ${product.price - product.discountedAmount}',
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                     fontSize: 16),
               ),
-              Text(
-                '(Ex Tax: SAR. ${product.tax})',
+              Text('(Ex Tax: SAR. '.tr()+'${product.tax})',
                 style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.w400,
                     fontSize: 16),
-              ),
+              ).tr(),
             ],
           ),
         ),
@@ -253,7 +252,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'ID-${product.id}',
+               "ID".tr()+ ' ${product.id}',
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
@@ -263,7 +262,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
               Padding(
                 padding: EdgeInsets.only(right: screenWidth / 2.7),
                 child: Text(
-                  'PTS: ${product.rewardPoints}',
+                  "PTS".tr()+' ${product.rewardPoints}',
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -312,19 +311,19 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
             children: [
               Row(
                 children: [
-                  Text('Availability:'),
+                  Text('Availability:').tr(),
                   SizedBox(
                     width: 10,
                   ),
                   Text(
                     product.quantity > 0 ? 'In Stock' : 'Out of Stock',
                     style: TextStyle(fontWeight: FontWeight.w600),
-                  )
+                  ).tr(),
                 ],
               ),
               Row(
                 children: [
-                  Text('Items Remaining:'),
+                  Text('Items Remaining:').tr(),
                   SizedBox(
                     width: 10,
                   ),
@@ -349,7 +348,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     Text(
                       'Colors:',
                       style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
+                    ).tr(),
                     SizedBox(
                       width: 10,
                     ),
@@ -385,7 +384,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     Text(
                       'Sizes:',
                       style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
+                    ).tr(),
                     SizedBox(
                       width: 10,
                     ),
@@ -495,11 +494,11 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         if (!(questions.length > 0)) {
           questions.add(Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text('No Questions available'),
+            child: Text('No Questions available').tr(),
           ));
           questionsNext.add(Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text('No Questions available'),
+            child: Text('No Questions available').tr(),
           ));
         }
       }
@@ -534,14 +533,14 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                         'Reviews',
                         style: TextStyle(
                             fontWeight: FontWeight.w600, color: primaryColor),
-                      ),
+                      ).tr(),
                     ),
                     Tab(
                       child: Text(
                         'Questions&Answers',
                         style: TextStyle(
                             fontWeight: FontWeight.w600, color: primaryColor),
-                      ),
+                      ).tr(),
                     ),
                   ],
                 ),
@@ -581,7 +580,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
                                   decoration: TextDecoration.underline),
-                            ),
+                            ).tr(),
                           ),
                         ),
                       ),
@@ -610,7 +609,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   width: double.maxFinite,
                                   child: TextField(
                                     decoration: InputDecoration(
-                                      hintText: 'Type here',
+                                      hintText: 'Type here'.tr(),
                                       border: OutlineInputBorder(
                                           borderSide:
                                               BorderSide(color: Colors.black)),
@@ -673,7 +672,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                             'Add Image',
                                             style:
                                                 TextStyle(color: primaryColor),
-                                          ),
+                                          ).tr(),
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 8.0),
@@ -716,7 +715,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                         child: Text(
                                           'Submit Review',
                                           style: TextStyle(color: Colors.white),
-                                        ),
+                                        ).tr(),
                                       ),
                                     ),
                                   ],
@@ -752,7 +751,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                 child: TextField(
                                   controller: quesController,
                                   decoration: InputDecoration(
-                                    hintText: 'Type your question(s) here',
+                                    hintText: 'Type your question(s) here'.tr(),
                                     border: OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.black)),
@@ -806,7 +805,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                       child: Text(
                                         'Ask Question',
                                         style: TextStyle(color: Colors.white),
-                                      ),
+                                      ).tr(),
                                     ),
                                   ),
                                 ),
@@ -837,7 +836,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   fontWeight: FontWeight.bold,
                                   color: primaryColor,
                                   decoration: TextDecoration.underline),
-                            ),
+                            ).tr(),
                           ),
                         ),
                       ),
@@ -973,7 +972,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   child: Text(
                                     'You may also like',
                                     style: boldTextStyle,
-                                  ),
+                                  ).tr(),
                                 ),
                                 getRelatedProducts()
                               ],
@@ -1089,7 +1088,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                             child: Text(
                               'Add to Cart',
                               style: TextStyle(color: Colors.white),
-                            ),
+                            ).tr(),
                           ),
                         ),
                       ),

@@ -2,6 +2,7 @@ import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/bloc/user_bloc/userState.dart';
 import 'package:adva/ui/screens/accountScreen.dart';
 import 'package:adva/ui/screens/accountsloginScreen.dart';
+import 'package:adva/ui/screens/signin_signup.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +35,7 @@ class _UserScreenState extends State<UserScreen> {
         if (state.user != null)
           return AccountScreen();
         else
-          return AccountsLoginScreen();
+          return SignInSignUp();
       } else if (state is GetUserLoggedInState) {
         // if (state.user != null)
         return AccountScreen();
@@ -46,9 +47,9 @@ class _UserScreenState extends State<UserScreen> {
           print("INSIDE UserLoggedInState true");
           return AccountScreen();
         } else
-          return AccountsLoginScreen();
+          return SignInSignUp();
       } else {
-        return AccountsLoginScreen();
+        return SignInSignUp();
       }
     });
   }

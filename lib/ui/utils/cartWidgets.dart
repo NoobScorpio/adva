@@ -24,8 +24,9 @@ Widget emptyCart() {
       ),
       Center(
         child: Text(
-          '       Your cart is empty \nAdd items in cart to display',
+          'Your cart is empty \nAdd items in cart to display',
           style: TextStyle(fontSize: 21, color: cartTextColor),
+          textAlign: TextAlign.center,
         ).tr(),
       ),
     ],
