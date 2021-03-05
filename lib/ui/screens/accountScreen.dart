@@ -381,12 +381,12 @@ class _AccountScreenState extends State<AccountScreen> {
             onTap: () {
               // languageBottomSheet(context);
               if (english) {
-                context.locale = Locale('ar', 'AE');
+                // context.locale = Locale('ar', 'AE');
                 setState(() {
                   english = false;
                 });
               } else {
-                context.locale = Locale('en', '');
+                // context.locale = Locale('en', '');
                 setState(() {
                   english = true;
                 });

@@ -1,15 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:adva/bloc/cart_bloc/cartBloc.dart';
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
-import 'package:adva/bloc/cart_bloc/cartEvent.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
-import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
-import 'package:adva/bloc/product_bloc/productBloc.dart';
-import 'package:adva/bloc/product_bloc/productEvent.dart';
-import 'package:adva/bloc/product_bloc/productState.dart';
 import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/productImage.dart';
@@ -24,7 +16,6 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/imagesRow.dart';
 import 'package:adva/ui/utils/questionWidget.dart';
 import 'package:adva/ui/utils/reviewWidget.dart';
-import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';

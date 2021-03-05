@@ -176,11 +176,14 @@ class UserRepositoryImpl implements UserRepository {
       //   ),
       // );
       // var response = await request.send();
-      String baseEncoded = base64Encode(await profile.readAsBytes());
+      List<int> imageBytes = profile.readAsBytesSync();
+      String ext = profile.path.split('/').last.split('.').last;
+      print("EXTENSION $ext");
+      String baseImage = base64Encode(imageBytes);
       var response = await http.post(
           baseURL + "/customer/basedecode/profile/update/${user.id}",
-          body: {"profile_image": baseEncoded});
-      print(baseEncoded);
+          body: {"profile_image": baseImage, "extension": ext});
+      print(baseImage);
       // debugPrint(response.body, wrapWidth: 1024);
       print("IMAGE RESPONSE ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {

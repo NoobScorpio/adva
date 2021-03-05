@@ -70,7 +70,7 @@ class _PostState extends State<Post> {
             children: [
               Row(
                 children: [
-                  if (post.customer.profileImage == null)
+                  if (post.customer == null)
                     CircleAvatar(
                       radius: 25.0,
                       backgroundColor: Colors.black,
@@ -79,18 +79,21 @@ class _PostState extends State<Post> {
                         color: Colors.white,
                       ),
                     ),
-                  if (post.customer.profileImage != null)
-                    CircleAvatar(
-                      radius: 25.0,
-                      backgroundImage: NetworkImage(
-                        post.customer.profileImage,
+                  if (post.customer != null)
+                    if (post.customer.profileImage != null)
+                      CircleAvatar(
+                        radius: 25.0,
+                        backgroundImage: NetworkImage(
+                          post.customer.profileImage,
+                        ),
                       ),
-                    ),
                   SizedBox(
                     width: 15,
                   ),
                   Text(
-                    post.customer.firstName + " " + post.customer.lastName,
+                    post.customer != null
+                        ? post.customer.firstName + " " + post.customer.lastName
+                        : "Anonymous",
                     style: boldTextStyle,
                   ),
                 ],
