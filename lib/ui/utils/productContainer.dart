@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:easy_localization/easy_localization.dart';
+
 class ProductContainer extends StatefulWidget {
   ProductContainer({
     this.screenHeight,
@@ -45,7 +47,10 @@ class ProductContainer extends StatefulWidget {
 class _ProductContainerState extends State<ProductContainer> {
   bool wish = false;
   List<WishList> wishes = [];
+  bool english;
+
   SharedPreferences sp;
+
   pressed() async {
     Navigator.push(
         context,
@@ -63,8 +68,10 @@ class _ProductContainerState extends State<ProductContainer> {
 
   setWishes() async {
     sp = await SharedPreferences.getInstance();
+    english = sp.getBool('english') ?? true;
   }
 
+  bool tagBool = true;
   @override
   Widget build(BuildContext context) {
     String tag = '';
@@ -75,11 +82,14 @@ class _ProductContainerState extends State<ProductContainer> {
         int.parse(pDateSplit[2]));
     Duration difference = today.difference(date);
     if (difference.inDays < 31 && widget.product.quantity > 0) {
-      tag = 'New';
+      tag = 'New'.tr();
+      tagBool = true;
     } else if (difference.inDays > 31 && widget.product.quantity > 0) {
       tag = '';
+      tagBool = false;
     } else if (widget.product.quantity == 0) {
-      tag = 'Out of stock';
+      tag = 'Out of Stock'.tr();
+      tagBool = false;
     }
     double screenHeight = MediaQuery.of(context).size.height;
     return widget.box
@@ -93,7 +103,7 @@ class _ProductContainerState extends State<ProductContainer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: screenHeight * 0.25,
+                  height: screenHeight * 0.32,
                   width: double.maxFinite,
                   child: Stack(
                     children: [
@@ -110,19 +120,23 @@ class _ProductContainerState extends State<ProductContainer> {
                         ),
                       ),
                       if (tag != '')
-                        Positioned(
-                          top: 8,
-                          left: 8,
-                          child: Container(
-                              height: 25,
-                              color: tag == 'New' ? Colors.black : Colors.red,
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(
-                                  tag,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              )),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Align(
+                            alignment: context.locale == Locale('en', '')
+                                ? Alignment.topLeft
+                                : Alignment.topRight,
+                            child: Container(
+                                height: 25,
+                                color: tagBool ? Colors.black : Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    tag,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                )),
+                          ),
                         ),
                       Center(
                         child: GestureDetector(
@@ -134,48 +148,71 @@ class _ProductContainerState extends State<ProductContainer> {
                               SharedPreferences sp =
                                   await SharedPreferences.getInstance();
                               bool loggedIn = sp.getBool('loggedIn');
-                              // print("USER STRING : $userString");
+
                               if (loggedIn == null || loggedIn == false) {
                                 showToast('Not Logged In', primaryColor);
                               } else {
                                 String userString = sp.getString('user');
+
                                 var user =
                                     User.fromJson(json.decode(userString));
+                                print("@USER ${user.name}");
                                 Product product = await ProductRepositoryImpl()
                                     .getProductByID(widget.pid);
                                 if (user != null && user.id != null) {
-                                  CartItem cartItem = CartItem();
-                                  cartItem.pName = product.productName;
-                                  cartItem.price = product.price;
-                                  cartItem.image = product.productimages == null
-                                      ? null
-                                      : product
-                                          .productimages[0].pictureReference;
-                                  cartItem.desc = product.productDescription;
-                                  cartItem.pid = product.id;
-                                  cartItem.discount = product.discountedAmount;
-                                  cartItem.vat = product.vat;
-                                  cartItem.size = product.sizes == null
-                                      ? null
-                                      : product.sizes[0].size;
-                                  cartItem.sizeID = product.sizes == null
-                                      ? null
-                                      : product.sizes[0].id;
+                                  if (product != null && product.id != null) {
+                                    print("@PRODUCT ${product.id}");
+                                    print("@PRODUCT ${product.productName}");
+                                    print("@PRODUCT ${product.productimages}");
+                                    print("@PRODUCT ${product.sizes}");
+                                    print("@PRODUCT ${product.category}");
 
-                                  cartItem.categoryID = product.categoryId;
-                                  cartItem.category = product.category == null
-                                      ? null
-                                      : product.category.categoryName;
-                                  cartItem.qty = 1;
-                                  //TODO: CART ITEM ADD
-                                  bool added =
-                                      await BlocProvider.of<CartCubit>(context)
-                                          .addItem(cartItem);
-                                  if (added)
-                                    showToast("Added to cart", primaryColor);
-                                  else
+                                    CartItem cartItem = CartItem();
+                                    cartItem.pName =
+                                        context.locale == Locale('ar', 'AE')
+                                            ? product.productArabicName
+                                            : product.productName;
+                                    cartItem.price = product.price;
+                                    cartItem.image =
+                                        product.productimages == null
+                                            ? null
+                                            : product.productimages[0]
+                                                .pictureReference;
+                                    cartItem.desc =
+                                        context.locale == Locale('ar', 'AE')
+                                            ? product.productArabicDescription
+                                            : product.productDescription;
+                                    cartItem.pid = product.id;
+                                    cartItem.discount =
+                                        product.discountedAmount;
+                                    cartItem.vat = product.vat;
+                                    cartItem.size = product.sizes == null ||
+                                            product.sizes.length == 0
+                                        ? null
+                                        : product.sizes[0].size;
+                                    cartItem.sizeID = product.sizes == null ||
+                                            product.sizes.length == 0
+                                        ? null
+                                        : product.sizes[0].id;
+
+                                    cartItem.categoryID = product.categoryId;
+                                    cartItem.category = product.category == null
+                                        ? null
+                                        : product.category.categoryName;
+                                    cartItem.qty = 1;
+                                    //TODO: CART ITEM ADD
+                                    bool added =
+                                        await BlocProvider.of<CartCubit>(
+                                                context)
+                                            .addItem(cartItem);
+                                    if (added)
+                                      showToast("Added to cart", primaryColor);
+                                    else
+                                      showToast('Could not add to cart',
+                                          primaryColor);
+                                  } else
                                     showToast(
-                                        'Could not add to cart', primaryColor);
+                                        "Product not available", primaryColor);
                                 } else {
                                   showToast(
                                       "You are not logged in", primaryColor);
@@ -205,13 +242,16 @@ class _ProductContainerState extends State<ProductContainer> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Align(
-                        alignment: Alignment.centerLeft,
+                        alignment: context.locale == Locale('en', '')
+                            ? Alignment.centerLeft
+                            : Alignment.centerRight,
                         child: GestureDetector(
                           onTap: pressed,
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 5, left: 12, right: 5),
+                            padding: const EdgeInsets.only(
+                                top: 5, left: 12, right: 5),
                             child: Text(
-                              '${widget.name}',
+                              '${context.locale == Locale('en', '') ? widget.product.productName : widget.product.productArabicName}',
                               style: TextStyle(
                                 fontSize: 20,
                               ),
@@ -229,7 +269,7 @@ class _ProductContainerState extends State<ProductContainer> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Price   ',
+                                'Price'.tr() + '   ',
                                 style: TextStyle(
                                   fontSize: 18,
                                 ),
@@ -237,9 +277,10 @@ class _ProductContainerState extends State<ProductContainer> {
                               Row(
                                 children: [
                                   Text(
-                                    'SAR  ',
+                                    'SAR'.tr() + '  ',
                                     style: TextStyle(
-                                        fontSize: 14, fontWeight: FontWeight.bold),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   Text(
                                     '${widget.price}',
@@ -274,7 +315,8 @@ class _ProductContainerState extends State<ProductContainer> {
                   Align(
                     alignment: Alignment.topRight,
                     child: Padding(
-                        padding: const EdgeInsets.only(right: 5.0, top: 5.0),
+                        padding: const EdgeInsets.only(
+                            right: 5.0, top: 5.0, left: 5.0),
                         child: GestureDetector(
                           onTap: () async {
                             showToast("Adding product", primaryColor);
@@ -337,18 +379,20 @@ class _ProductContainerState extends State<ProductContainer> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(8.0),
+                            padding: EdgeInsets.symmetric(horizontal: 8.0),
                             child: Container(
                                 height: 120,
                                 width: screenHeight * 0.22,
                                 child: Stack(
                                   children: [
                                     Container(
-                                      height: 120,
-                                      width: screenHeight * 0.22,
-                                      child: FittedBox(
-                                          fit: BoxFit.cover,
-                                          child: Image.network(widget.image)),
+                                      constraints: BoxConstraints.expand(),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10)),
+                                          image: DecorationImage(
+                                              image: NetworkImage(widget.image),
+                                              fit: BoxFit.cover)),
                                     ),
                                     if (tag != '')
                                       Positioned(
@@ -356,7 +400,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                         left: 8,
                                         child: Container(
                                             height: 25,
-                                            color: tag == 'New'
+                                            color: tagBool
                                                 ? Colors.black
                                                 : Colors.red,
                                             child: Padding(
@@ -484,7 +528,7 @@ class _ProductContainerState extends State<ProductContainer> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${widget.name}',
+                                  '${context.locale == Locale('en', '') ? widget.product.productName : widget.product.productArabicName}',
                                   style: TextStyle(
                                     fontSize: 17,
                                   ),
@@ -496,7 +540,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                   height: 40,
                                   width: screenHeight * 0.22,
                                   child: Text(
-                                    '${widget.description}',
+                                    '${context.locale == Locale('en', '') ? widget.product.productDescription : widget.product.productArabicDescription}',
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 14,
@@ -514,7 +558,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Price ',
+                                        'Price'.tr() + ' ',
                                         style: TextStyle(
                                           fontSize: 17,
                                         ),
@@ -522,7 +566,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                       Row(
                                         children: [
                                           Text(
-                                            'SAR ',
+                                            'SAR'.tr() + ' ',
                                             style: TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold),
@@ -547,7 +591,7 @@ class _ProductContainerState extends State<ProductContainer> {
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   )
                 ],
               ),

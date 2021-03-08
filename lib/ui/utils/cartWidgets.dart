@@ -86,6 +86,7 @@ class ProductCartContainer extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Card(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           elevation: 4,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -101,42 +102,46 @@ class ProductCartContainer extends StatelessWidget {
                             alignment: Alignment.topLeft,
                             child: Container(
                               height: 100,
-                              width: 100,
+                              width: screenWidth * 0.27,
                               child: cartItem.image == null
                                   ? Icon(
                                       Icons.image,
                                       color: Colors.grey,
                                     )
-                                  : Image.network(
-                                      cartItem.image,
-                                      scale: 3,
+                                  : Container(
+                                      height: 100,
+                                      width: screenWidth * 0.27,
+                                      constraints: BoxConstraints.expand(),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10)),
+                                          image: DecorationImage(
+                                              image:
+                                                  NetworkImage(cartItem.image),
+                                              fit: BoxFit.cover)),
                                     ),
                             )),
+                        SizedBox(
+                          width: 5,
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 16),
-                              child: Text(
-                                '${cartItem.pName}',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
+                            Text(
+                              '${cartItem.pName}',
+                              style: TextStyle(
+                                fontSize: 20,
                               ),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 8.0, left: 16),
-                              child: Container(
-                                width: 130,
-                                child: Text(
-                                  '${cartItem.desc}',
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  // max
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                  ),
+                            Container(
+                              width: 130,
+                              child: Text(
+                                '${cartItem.desc}',
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                // max
+                                style: TextStyle(
+                                  fontSize: 14,
                                 ),
                               ),
                             ),
@@ -149,7 +154,7 @@ class ProductCartContainer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'SAR  ',
+                          'SAR'.tr() + '  ',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
@@ -165,6 +170,9 @@ class ProductCartContainer extends StatelessWidget {
                       ],
                     )
                   ],
+                ),
+                SizedBox(
+                  height: 5,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +220,7 @@ class ProductCartContainer extends StatelessWidget {
                                 color: cartTextColor,
                               ),
                               Text(
-                                'Move to whishlist',
+                                'Move to wish list',
                                 style: TextStyle(color: cartTextColor),
                               ).tr(),
                               Padding(

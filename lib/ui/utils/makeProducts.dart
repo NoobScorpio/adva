@@ -37,7 +37,7 @@ Widget makeProducts(screenHeight, products, box, context, {message}) {
               padding: const EdgeInsets.all(15),
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: screenHeight * 0.00065,
+              childAspectRatio: screenHeight * 0.00069,
               children: widgets,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -51,7 +51,8 @@ Widget makeProducts(screenHeight, products, box, context, {message}) {
           padding: const EdgeInsets.only(top: 150.0),
           child: Center(
             child:
-                Text(message == null ? 'No product in this Category' : message).tr(),
+                Text(message == null ? 'No product in this Category' : message)
+                    .tr(),
           ),
         );
 }

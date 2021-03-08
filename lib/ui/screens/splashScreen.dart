@@ -33,9 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     BlocProvider.of<GetAdsCubit>(context).getAds();
     BlocProvider.of<GetCategoryCubit>(context).getCategories();
+    BlocProvider.of<GetFeaturedCubit>(context).getSellers();
     BlocProvider.of<GetOfferCubit>(context).getOffers();
     BlocProvider.of<GetSellerCubit>(context).getSellers();
-    BlocProvider.of<GetFeaturedCubit>(context).getSellers();
+
     BlocProvider.of<GetBrandsCubit>(context).getBrands();
     BlocProvider.of<GetCategoryProductsCubit>(context)
         .getCategoryProducts("Makeup");
@@ -47,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
     bool loggedIn = sharedPreferences.getBool('loggedIn');
     if (loggedIn == null || loggedIn == false) {
       await sharedPreferences.setBool("loggedIn", false);
+      await sharedPreferences.setBool("english", true);
       MiscRepositoryImpl misc = MiscRepositoryImpl();
       await misc.getCODRate();
       await misc.getShipRate();
@@ -61,6 +63,12 @@ class _SplashScreenState extends State<SplashScreen> {
       await misc.getShipRate();
       await misc.getTaxRate();
       await BlocProvider.of<UserCubit>(context).setStatus(true);
+      bool english = sharedPreferences.getBool("english");
+      if (english == null || english == true) {
+        await sharedPreferences.setBool("english", true);
+      } else {
+        await sharedPreferences.setBool("english", false);
+      }
     }
   }
 
@@ -126,17 +134,18 @@ class _SplashScreenState extends State<SplashScreen> {
             Align(
               alignment: Alignment.center,
               child: AnimatedContainer(
-                duration: Duration(seconds: 10),
-                height: height,
-                width: width,
-                child:
-                FittedBox(
-                    fit: BoxFit.contain,
-                    child: Image.asset('assets/images/newadva.gif',))
-                // SvgPicture.asset(
-                //   'assets/images/logo.svg',
-                // ),
-              ),
+                  duration: Duration(seconds: 10),
+                  height: height,
+                  width: width,
+                  child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Image.asset(
+                        'assets/images/newadva.gif',
+                      ))
+                  // SvgPicture.asset(
+                  //   'assets/images/logo.svg',
+                  // ),
+                  ),
             ),
             // if (!show)
             //   Align(

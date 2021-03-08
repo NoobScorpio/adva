@@ -33,7 +33,11 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
   bool box = true;
   bool brand;
   bool filter = false;
-  List<String> sortValues = ['Sort by'.tr(), 'High to Low'.tr(), 'Low to High'.tr()];
+  List<String> sortValues = [
+    'Sort by'.tr(),
+    'High to Low'.tr(),
+    'Low to High'.tr()
+  ];
   String sortVal = 'Sort by'.tr();
   bool sort = false;
   _ShopCategoryScreenState(this.brand);
@@ -157,27 +161,32 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: screenWidth * 0.1,
-                      height: screenHeight * 0.05,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 0.1, color: Colors.black)),
-                      child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              box = !box;
-                            });
-                          },
-                          child: !box
-                              ? Icon(Icons.widgets_outlined)
-                              : Icon(Icons.list)),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: screenWidth * 0.1,
+                        height: screenHeight * 0.05,
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(width: 0.1, color: Colors.black)),
+                        child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                box = !box;
+                              });
+                            },
+                            child: !box
+                                ? Icon(Icons.widgets_outlined)
+                                : Icon(Icons.list)),
+                      ),
                     ),
                   ],
                 ),
               ),
               //SHOP BY BRAND AND CATEGORY
               Padding(
-                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                padding: EdgeInsets.symmetric(
+                    vertical: screenHeight * 0.02, horizontal: 15),
                 child: Container(
                   // screenHeight: screenHeight * 0.26,
                   width: screenWidth,
@@ -289,12 +298,8 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                       images.add(Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 5),
-                                        child: MyButton(
-                                          height: 40,
-                                          width: 150,
-                                          innerColor: Colors.white,
-                                          borderColor: Colors.grey[300],
-                                          onPressed: () {
+                                        child: GestureDetector(
+                                          onTap: () {
                                             setState(() {
                                               brand = false;
                                               filter = false;
@@ -305,10 +310,23 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                                 .getCategoryProducts(
                                                     cat.id.toString());
                                           },
-                                          child: Text(
-                                            '${cat.categoryName}',
-                                            style:
-                                                TextStyle(color: Colors.black),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: Colors.grey,
+                                                ),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(20))),
+                                            height: 40,
+                                            width: 150,
+                                            child: Center(
+                                              child: Text(
+                                                '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ));
@@ -499,6 +517,7 @@ class ShopSlideContainer extends StatelessWidget {
       decoration:
           BoxDecoration(border: Border.all(width: 0.3, color: primaryColor)),
       child: FittedBox(
+        fit: BoxFit.cover,
         child: img == null
             ? Icon(
                 Icons.image,

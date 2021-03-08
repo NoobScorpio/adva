@@ -50,7 +50,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-
+    bool english = context.locale == Locale('en', '');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -84,7 +84,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Align(
-                      alignment: Alignment.topLeft,
+                      alignment:
+                          english ? Alignment.topLeft : Alignment.topRight,
                       child: Text(
                         'Summary',
                         style: TextStyle(color: primaryColor),
@@ -107,7 +108,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                   print(
                                       "INSIDE ORDER DETAIL ${state.orderDetail.cart.length}");
                                   return getOrderSummary(
-                                      orderDetail: state.orderDetail);
+                                      orderDetail: state.orderDetail,
+                                      english: english);
                                 } else
                                   return buildLoading();
                               } else if (state is OrderErrorState)
@@ -280,7 +282,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                                 ),
                                               ),
                                             ),
-                                            Text('Your order is on your way').tr(),
+                                            Text('Your order is on your way')
+                                                .tr(),
                                             SizedBox(
                                                 height: screenHeight * 0.04),
                                             MyButton(
@@ -381,7 +384,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     );
   }
 
-  Widget getOrderSummary({OrderDetail orderDetail}) {
+  Widget getOrderSummary({OrderDetail orderDetail, bool english}) {
     if (orderDetail != null && orderDetail.cart.length > 0) {
       List<Widget> widgets = [];
       for (Cart cart in orderDetail.cart) {
@@ -413,9 +416,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${cart.product.productName}').tr(),
                   Text(
-                      '${cart.product.category != null ? cart.product.category.categoryName : "No Category"} / ${cart.size ?? "No Size"}',
+                      '${english ? cart.product.productName : cart.product.productArabicName}'),
+                  Text(
+                      '${cart.product.category != null ? cart.product.category.categoryName : "No Category".tr()} / ${cart.size ?? "No Size".tr()}',
                       style: TextStyle(
                         color: cartTextColor,
                       )).tr()
@@ -425,11 +429,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('Sar ${cart.price}',
+                Text('Sar'.tr() + ' ${cart.price}',
                     style: TextStyle(
                       color: cartTextColor,
-                    )).tr(),
-                Text('Quantity: ${cart.quantity}',
+                    )),
+                Text('Quantity'.tr() + ': ${cart.quantity}',
                     style: TextStyle(
                       color: cartTextColor,
                     )).tr()
@@ -447,7 +451,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     );
   }
 
-  Widget getPersonalInfo({OrderDetail orderDetail}) {
+  Widget getPersonalInfo({OrderDetail orderDetail, bool english}) {
     if (orderDetail != null) {
       return Container(
         child: Card(
@@ -461,7 +465,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ),
                 Text('Full Name').tr(),
                 Text(
-                  '${orderDetail.firstName ?? "Unknown"} ${orderDetail.lastName ?? ""}',
+                  '${orderDetail.firstName ?? "Unknown".tr()} ${orderDetail.lastName ?? ""}',
                   style: TextStyle(color: cartTextColor),
                 ).tr(),
                 SizedBox(
@@ -474,7 +478,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       children: [
                         Text('E-mail address').tr(),
                         Text(
-                          '${orderDetail.email ?? "no email"}',
+                          '${orderDetail.email ?? "No email".tr()}',
                           style: TextStyle(color: cartTextColor),
                         ).tr(),
                       ],
@@ -487,7 +491,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       children: [
                         Text('Phone No.').tr(),
                         Text(
-                          '${orderDetail.phone ?? "no phone"}',
+                          '${orderDetail.phone ?? "No phone"}',
                           style: TextStyle(color: cartTextColor),
                         ).tr(),
                       ],
@@ -532,7 +536,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       children: [
                         Text('E-mail address').tr(),
                         Text(
-                          '${widget.personal.email ?? "no email"}',
+                          '${widget.personal.email ?? "No email"}',
                           style: TextStyle(color: cartTextColor),
                         ).tr(),
                       ],
@@ -545,7 +549,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       children: [
                         Text('Phone No.').tr(),
                         Text(
-                          '${widget.personal.phone ?? "no phone"}',
+                          '${widget.personal.phone ?? "No phone"}',
                           style: TextStyle(color: cartTextColor),
                         ).tr(),
                       ],

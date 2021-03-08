@@ -200,7 +200,7 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
                             Text('${order.status}').tr(),
                           ],
                         )),
-                        Text('SAR. ${order.total}'),
+                        Text('SAR'.tr() + '. ${order.total}'),
                       ],
                     ),
                   ),
@@ -218,7 +218,7 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Center(
           child: Text(
-            'You don\'t have any Orders',
+            'You do not have any Orders',
             style: TextStyle(color: Colors.grey),
           ).tr(),
         ),

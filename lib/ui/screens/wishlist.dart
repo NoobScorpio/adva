@@ -20,6 +20,7 @@ class WishListScreen extends StatefulWidget {
 class _WishListScreenState extends State<WishListScreen> {
   @override
   Widget build(BuildContext context) {
+    bool english = context.locale == Locale('en', '');
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -90,21 +91,24 @@ class _WishListScreenState extends State<WishListScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${wish.product == null ? "Name" : wish.product.productName}',
+                                          '${wish.product == null ? (english ? "Name" : "") : (english ? wish.product.productName : wish.product.productArabicName)}',
                                           style: boldTextStyle,
                                         ).tr(),
-                                        Text(
-                                            'Price: SAR. ${wish.product == null ? "??" : wish.product.price}').tr(),
+                                        Text('Price'.tr() +
+                                            ': ' +
+                                            'SAR'.tr() +
+                                            '. ${wish.product == null ? "??" : wish.product.price}'),
                                       ],
                                     ),
                                     SizedBox(
                                       height: 15,
                                     ),
                                     Text(wish.product == null
-                                        ? "Stock"
-                                        : wish.product.quantity > 0
-                                            ? 'In Stock'
-                                            : "Out of stock").tr()
+                                            ? "Stock"
+                                            : wish.product.quantity > 0
+                                                ? 'In Stock'
+                                                : "Out of stock")
+                                        .tr()
                                   ],
                                 )
                               ],

@@ -63,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           Container(
-            height: 500,
+            // height: 500,
             width: double.maxFinite,
             child: Card(
               child: Column(
@@ -135,6 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   child: GestureDetector(
                                     onTap: () async {
+                                      showToast("Uploading", primaryColor);
                                       try {
                                         List<Media> res =
                                             await ImagesPicker.pick(
@@ -149,7 +150,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                       context)
                                                   .updateProfile(
                                                       widget.user, image);
-                                          print("UPDATED");
+                                          if (updated)
+                                            showToast("Uploaded", primaryColor);
+                                          else
+                                            showToast(
+                                                "Not Uploaded", primaryColor);
                                         }
                                       } catch (e) {
                                         print(e);
@@ -187,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ).tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
+                    padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                     child: Text(
                       '${widget.user.firstName ?? ""}',
                       style: boldTextStyle,
@@ -205,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ).tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
+                    padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                     child: Text(
                       '${widget.user.lastName ?? ""}',
                       style: boldTextStyle,
@@ -223,9 +228,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ).tr(),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
+                    padding: const EdgeInsets.only(
+                        left: 15.0, right: 15.0, bottom: 10),
                     child: Text(
-                      'English',
+                      context.locale == Locale('en', '') ? "English" : "عربي",
                       style: boldTextStyle,
                     ),
                   ),

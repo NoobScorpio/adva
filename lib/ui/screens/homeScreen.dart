@@ -88,19 +88,17 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: TextFormField(
                               autovalidateMode: AutovalidateMode.always,
                               decoration: InputDecoration(
-
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                       width: 0.1,
                                     ),
                                   ),
-
                                   hintText: 'Search'.tr(),
                                   contentPadding: EdgeInsets.only(
                                       top: screenHeight * 0.01,
                                       left: screenWidth * 0.03),
                                   suffixIcon:
-                                      Icon(Icons.search,color:Colors.black)),
+                                      Icon(Icons.search, color: Colors.black)),
                               onSaved: (String value) {},
                             ),
                           ),
@@ -251,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: 150,
                                 child: Center(
                                   child: Text(
-                                    '${cat.categoryName}',
+                                    '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),
@@ -426,11 +424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             } else {
                               List<Seller> selling = state.seller;
                               List<Widget> widgets = [];
-                              // print(sellings.length);
                               for (Seller selling in selling) {
-                                // print(
-                                //     selling.productimages[0].pictureReference);
-
                                 widgets.add(GestureDetector(
                                   onTap: () async {
                                     Navigator.push(
@@ -459,13 +453,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                               Radius.circular(20))),
                                       // height: 120,
                                       width: 160,
-                                      // child: FittedBox(
-                                      //   fit: BoxFit.cover,
-                                      //   child: Image.network(
-                                      //     selling.productimages[0]
-                                      //         .pictureReference,
-                                      //   ),
-                                      // ),
                                     ),
                                   ),
                                 ));
@@ -473,10 +460,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               return ListWheelScrollViewX(
                                   diameterRatio: 2.5,
-                                  // controller: _scrollController,
                                   scrollDirection: Axis.horizontal,
-                                  // magnification: 1.2,
-                                  // useMagnifier: true,
                                   itemExtent: 180,
                                   children: widgets);
                             }

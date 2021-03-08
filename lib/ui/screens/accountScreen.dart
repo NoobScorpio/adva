@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:adva/bloc/address_bloc/addressCubit.dart';
+import 'package:adva/bloc/category_bloc/getCategoryCubit.dart';
+import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/bloc/user_bloc/userState.dart';
 import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
@@ -32,10 +34,16 @@ class _AccountScreenState extends State<AccountScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getLang();
     BlocProvider.of<UserCubit>(context).getUser();
   }
 
-  bool english = true;
+  getLang() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    english = sp.getBool('english') ?? true;
+  }
+
+  bool english;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -377,19 +385,24 @@ class _AccountScreenState extends State<AccountScreen> {
             ).tr(),
           ),
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               // languageBottomSheet(context);
+              SharedPreferences sp = await SharedPreferences.getInstance();
               if (english) {
                 context.locale = Locale('ar', 'AE');
                 setState(() {
                   english = false;
                 });
+                await sp.setBool('english', false);
               } else {
                 context.locale = Locale('en', '');
                 setState(() {
                   english = true;
                 });
+                await sp.setBool('english', true);
               }
+              await BlocProvider.of<GetCategoryCubit>(context).getCategories();
+              await BlocProvider.of<GetFeaturedCubit>(context).getSellers();
             },
             child: ListTile(
               tileColor: Colors.white,
@@ -399,7 +412,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               title: Text('Language').tr(),
               trailing: Text(
-                english ? 'English' : "Arabic",
+                english ?? true ? 'English' : "Arabic",
                 style: boldTextStyle,
               ),
             ),

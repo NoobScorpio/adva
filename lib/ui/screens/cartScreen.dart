@@ -67,7 +67,7 @@ class _CartScreenState extends State<CartScreen> {
                     child: Padding(
                       padding: EdgeInsets.only(
                           left: screenWidth * 0.03, top: screenHeight * 0.017),
-                      child: Text('Items ${state.cartItems.length}').tr(),
+                      child: Text('Items'.tr() + ' ${state.cartItems.length}'),
                     )));
                 for (CartItem cartItem in state.cartItems) {
                   print(cartItem.price);
@@ -92,7 +92,7 @@ class _CartScreenState extends State<CartScreen> {
                                 style: TextStyle(
                                   fontSize: 18,
                                 )).tr(),
-                            txt1: Text('SAR. ${state.subTotal}',
+                            txt1: Text('SAR'.tr() + '. ${state.subTotal}',
                                 style: TextStyle(
                                   fontSize: 18,
                                 )).tr()),
@@ -100,11 +100,13 @@ class _CartScreenState extends State<CartScreen> {
                             screenHeight: screenHeight,
                             screenWidth: screenWidth,
                             txt: Text('Total (Inc VAT)',
-                                style: TextStyle(
-                                    fontSize: 18, color: cartTextColor)).tr(),
-                            txt1: Text('SAR. ${state.total}',
-                                style: TextStyle(
-                                    fontSize: 18, color: cartTextColor)).tr()),
+                                    style: TextStyle(
+                                        fontSize: 16, color: cartTextColor))
+                                .tr(),
+                            txt1: Text('SAR'.tr() + '. ${state.total}',
+                                    style: TextStyle(
+                                        fontSize: 18, color: cartTextColor))
+                                .tr()),
                       ],
                     ),
                   ),
@@ -150,9 +152,12 @@ class _CartScreenState extends State<CartScreen> {
                           borderColor: Colors.transparent,
                           innerColor: primaryColor,
                           child: Center(
-                            child: Text('Buy item(s) for SAR ${state.total}',
-                                style: TextStyle(
-                                    fontSize: 15, color: Colors.white)).tr(),
+                            child: Text(
+                                    'Buy item(s) for SAR '.tr() +
+                                        '${state.total}',
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.white))
+                                .tr(),
                           ),
                           onPressed: () async {
                             User user =
