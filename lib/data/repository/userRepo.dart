@@ -13,6 +13,7 @@ abstract class UserRepository {
   Future<User> logIn({String email, String password});
   Future<User> getUser();
   Future<bool> updateUser(User user);
+  Future<bool> updateLocalUser(User user);
   Future<bool> updateUserProfile(User user, File profile);
   Future<bool> updatePass(User user, String pass, String newPass);
   Future<bool> createAccount(
@@ -279,6 +280,18 @@ class UserRepositoryImpl implements UserRepository {
       return false;
     } else {
       print('Something went wrong');
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> updateLocalUser(User user) async {
+    try {
+      SharedPreferences sp = await SharedPreferences.getInstance();
+      await sp.setString('user', json.encode(user.toJson()));
+      return true;
+    } catch (e) {
+      print("@USER LOCAL UPDATE $e");
       return false;
     }
   }

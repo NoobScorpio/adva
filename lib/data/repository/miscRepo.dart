@@ -44,9 +44,10 @@ class MiscRepositoryImpl extends MiscRepository {
 
   @override
   Future<DiscountRate> getDiscount({String discount}) async {
+    print("@MISC DISCOUNT $discount");
     sp = await SharedPreferences.getInstance();
     var response = await http
-        .post(baseURL + "/discount/get", body: {"discount_code": discount});
+        .post(baseURL + "/discount/check", body: {"discount_code": discount});
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -70,7 +71,7 @@ class MiscRepositoryImpl extends MiscRepository {
   Future<Promo> getPromo({String promo}) async {
     sp = await SharedPreferences.getInstance();
     var response =
-        await http.post(baseURL + "/promo/get", body: {"promo_code": promo});
+        await http.post(baseURL + "/promo/check", body: {"promo_code": promo});
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);

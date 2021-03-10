@@ -9,6 +9,7 @@ import 'package:adva/data/model/sizes.dart';
 
 class Product {
   int id;
+  int newQuantity;
   String productName;
   String productArabicName;
   int categoryId;
@@ -66,6 +67,7 @@ class Product {
       this.sku,
       this.model,
       this.barcode,
+      this.newQuantity,
       this.timer,
       this.timerFrom,
       this.timerTo,
@@ -89,6 +91,7 @@ class Product {
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    newQuantity = json['newQuantity'];
     productName = json['product_name'];
     productArabicName = json['product_arabic_name'];
     categoryId = json['category_id'];
@@ -164,6 +167,9 @@ class Product {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+
+    data['newQuantity'] = this.newQuantity;
+
     data['product_name'] = this.productName;
     data['product_arabic_name'] = this.productArabicName;
     data['category_id'] = this.categoryId;

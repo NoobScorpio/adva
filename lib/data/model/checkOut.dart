@@ -1,6 +1,7 @@
 class CheckOutInfo {
   String name;
   String email;
+  int addressId;
   String phone;
   String address;
   String city;
@@ -10,6 +11,7 @@ class CheckOutInfo {
 
   CheckOutInfo(
       {this.name,
+      this.addressId,
       this.email,
       this.paymentMethod,
       this.phone,
@@ -19,6 +21,7 @@ class CheckOutInfo {
       this.postal});
 
   CheckOutInfo.fromJson(Map<String, dynamic> json) {
+    addressId = json['addressId'];
     paymentMethod = json['paymentMethod'];
     name = json['name'];
     email = json['email'];
@@ -31,6 +34,8 @@ class CheckOutInfo {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['addressId'] = this.addressId;
     data['paymentMethod'] = this.paymentMethod;
     data['name'] = this.name;
     data['email'] = this.email;

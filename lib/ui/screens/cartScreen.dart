@@ -63,10 +63,14 @@ class _CartScreenState extends State<CartScreen> {
                 }
                 List<Widget> widgets = [];
                 widgets.add(Align(
-                    alignment: Alignment.topLeft,
+                    alignment: context.locale == Locale('en', '')
+                        ? Alignment.topLeft
+                        : Alignment.topRight,
                     child: Padding(
                       padding: EdgeInsets.only(
-                          left: screenWidth * 0.03, top: screenHeight * 0.017),
+                          right: screenWidth * 0.03,
+                          left: screenWidth * 0.03,
+                          top: screenHeight * 0.017),
                       child: Text('Items'.tr() + ' ${state.cartItems.length}'),
                     )));
                 for (CartItem cartItem in state.cartItems) {
@@ -78,6 +82,8 @@ class _CartScreenState extends State<CartScreen> {
                       screenHeight: screenHeight,
                       screenWidth: screenWidth));
                 }
+                print("@CART subTotal: ${state.subTotal}");
+                dynamic total = state.total, subTotal = state.subTotal;
                 widgets.add(Padding(
                   padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
                   child: Container(
@@ -85,28 +91,60 @@ class _CartScreenState extends State<CartScreen> {
                     decoration: BoxDecoration(color: cartContainerColor),
                     child: Column(
                       children: [
-                        CartRow(
-                            screenHeight: screenHeight,
-                            screenWidth: screenWidth,
-                            txt: Text('Sub - Total',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                )).tr(),
-                            txt1: Text('SAR'.tr() + '. ${state.subTotal}',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                )).tr()),
-                        CartRow(
-                            screenHeight: screenHeight,
-                            screenWidth: screenWidth,
-                            txt: Text('Total (Inc VAT)',
-                                    style: TextStyle(
-                                        fontSize: 16, color: cartTextColor))
-                                .tr(),
-                            txt1: Text('SAR'.tr() + '. ${state.total}',
-                                    style: TextStyle(
-                                        fontSize: 18, color: cartTextColor))
-                                .tr()),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: screenHeight * 0.025,
+                              left: screenWidth * 0.032,
+                              right: screenWidth * 0.032),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Sub - Total',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  )).tr(),
+                              Row(
+                                children: [
+                                  Text('SAR'.tr(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      )).tr(),
+                                  Text('. $subTotal',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: screenHeight * 0.025,
+                              left: screenWidth * 0.032,
+                              right: screenWidth * 0.032),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Total (Inc VAT)',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  )).tr(),
+                              Row(
+                                children: [
+                                  Text('SAR'.tr(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      )).tr(),
+                                  Text('. $total',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),

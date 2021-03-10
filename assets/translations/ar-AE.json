@@ -56,6 +56,7 @@
   "Phone no": "رقم الهاتف",
   "Shipping Address": "عنوان الشحن",
   "Add address": "أضف العنوان",
+  "Add Address": "أضف العنوان",
   "Proceed to payments": "اتمام عملية الدفع",
   "No claim requests made": "لم يتم تقديم طلب",
   "Want to make a claim request?": "تريد تقديم طلب مطالبة",
@@ -150,6 +151,7 @@
   "Enter Phone no": "أدخل رقم الهاتف" ,
   "You have no address added": "لم تتم إضافة أي عنوان" ,
   "Flat shipping rate": "سعر الشحن ثابت" ,
+  "Flat Shipping Rate": "سعر الشحن ثابت" ,
   "Total (including Vat)": "الإجمالي (شاملاً ضريبة القيمة المضافة)" ,
   "Enter city name": "أدخل اسم المدينة" ,
   "Enter full address": "أدخل العنوان الكامل" ,
@@ -196,5 +198,14 @@
   "No email": "لا البريد الإلكتروني",
   "Phone No.": "رقم الهاتف.",
   "No phone": "لا يوجد هاتف",
-  "No personal information available": "لا توجد معلومات شخصية متاحة"
+  "No personal information available": "لا توجد معلومات شخصية متاحة",
+  "Please fill all fields": "لو سمحت أملأ كل الحقول",
+  "Payments": "المدفوعات",
+  "Card Payment": "بطاقه ائتمان",
+  "Cash on Delivery": "بطاقه ائتمان",
+  "Enter Promo Code": "إدخال الرمز الترويجي",
+  "Enter Discount Code": "أدخل رمز الخصم",
+  "Applying": "التقديم",
+  "Promo not valid": "الترويجي غير صالح",
+  "Discount not valid": "الخصم غير صالح"
 }

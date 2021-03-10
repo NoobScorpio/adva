@@ -2,16 +2,23 @@ import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/bloc/order_bloc/orderCubit.dart';
 import 'package:adva/bloc/order_bloc/orderState.dart';
+import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/data/model/cart.dart';
 import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/data/model/checkOut.dart';
+import 'package:adva/data/model/order.dart';
 import 'package:adva/data/model/orderDetail.dart';
+import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/user.dart';
+import 'package:adva/data/repository/cartRepo.dart';
+import 'package:adva/data/repository/orderRepo.dart';
+import 'package:adva/ui/screens/cardPaymentScreen.dart';
 import 'package:adva/ui/screens/orderReturnScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
 import 'package:adva/ui/utils/statesUi.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +27,10 @@ class OrderDetailsScreen extends StatefulWidget {
   final int oid, cid;
   final bool cart;
   final User user;
+  final promoCode, discountCode;
+  final int pointsDiscount;
   final CheckOutInfo personal;
-  final dynamic total, subTotal;
+  final dynamic total, subTotal, shipRate;
   const OrderDetailsScreen(
       {Key key,
       this.oid,
@@ -30,7 +39,11 @@ class OrderDetailsScreen extends StatefulWidget {
       this.user,
       this.personal,
       this.total,
-      this.subTotal})
+      this.subTotal,
+      this.shipRate,
+      this.promoCode,
+      this.discountCode,
+      this.pointsDiscount})
       : super(key: key);
   @override
   _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
@@ -244,69 +257,92 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           innerColor: primaryColor,
                           borderColor: Colors.transparent,
                           child: Text(
-                            'Next',
+                            'Confirm',
                             style: TextStyle(color: Colors.white),
                           ).tr(),
-                          onPressed: () {
-                            showDialog<void>(
+                          onPressed: () async {
+                            showDialog(
                                 context: context,
-                                barrierDismissible: true,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    backgroundColor: Colors.black87,
-                                    actions: [
-                                      Container(
-                                        // height: screenHeight * 0.2,
-                                        width: screenWidth,
-                                        child: Column(
-                                          children: [
-                                            Center(
-                                              child: Text('Success').tr(),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 10),
-                                              child: Container(
-                                                height: screenHeight * 0.033,
-                                                width: screenWidth * 0.065,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                  color: Colors.white,
-                                                ),
-                                                child: Icon(
-                                                  Icons.done,
-                                                  color: Colors.black,
-                                                  size: 25,
-                                                ),
-                                              ),
-                                            ),
-                                            Text('Your order is on your way')
-                                                .tr(),
-                                            SizedBox(
-                                                height: screenHeight * 0.04),
-                                            MyButton(
-                                              height: 50,
-                                              width: double.maxFinite,
-                                              onPressed: () {
-                                                Navigator.of(context).popUntil(
-                                                    (route) => route.isFirst);
-                                              },
-                                              child: Text(
-                                                'Go to Home',
-                                                style: TextStyle(
-                                                    color: Colors.white),
-                                              ).tr(),
-                                              innerColor: primaryColor,
-                                              borderColor: Colors.transparent,
-                                            )
-                                          ],
-                                        ),
+                                builder: (_) => Center(
+                                      child: CircularProgressIndicator(
+                                        backgroundColor: primaryColor,
                                       ),
-                                    ],
-                                  );
-                                });
+                                    ));
+                            List<Product> products = [];
+                            List<CartItem> cartItems =
+                                await CartRepositoryImpl().getItems();
+                            for (var item in cartItems) {
+                              products.add(Product(
+                                  productArabicName: item.arabicName,
+                                  productName: item.pName,
+                                  id: item.pid,
+                                  price: item.price,
+                                  newQuantity: item.qty));
+                            }
+                            print("@PAYMENT ${widget.personal.paymentMethod}");
+                            Order order = Order(
+                                customerId: widget.user.id,
+                                total: widget.total,
+                                email: widget.user.email,
+                                phone: widget.user.phone,
+                                addressId: widget.personal.addressId,
+                                products: products,
+                                paymentType: widget.personal.paymentMethod,
+                                promoCode: widget.promoCode,
+                                discountCode: widget.discountCode,
+                                pointsDiscount: widget.pointsDiscount ?? 0);
+                            if (widget.personal.paymentMethod ==
+                                'CashonDelivery') {
+                              int ordered = await OrderRepositoryImpl()
+                                  .createOrder(order: order);
+                              if (ordered != null) {
+                                User user = widget.user;
+                                user.points = ordered;
+                                print("@POINTS ${user.points}");
+                                bool updated =
+                                    await BlocProvider.of<UserCubit>(context)
+                                        .updateLocalInfo(user);
+                                if (updated) {
+                                  Navigator.pop(context);
+                                  await BlocProvider.of<CartCubit>(context)
+                                      .emptyCart();
+                                  successDialog(
+                                      screenHeight: screenHeight,
+                                      screenWidth: screenWidth);
+                                }
+                              } else {
+                                Navigator.pop(context);
+                                showToast(
+                                    "Please try again later", primaryColor);
+                              }
+                            } else {
+                              String id = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => CardPaymentScreen(
+                                            total: widget.total,
+                                            id: widget.user.id,
+                                          )));
+
+                              if (id != null && id != '') {
+                                order.id = id;
+                                bool confirmed = await OrderRepositoryImpl()
+                                    .confirmOrder(order: order);
+
+                                if (confirmed != null) {
+                                  Navigator.pop(context);
+                                  await BlocProvider.of<CartCubit>(context)
+                                      .emptyCart();
+                                  successDialog(
+                                      screenHeight: screenHeight,
+                                      screenWidth: screenWidth);
+                                } else {
+                                  Navigator.pop(context);
+                                  showToast(
+                                      "Please try again later", primaryColor);
+                                }
+                              }
+                            }
                           },
                         ),
                       ],
@@ -318,6 +354,70 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         ),
       ),
     );
+  }
+
+  successDialog({screenWidth, screenHeight}) {
+    return showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.black87,
+            actions: [
+              Container(
+                // height: screenHeight * 0.2,
+                width: screenWidth,
+                child: Column(
+                  children: [
+                    Center(
+                      child: Text(
+                        'Success',
+                        style: TextStyle(color: Colors.white),
+                      ).tr(),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Container(
+                        height: screenHeight * 0.033,
+                        width: screenWidth * 0.065,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
+                        ),
+                        child: Icon(
+                          Icons.done,
+                          color: Colors.black,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Your order is on your way',
+                      style: TextStyle(color: Colors.white),
+                    ).tr(),
+                    SizedBox(height: screenHeight * 0.04),
+                    MyButton(
+                      height: 50,
+                      width: double.maxFinite,
+                      onPressed: () {
+                        int count = 0;
+                        Navigator.popUntil(context, (route) {
+                          return count++ == 4;
+                        });
+                      },
+                      child: Text(
+                        'Go to Home',
+                        style: TextStyle(color: Colors.white),
+                      ).tr(),
+                      innerColor: primaryColor,
+                      borderColor: Colors.transparent,
+                    )
+                  ],
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   Widget getCartSummary({List<CartItem> cartItems}) {
@@ -419,7 +519,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   Text(
                       '${english ? cart.product.productName : cart.product.productArabicName}'),
                   Text(
-                      '${cart.product.category != null ? cart.product.category.categoryName : "No Category".tr()} / ${cart.size ?? "No Size".tr()}',
+                      '${cart.product.category != null ? (english ? cart.product.category.categoryName : cart.product.category.categoryArabicName) : "No Category".tr()}',
                       style: TextStyle(
                         color: cartTextColor,
                       )).tr()
@@ -429,14 +529,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('Sar'.tr() + ' ${cart.price}',
+                Text('SAR'.tr() + ' ${cart.price}',
                     style: TextStyle(
                       color: cartTextColor,
                     )),
                 Text('Quantity'.tr() + ': ${cart.quantity}',
                     style: TextStyle(
                       color: cartTextColor,
-                    )).tr()
+                    ))
               ],
             ),
           ],
@@ -670,7 +770,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     total: total != null
                         ? total.toString()
                         : orderDetail.total.toString(),
-                    flatShippingRate: '10',
+                    flatShippingRate: widget.shipRate ?? "1",
                     subTotal: subTotal != null
                         ? subTotal.toString()
                         : orderDetail.total.toString(),
@@ -788,8 +888,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       color: Colors.grey,
                     ),
                     PaymentColumn(
-                      total: (widget.total + 10).toString(),
-                      flatShippingRate: '10',
+                      total: widget.total.toString(),
+                      flatShippingRate: widget.shipRate ?? '1',
                       subTotal: widget.subTotal.toString(),
                     )
                   ],

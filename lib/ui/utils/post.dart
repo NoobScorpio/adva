@@ -216,35 +216,35 @@ class _PostState extends State<Post> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        SharedPreferences sp =
-                            await SharedPreferences.getInstance();
-                        bool loggedIn = sp.getBool('loggedIn');
-                        if (loggedIn == null || loggedIn == false) {
-                          showToast("Not logged in", primaryColor);
-                        } else {
-                          User user = await BlocProvider.of<UserCubit>(context)
-                              .getUser();
-                          // print("CUSTOEMR ID: ${user.id}");
-                          bool postLiked =
-                              await BlocProvider.of<PostsCubit>(context)
-                                  .postLike(post.id, user.id);
-                          if (postLiked) {
-                            if (liked) {
-                              setState(() {
-                                liked = false;
-                                likes--;
-                              });
-                              showToast("Un liked", primaryColor);
-                            } else if (!liked) {
-                              setState(() {
-                                liked = true;
-                                likes++;
-                              });
-                              showToast("Liked", primaryColor);
-                            }
-                          } else
-                            showToast("Could not like", primaryColor);
-                        }
+                        // SharedPreferences sp =
+                        //     await SharedPreferences.getInstance();
+                        // bool loggedIn = sp.getBool('loggedIn');
+                        // if (loggedIn == null || loggedIn == false) {
+                        //   showToast("Not logged in", primaryColor);
+                        // } else {
+                        //   User user = await BlocProvider.of<UserCubit>(context)
+                        //       .getUser();
+                        //   // print("CUSTOEMR ID: ${user.id}");
+                        //   bool postLiked =
+                        //       await BlocProvider.of<PostsCubit>(context)
+                        //           .postLike(post.id, user.id);
+                        //   if (postLiked) {
+                        //     if (liked) {
+                        //       setState(() {
+                        //         liked = false;
+                        //         likes--;
+                        //       });
+                        //       showToast("Un liked", primaryColor);
+                        //     } else if (!liked) {
+                        //       setState(() {
+                        //         liked = true;
+                        //         likes++;
+                        //       });
+                        //       showToast("Liked", primaryColor);
+                        //     }
+                        //   } else
+                        //     showToast("Could not like", primaryColor);
+                        // }
                       },
                       child: liked
                           ? Icon(
@@ -287,8 +287,8 @@ class LikeButton extends StatelessWidget {
             onTap: () async {
               User user = await BlocProvider.of<UserCubit>(context).getUser();
               print("CUSTOEMR ID: ${user.id}");
-              bool liked = await BlocProvider.of<PostsCubit>(context)
-                  .postLike(pid, user.id);
+              // bool liked = await BlocProvider.of<PostsCubit>(context)
+              //     .postLike(pid, user.id);
             },
             child: like
                 ? Icon(

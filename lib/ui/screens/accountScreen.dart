@@ -43,9 +43,23 @@ class _AccountScreenState extends State<AccountScreen> {
     english = sp.getBool('english') ?? true;
   }
 
+  int langGroup = 1;
+  checkLang() async {
+    if (context.locale == Locale('en', '')) {
+      setState(() {
+        langGroup = 1;
+      });
+    } else {
+      setState(() {
+        langGroup = 2;
+      });
+    }
+  }
+
   bool english;
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => checkLang());
     return Scaffold(
       backgroundColor: Colors.grey[200],
       body: SafeArea(
@@ -386,23 +400,7 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
           GestureDetector(
             onTap: () async {
-              // languageBottomSheet(context);
-              SharedPreferences sp = await SharedPreferences.getInstance();
-              if (english) {
-                context.locale = Locale('ar', 'AE');
-                setState(() {
-                  english = false;
-                });
-                await sp.setBool('english', false);
-              } else {
-                context.locale = Locale('en', '');
-                setState(() {
-                  english = true;
-                });
-                await sp.setBool('english', true);
-              }
-              await BlocProvider.of<GetCategoryCubit>(context).getCategories();
-              await BlocProvider.of<GetFeaturedCubit>(context).getSellers();
+              languageBottomSheet();
             },
             child: ListTile(
               tileColor: Colors.white,
@@ -412,7 +410,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               title: Text('Language').tr(),
               trailing: Text(
-                english ?? true ? 'English' : "Arabic",
+                langGroup == 1 ? 'English' : "Arabic",
                 style: boldTextStyle,
               ),
             ),
@@ -586,9 +584,9 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  void languageBottomSheet(con) {
+  void languageBottomSheet() {
     showModalBottomSheet(
-        context: con,
+        context: context,
         builder: (BuildContext bc) {
           return Container(
             child: Wrap(
@@ -608,17 +606,30 @@ class _AccountScreenState extends State<AccountScreen> {
                         color: Colors.grey,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          con.locale = Locale('en', '');
-                          // setState(() {
-                          //   english = true;
-                          // });
+                        onTap: () async {
+                          showDialog(
+                              context: context,
+                              builder: (_) => Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: primaryColor,
+                                    ),
+                                  ));
+                          context.locale = Locale('en', '');
+                          await BlocProvider.of<GetCategoryCubit>(context)
+                              .getCategories();
+                          await BlocProvider.of<GetFeaturedCubit>(context)
+                              .getSellers();
                         },
                         child: ListTile(
                           title: Text('English'),
-                          trailing: Icon(
-                            Icons.check_circle,
-                            color: primaryColor,
+                          trailing: Radio(
+                            value: 1,
+                            groupValue: langGroup,
+                            onChanged: (val) {
+                              setState(() {
+                                langGroup = val;
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -626,17 +637,30 @@ class _AccountScreenState extends State<AccountScreen> {
                         color: Colors.grey,
                       ),
                       GestureDetector(
-                        onTap: () {
-                          con.locale = Locale('ar', '');
-                          // setState(() {
-                          //   english = false;
-                          // });
+                        onTap: () async {
+                          showDialog(
+                              context: context,
+                              builder: (_) => Center(
+                                    child: CircularProgressIndicator(
+                                      backgroundColor: primaryColor,
+                                    ),
+                                  ));
+                          context.locale = Locale('ar', 'AE');
+                          await BlocProvider.of<GetCategoryCubit>(context)
+                              .getCategories();
+                          await BlocProvider.of<GetFeaturedCubit>(context)
+                              .getSellers();
                         },
                         child: ListTile(
                           title: Text('Arabic'),
-                          trailing: Icon(
-                            Icons.circle,
-                            color: Colors.grey,
+                          trailing: Radio(
+                            value: 2,
+                            groupValue: langGroup,
+                            onChanged: (val) {
+                              setState(() {
+                                langGroup = val;
+                              });
+                            },
                           ),
                         ),
                       ),

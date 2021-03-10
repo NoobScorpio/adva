@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:adva/bloc/gallery_bloc/galleryState.dart';
+import 'package:adva/data/model/post.dart';
 import 'package:adva/data/repository/galleryRepo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,21 +38,21 @@ class PostsCubit extends Cubit<GalleryState> {
     }
   }
 
-  Future<bool> postLike(int pid, int cid) async {
+  Future<List<PostModel>> postLike(int pid, int cid) async {
     try {
       // emit(GalleryLoadingState());
       final posts = await galleryRepository.postLike(pid: pid, cid: cid);
       if (posts != null) {
         emit(GalleryPostLikedState(posts: posts));
         emit(GalleryLoadedState(posts: posts));
-        return true;
+        return posts;
       } else {
         emit(GalleryLoadedState(posts: posts));
-        return false;
+        return null;
       }
     } on Exception {
       emit(GalleryErrorState());
-      return false;
+      return null;
     }
   }
 }

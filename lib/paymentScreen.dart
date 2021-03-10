@@ -2,8 +2,11 @@ import 'dart:ui';
 
 import 'package:adva/bloc/payment_bloc/paymentState.dart';
 import 'package:adva/data/model/checkOut.dart';
+import 'package:adva/data/model/discountRate.dart';
 import 'package:adva/data/model/payment.dart';
+import 'package:adva/data/model/promo.dart';
 import 'package:adva/data/model/user.dart';
+import 'package:adva/data/repository/miscRepo.dart';
 import 'package:adva/ui/screens/addCardScreen.dart';
 import 'package:adva/ui/screens/orderDetailsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -11,16 +14,23 @@ import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/tFContainer.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PaymentScreen extends StatefulWidget {
   final User user;
   final CheckOutInfo checkout;
-  final dynamic total, subTotal;
+  final dynamic total, subTotal, shipRate;
   const PaymentScreen(
-      {Key key, this.user, this.checkout, this.total, this.subTotal})
+      {Key key,
+      this.user,
+      this.checkout,
+      this.total,
+      this.subTotal,
+      this.shipRate})
       : super(key: key);
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -28,6 +38,21 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   int groupValue1 = 1, groupValue2 = 0;
+  MiscRepositoryImpl miscRepo = MiscRepositoryImpl();
+  TextEditingController promoCont, discountCont;
+  bool promoApplied = false, discountApplied = false;
+  dynamic promoValue, discountValue, overAllTotal;
+  String promoCode, discountCode, pointsDiscount;
+  int points;
+  int pointsGroup = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    promoCont = TextEditingController();
+    discountCont = TextEditingController();
+    points = widget.user.points;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +61,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         title: Text(
@@ -45,26 +78,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
             // fontSize: 22,
             fontWeight: FontWeight.w400,
           ),
-        ),
+        ).tr(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: ListView(
-          children: [
-            SizedBox(
-              height: screenHeight * 0.02,
-            ),
-            Container(
-              color: Colors.white,
-              width: screenWidth,
-              height: screenHeight * 0.25,
+      body: ListView(
+        children: [
+          SizedBox(
+            height: screenHeight * 0.02,
+          ),
+          Container(
+            color: Colors.white,
+            width: screenWidth,
+            // height: screenHeight * 0.25,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Payment Method',
                     style: TextStyle(color: cartTextColor),
-                  ),
+                  ).tr(),
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Container(
@@ -77,7 +110,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           children: [
                             Row(
                               children: [
-                                Text('Card Payment'),
+                                Text('Card Payment').tr(),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -110,7 +143,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           children: [
                             Row(
                               children: [
-                                Text('Cash on Delivery'),
+                                Text('Cash on Delivery').tr(),
                                 SizedBox(
                                   width: 10,
                                 ),
@@ -132,227 +165,378 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ],
               ),
             ),
-            //ADD CARD
-            if (groupValue1 == 1)
-              Padding(
-                padding: const EdgeInsets.all(13),
-                child: GestureDetector(
-                  onTap: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) =>
-                    //             AddCardScreen(user: widget.user)));
-                  },
-                  child: Container(
-                    height: screenHeight * 0.085,
-                    child: Card(
-                        elevation: 5,
-                        child: Center(
-                            child: Text(
-                          '+Add Card',
-                          style: TextStyle(color: primaryColor),
-                        ))),
+          ),
+          SizedBox(
+            height: screenHeight * 0.02,
+          ),
+          //PROMO
+          Container(
+            color: Colors.white,
+            width: screenWidth,
+            // height: screenHeight * 0.19,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: screenWidth * 0.02),
+                    child: Text(
+                      'Enter Promo Code',
+                      style: boldTextStyle,
+                    ).tr(),
                   ),
-                ),
-              ),
-            //SAVED PAYMENTS
-            if (groupValue1 == 1)
-              Container(
-                color: Colors.white,
-                width: screenWidth,
-                // height: screenHeight * 0.31,
-                child: Padding(
-                  padding: EdgeInsets.only(top: screenHeight * 0.02),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: screenWidth * 0.05,
-                        ),
-                        child: Text(
-                          'Saved Payments',
-                          style: TextStyle(color: cartTextColor, fontSize: 17),
+                  Container(
+                    height: 50,
+                    child: TextFormField(
+                      controller: promoCont,
+                      autovalidateMode: AutovalidateMode.always,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 0.3, color: Colors.black),
                         ),
                       ),
-                      // BlocConsumer(
-                      //   listener: (context, state) {},
-                      //   builder: (context, state) {
-                      //     if (state is PaymentInitialState)
-                      //       return buildLoading();
-                      //     if (state is PaymentLoadingState)
-                      //       return buildLoading();
-                      //     if (state is PaymentLoadedState) {
-                      //       if (state.payments != null &&
-                      //           state.payments.length != 0) {
-                      //         groupValue2 = state.payments[0].id;
-                      //         return paymentWidgets(payments: state.payments);
-                      //       } else
-                      //         return paymentWidgets(payments: []);
-                      //     }
-                      //     if (state is PaymentAddState) {
-                      //       if (state.payments != null &&
-                      //           state.payments.length != 0) {
-                      //         groupValue2 = state.payments[0].id;
-                      //         return paymentWidgets(payments: state.payments);
-                      //       } else
-                      //         return paymentWidgets(payments: []);
-                      //     }
-                      //     if (state is PaymentDeleteState) {
-                      //       if (state.payments != null &&
-                      //           state.payments.length != 0) {
-                      //         groupValue2 = state.payments[0].id;
-                      //         return paymentWidgets(payments: state.payments);
-                      //       } else
-                      //         return paymentWidgets(payments: []);
-                      //     } else
-                      //       return paymentWidgets(payments: []);
-                      //   },
-                      // )
-                    ],
-                  ),
-                ),
-              ),
-            //PROMO
-            Padding(
-              padding: EdgeInsets.only(
-                  top: screenHeight * 0.028, bottom: screenHeight * 0.02),
-              child: Container(
-                color: Colors.white,
-                width: screenWidth,
-                // height: screenHeight * 0.19,
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: screenWidth * 0.02),
-                        child: Text(
-                          'Enter Promo Code',
-                          style: boldTextStyle,
-                        ),
-                      ),
-                      TFContainer(
-                          screenHeight: screenHeight, screenWidth: screenWidth),
-                      SizedBox(
-                        height: screenHeight * 0.01,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: screenHeight * 0.06,
-                            width: screenWidth * 0.3,
-                            decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 0.5, color: primaryColor),
-                            ),
-                            child: Center(
-                                child: Text(
-                              'Apply',
-                              style: TextStyle(color: primaryColor),
-                            )),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            //NEXT PAYMENT
-            Padding(
-              padding: EdgeInsets.only(top: screenHeight * 0.028),
-              child: Container(
-                color: Colors.white,
-                width: screenWidth,
-                height: screenHeight * 0.3,
-                child: Column(
-                  children: [
-                    PaymentColumn(
-                      subTotal: widget.subTotal.toString(),
-                      total: (widget.total + 10).toString(),
-                      flatShippingRate: 10.toString(),
+                      onSaved: (String value) {},
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.05,
-                          vertical: screenHeight * 0.013),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: MyButton(
-                              height: screenHeight * 0.07,
-                              // width: double.maxFinite,
-                              child: Text(
-                                'Next',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                              borderColor: Colors.transparent,
-                              innerColor: primaryColor,
-                              onPressed: () {
-                                CheckOutInfo checkOutInfo = widget.checkout;
-                                checkOutInfo.paymentMethod = groupValue1 == 1
-                                    ? "Card Payment"
-                                    : "Cash on delivery";
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            OrderDetailsScreen(
-                                                personal: checkOutInfo,
-                                                cart: true,
-                                                total: widget.total,
-                                                subTotal: widget.subTotal,
-                                                user: widget.user)));
-                              },
-                            ),
-                          ),
-                          Expanded(
-                            child: MyButton(
-                              height: screenHeight * 0.07,
-                              // width: double.maxFinite,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      FontAwesomeIcons.apple,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Pay',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 17),
-                                  ),
-                                ],
-                              ),
-                              borderColor: Colors.transparent,
-                              innerColor: Colors.black,
-                              onPressed: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //         builder: (context) => PaymentScreen()));
-                              },
-                            ),
-                          ),
-                        ],
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.01,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      showToast('Applying', primaryColor);
+                      if (promoCont.text != '' && promoCont.text != null) {
+                        Promo promo =
+                            await miscRepo.getPromo(promo: promoCont.text);
+                        if (promo != null) {
+                          setState(() {
+                            promoValue =
+                                widget.total * (promo.pointsForCustomer / 100);
+                            promoApplied = true;
+                            promoCode = promoCont.text;
+                            promoCont.text = '';
+                          });
+                        } else {
+                          showToast('Promo not valid', primaryColor);
+                        }
+                      }
+                    },
+                    child: Container(
+                      height: screenHeight * 0.06,
+                      width: screenWidth * 0.3,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 0.5, color: primaryColor),
                       ),
-                    )
-                  ],
-                ),
+                      child: Center(
+                          child: Text(
+                        'Apply',
+                        style: TextStyle(color: primaryColor),
+                      ).tr()),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: screenHeight * 0.02,
+          ),
+          //DISCOUNT
+          Container(
+            color: Colors.white,
+            width: screenWidth,
+            // height: screenHeight * 0.19,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: screenWidth * 0.02),
+                    child: Text(
+                      'Enter Discount Code',
+                      style: boldTextStyle,
+                    ).tr(),
+                  ),
+                  Container(
+                    height: 50,
+                    child: TextFormField(
+                      controller: discountCont,
+                      autovalidateMode: AutovalidateMode.always,
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 0.3, color: Colors.black),
+                        ),
+                      ),
+                      onSaved: (String value) {},
+                    ),
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.01,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      showToast('Applying', primaryColor);
+                      if (discountCont.text != '' &&
+                          discountCont.text != null) {
+                        DiscountRate discount = await miscRepo.getDiscount(
+                            discount: discountCont.text);
+                        if (discount != null) {
+                          var total = widget.total;
+                          setState(() {
+                            discountValue = (total *
+                                (double.parse(discount.discountPercent) / 100));
+                            discountApplied = true;
+                            discountCode = discountCont.text;
+                            discountCont.text = '';
+                          });
+                        } else {
+                          showToast('Discount not valid', primaryColor);
+                        }
+                      }
+                    },
+                    child: Container(
+                      height: screenHeight * 0.06,
+                      width: screenWidth * 0.3,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 0.5, color: primaryColor),
+                      ),
+                      child: Center(
+                          child: Text(
+                        'Apply',
+                        style: TextStyle(color: primaryColor),
+                      ).tr()),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: screenHeight * 0.02,
+          ),
+          //POINTS
+          Container(
+            color: Colors.white,
+            width: screenWidth,
+            // height: screenHeight * 0.19,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: screenWidth * 0.02, right: screenWidth * 0.02),
+                    child: Text(
+                      'PTS'.tr() + ': $points',
+                      style: boldTextStyle,
+                    ),
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.01,
+                  ),
+                  pointsRow(screenWidth: screenWidth),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: screenHeight * 0.02,
+          ),
+          //NEXT PAYMENT
+          Container(
+            color: Colors.white,
+            width: screenWidth,
+            // height: screenHeight * 0.3,
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  getPaymentColumn(
+                      tOTAL: widget.total,
+                      dISCOUNT: discountValue,
+                      pROMO: promoValue,
+                      sHIP: widget.shipRate,
+                      sUBTOTAL: widget.subTotal),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenWidth * 0.05,
+                        vertical: screenHeight * 0.013),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: MyButton(
+                            height: screenHeight * 0.07,
+                            // width: double.maxFinite,
+                            child: Text(
+                              'Next',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                            borderColor: Colors.transparent,
+                            innerColor: primaryColor,
+                            onPressed: () {
+                              CheckOutInfo checkOutInfo = widget.checkout;
+                              checkOutInfo.paymentMethod = groupValue1 == 1
+                                  ? "CreditCardPayments"
+                                  : "CashonDelivery";
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => OrderDetailsScreen(
+                                          personal: checkOutInfo,
+                                          cart: true,
+                                          promoCode:
+                                              promoApplied ? promoCode : null,
+                                          discountCode: discountApplied
+                                              ? discountCode
+                                              : null,
+                                          pointsDiscount: pointsGroup != 0
+                                              ? pointsGroup
+                                              : null,
+                                          total: overAllTotal,
+                                          shipRate: widget.shipRate,
+                                          subTotal: widget.subTotal,
+                                          user: widget.user)));
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget pointsRow({screenWidth}) {
+    return Padding(
+      padding:
+          EdgeInsets.only(left: screenWidth * 0.02, right: screenWidth * 0.02),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('10%'),
+                Text('20%'),
+                Text('30%'),
+                Text('40%'),
+                Text('50%'),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Radio(
+                value: 1,
+                groupValue: pointsGroup,
+                onChanged: (val) {
+                  setState(() {
+                    if (points >= 100)
+                      pointsGroup = val;
+                    else
+                      showToast('Not enough points', primaryColor);
+                  });
+                },
+              ),
+              Radio(
+                value: 2,
+                groupValue: pointsGroup,
+                onChanged: (val) {
+                  setState(() {
+                    if (points >= 200)
+                      pointsGroup = val;
+                    else
+                      showToast('Not enough points', primaryColor);
+                  });
+                },
+              ),
+              Radio(
+                value: 3,
+                groupValue: pointsGroup,
+                onChanged: (val) {
+                  setState(() {
+                    if (points >= 300)
+                      pointsGroup = val;
+                    else
+                      showToast('Not enough points', primaryColor);
+                  });
+                },
+              ),
+              Radio(
+                value: 4,
+                groupValue: pointsGroup,
+                onChanged: (val) {
+                  setState(() {
+                    if (points >= 400)
+                      pointsGroup = val;
+                    else
+                      showToast('Not enough points', primaryColor);
+                  });
+                },
+              ),
+              Radio(
+                value: 5,
+                groupValue: pointsGroup,
+                onChanged: (val) {
+                  setState(() {
+                    if (points >= 500)
+                      pointsGroup = val;
+                    else
+                      showToast('Not enough points', primaryColor);
+                  });
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget getPaymentColumn({tOTAL, sUBTOTAL, dISCOUNT, pROMO, sHIP}) {
+    print("@PAY START $tOTAL");
+    if (pROMO != null && dISCOUNT != null) {
+      print("@PAY PROMO--DISCOUNT $pROMO--$dISCOUNT--$tOTAL");
+      tOTAL = tOTAL - pROMO - dISCOUNT + sHIP;
+    } else if (pROMO == null && dISCOUNT != null) {
+      tOTAL = tOTAL - dISCOUNT + sHIP;
+      print("@PAY DISCOUNT $dISCOUNT--$tOTAL");
+    } else if (pROMO != null && dISCOUNT == null) {
+      tOTAL = tOTAL - pROMO + sHIP;
+      print("@PAY PROMO $pROMO--$tOTAL");
+    } else if (pROMO == null && dISCOUNT == null) {
+      tOTAL = tOTAL + sHIP;
+      print("@PAY $tOTAL");
+    }
+    dynamic points;
+    if (pointsGroup > 0) {
+      dynamic total = widget.total;
+      setState(() {
+        points = total * ((pointsGroup * 10) / 100);
+        tOTAL = tOTAL - points;
+      });
+    }
+    overAllTotal = tOTAL;
+    return PaymentColumn(
+      subTotal: sUBTOTAL,
+      total: tOTAL,
+      promo: pROMO,
+      discount: dISCOUNT,
+      flatShippingRate: sHIP,
+      points: points,
     );
   }
 

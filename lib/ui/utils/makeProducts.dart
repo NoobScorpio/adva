@@ -14,11 +14,10 @@ Widget makeProducts(screenHeight, products, box, context, {message}) {
     if (products[0].runtimeType == Product) {
       for (Product product in products) {
         widgets.add(getProduct(
-          product: product,
-          context: context,
-          screenHeight: screenHeight,
-          box: box,
-        ));
+            product: product,
+            context: context,
+            screenHeight: screenHeight,
+            box: box));
       }
     } else {
       for (Featured product in products) {

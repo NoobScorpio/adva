@@ -168,20 +168,18 @@ class _ProductContainerState extends State<ProductContainer> {
                                     print("@PRODUCT ${product.category}");
 
                                     CartItem cartItem = CartItem();
-                                    cartItem.pName =
-                                        context.locale == Locale('ar', 'AE')
-                                            ? product.productArabicName
-                                            : product.productName;
+                                    cartItem.pName = product.productName;
+                                    cartItem.arabicName =
+                                        product.productArabicName;
                                     cartItem.price = product.price;
                                     cartItem.image =
                                         product.productimages == null
                                             ? null
                                             : product.productimages[0]
                                                 .pictureReference;
-                                    cartItem.desc =
-                                        context.locale == Locale('ar', 'AE')
-                                            ? product.productArabicDescription
-                                            : product.productDescription;
+                                    cartItem.desc = product.productDescription;
+                                    cartItem.arabicDesc =
+                                        product.productArabicDescription;
                                     cartItem.pid = product.id;
                                     cartItem.discount =
                                         product.discountedAmount;
@@ -205,9 +203,14 @@ class _ProductContainerState extends State<ProductContainer> {
                                         await BlocProvider.of<CartCubit>(
                                                 context)
                                             .addItem(cartItem);
-                                    if (added)
-                                      showToast("Added to cart", primaryColor);
-                                    else
+                                    if (added) {
+                                      {
+                                        showToast(
+                                            "Added to cart", primaryColor);
+                                        // Get the position of the current widget when clicked, and pass in overlayEntry
+
+                                      }
+                                    } else
                                       showToast('Could not add to cart',
                                           primaryColor);
                                   } else
@@ -517,6 +520,143 @@ class _ProductContainerState extends State<ProductContainer> {
                                         //   },
                                         // ),
                                       ),
+                                    Center(
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          if (widget.product.quantity == 0) {
+                                            showToast(
+                                                'Out of Stock', primaryColor);
+                                          } else {
+                                            showToast('Adding Item to Cart',
+                                                primaryColor);
+                                            SharedPreferences sp =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            bool loggedIn =
+                                                sp.getBool('loggedIn');
+
+                                            if (loggedIn == null ||
+                                                loggedIn == false) {
+                                              showToast('Not Logged In',
+                                                  primaryColor);
+                                            } else {
+                                              String userString =
+                                                  sp.getString('user');
+
+                                              var user = User.fromJson(
+                                                  json.decode(userString));
+                                              print("@USER ${user.name}");
+                                              Product product =
+                                                  await ProductRepositoryImpl()
+                                                      .getProductByID(
+                                                          widget.pid);
+                                              if (user != null &&
+                                                  user.id != null) {
+                                                if (product != null &&
+                                                    product.id != null) {
+                                                  print(
+                                                      "@PRODUCT ${product.id}");
+                                                  print(
+                                                      "@PRODUCT ${product.productName}");
+                                                  print(
+                                                      "@PRODUCT ${product.productimages}");
+                                                  print(
+                                                      "@PRODUCT ${product.sizes}");
+                                                  print(
+                                                      "@PRODUCT ${product.category}");
+
+                                                  CartItem cartItem =
+                                                      CartItem();
+                                                  cartItem.pName =
+                                                      product.productName;
+                                                  cartItem.arabicName =
+                                                      product.productArabicName;
+                                                  cartItem.price =
+                                                      product.price;
+                                                  cartItem.image =
+                                                      product.productimages ==
+                                                              null
+                                                          ? null
+                                                          : product
+                                                              .productimages[0]
+                                                              .pictureReference;
+                                                  cartItem.desc = product
+                                                      .productDescription;
+                                                  cartItem.arabicDesc = product
+                                                      .productArabicDescription;
+                                                  cartItem.pid = product.id;
+                                                  cartItem.discount =
+                                                      product.discountedAmount;
+                                                  cartItem.vat = product.vat;
+                                                  cartItem.size =
+                                                      product.sizes == null ||
+                                                              product.sizes
+                                                                      .length ==
+                                                                  0
+                                                          ? null
+                                                          : product
+                                                              .sizes[0].size;
+                                                  cartItem.sizeID =
+                                                      product.sizes == null ||
+                                                              product.sizes
+                                                                      .length ==
+                                                                  0
+                                                          ? null
+                                                          : product.sizes[0].id;
+
+                                                  cartItem.categoryID =
+                                                      product.categoryId;
+                                                  cartItem.category =
+                                                      product.category == null
+                                                          ? null
+                                                          : product.category
+                                                              .categoryName;
+                                                  cartItem.qty = 1;
+                                                  //TODO: CART ITEM ADD
+                                                  bool added =
+                                                      await BlocProvider.of<
+                                                                  CartCubit>(
+                                                              context)
+                                                          .addItem(cartItem);
+                                                  if (added) {
+                                                    {
+                                                      showToast("Added to cart",
+                                                          primaryColor);
+                                                      // Get the position of the current widget when clicked, and pass in overlayEntry
+
+                                                    }
+                                                  } else
+                                                    showToast(
+                                                        'Could not add to cart',
+                                                        primaryColor);
+                                                } else
+                                                  showToast(
+                                                      "Product not available",
+                                                      primaryColor);
+                                              } else {
+                                                showToast(
+                                                    "You are not logged in",
+                                                    primaryColor);
+                                              }
+                                            }
+                                          }
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 21,
+                                          backgroundColor:
+                                              Colors.white.withOpacity(0.3),
+                                          child: CircleAvatar(
+                                            radius: 20,
+                                            backgroundColor:
+                                                primaryColor.withOpacity(0.5),
+                                            child: Icon(
+                                              Icons.shopping_cart_outlined,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 )),
                           ),

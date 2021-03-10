@@ -8,6 +8,7 @@ abstract class CartRepository {
   Future<List<CartItem>> addItem(CartItem cartItem);
   Future<List<CartItem>> getItems();
   Future<List<CartItem>> removeItem(CartItem cartItem, bool remove);
+  Future<void> emptyCart();
 }
 
 class CartRepositoryImpl extends CartRepository {
@@ -104,6 +105,17 @@ class CartRepositoryImpl extends CartRepository {
         }
         return null;
       }
+    }
+  }
+
+  @override
+  Future<void> emptyCart() async {
+    try {
+      sharedPreferences = await SharedPreferences.getInstance();
+      MyCart cart = MyCart();
+      await sharedPreferences.setString('cart', json.encode(cart.toJson()));
+    } catch (e) {
+      print("@CART REPO EMPTY : $e");
     }
   }
 }

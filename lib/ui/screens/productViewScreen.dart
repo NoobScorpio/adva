@@ -32,6 +32,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 class ProductViewScreen extends StatefulWidget {
   final int pid;
 
@@ -42,12 +43,18 @@ class ProductViewScreen extends StatefulWidget {
 
 class _ProductViewScreenState extends State<ProductViewScreen> {
   double _rating = 3.5;
-  List<String> qtyValue = ["QTY".tr()+" 1", "QTY".tr()+" 2", "QTY".tr()+" 3", "QTY".tr()+" 4", "QTY".tr()+" 5"];
-  String qtySelected = "QTY".tr()+" 1";
+  List<String> qtyValue = [
+    "QTY".tr() + " 1",
+    "QTY".tr() + " 2",
+    "QTY".tr() + " 3",
+    "QTY".tr() + " 4",
+    "QTY".tr() + " 5"
+  ];
+  String qtySelected = "QTY".tr() + " 1";
   bool isLoading = true;
   int colorValue;
   int sizeValue;
-  String pName, image, desc;
+  String pName, arabicName, image, desc, arabicDesc;
   dynamic discount = 0.0;
   dynamic price = 0.0;
   dynamic vat = 0.0;
@@ -179,8 +186,10 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
 
   Widget getDetails(screenWidth, screenHeight) {
     pName = product.productName;
+    arabicName = product.productArabicName;
     price = product.price;
     desc = product.productDescription;
+    arabicDesc = product.productArabicDescription;
     image = product.productimages[0].pictureReference;
     discount = product.discountedAmount + 0.0 ?? 0.0;
     vat += product.vat + 0.0 ?? 0.0;
@@ -195,7 +204,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-             product.productName,
+            product.productName,
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20),
           ),
@@ -214,7 +223,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     fontSize: 14),
               ).tr(),
               Text(
-                'SAR.'.tr()+' ${product.price}',
+                'SAR.'.tr() + ' ${product.price}',
                 style: TextStyle(
                     decorationColor: Colors.red,
                     decoration: TextDecoration.lineThrough,
@@ -230,13 +239,14 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     fontSize: 14),
               ),
               Text(
-                'SAR.'.tr()+' ${product.price - product.discountedAmount}',
+                'SAR.'.tr() + ' ${product.price - product.discountedAmount}',
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                     fontSize: 16),
               ),
-              Text('(Ex Tax: SAR. '.tr()+'${product.tax})',
+              Text(
+                '(Ex Tax: SAR. '.tr() + '${product.tax})',
                 style: TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.w400,
@@ -252,7 +262,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-               "ID".tr()+ ' ${product.id}',
+                "ID".tr() + ' ${product.id}',
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
@@ -262,7 +272,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
               Padding(
                 padding: EdgeInsets.only(right: screenWidth / 2.7),
                 child: Text(
-                  "PTS".tr()+' ${product.rewardPoints}',
+                  "PTS".tr() + ' ${product.rewardPoints}',
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
@@ -895,11 +905,12 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         }
       }
     }
-    for (Reviews rev in product.reviews) {
-      if (!(reviews.length > 0)) {
-        reviewAvg += rev.stars.toDouble();
+    if (product.reviews != null)
+      for (Reviews rev in product.reviews) {
+        if (!(reviews.length > 0)) {
+          reviewAvg += rev.stars.toDouble();
+        }
       }
-    }
     setState(() {
       isLoading = false;
     });
@@ -1053,6 +1064,8 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                     print(qtySelected.split(' ')[1]);
                                     CartItem cartItem = CartItem();
                                     cartItem.pName = pName;
+                                    cartItem.arabicName = arabicName;
+                                    cartItem.arabicDesc = arabicDesc;
                                     cartItem.price = price;
                                     cartItem.image = image;
                                     cartItem.desc = desc;

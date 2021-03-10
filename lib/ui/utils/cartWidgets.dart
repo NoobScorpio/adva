@@ -128,7 +128,7 @@ class ProductCartContainer extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '${cartItem.pName}',
+                              '${context.locale == Locale('en', '') ? cartItem.pName : cartItem.arabicName}',
                               style: TextStyle(
                                 fontSize: 20,
                               ),
@@ -136,7 +136,7 @@ class ProductCartContainer extends StatelessWidget {
                             Container(
                               width: 130,
                               child: Text(
-                                '${cartItem.desc}',
+                                '${context.locale == Locale('en', '') ? cartItem.desc : cartItem.arabicDesc}',
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 // max

@@ -29,6 +29,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   carousel_pro: ^1.0.0
+  carousel_slider: ^3.0.0
   custom_navigator: ^0.3.0
   google_fonts: ^1.1.2
   flutter_slidable: ^0.5.7
@@ -49,6 +50,8 @@ dependencies:
   shared_preferences: ^0.5.12+4
   easy_localization: ^2.3.3
   dio: ^3.0.10
+  flutter_share: ^1.0.5
+  webview_flutter:
   list_wheel_scroll_view_x: ^0.0.2
 dev_dependencies:
   flutter_test:

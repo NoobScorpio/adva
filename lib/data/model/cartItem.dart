@@ -4,6 +4,7 @@ class CartItem extends Equatable {
   int id;
   int pid;
   String pName;
+  String arabicName;
   dynamic price;
   int color;
   dynamic vat;
@@ -13,11 +14,12 @@ class CartItem extends Equatable {
   int sizeID;
   String size;
   String image;
-  String desc;
+  String desc, arabicDesc;
   bool wishList;
   dynamic discount;
   CartItem(
       {this.id,
+      this.arabicName,
       this.pName,
       this.pid,
       this.color,
@@ -31,9 +33,12 @@ class CartItem extends Equatable {
       this.image,
       this.wishList,
       this.discount,
-      this.desc});
+      this.desc,
+      this.arabicDesc});
 
   CartItem.fromJson(Map<String, dynamic> json) {
+    arabicDesc = json['arabicDesc'];
+    arabicName = json['arabicName'];
     categoryID = json['categoryID'];
     sizeID = json['sizeID'];
     id = json['id'];
@@ -53,6 +58,9 @@ class CartItem extends Equatable {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['arabicDesc'] = this.arabicDesc;
+    data['arabicName'] = this.arabicName;
     data['categoryID'] = this.categoryID;
     data['sizeID'] = this.sizeID;
     data['category'] = this.category;
@@ -78,6 +86,7 @@ class CartItem extends Equatable {
           runtimeType == other.runtimeType &&
           id == other.id &&
           pid == other.pid &&
+          arabicName == other.arabicName &&
           pName == other.pName &&
           color == other.color &&
           price == other.price &&
@@ -95,7 +104,7 @@ class CartItem extends Equatable {
       vat.hashCode +
       pid.hashCode +
       color.hashCode +
-      qty.hashCode +
+      arabicName.hashCode +
       image.hashCode +
       size.hashCode +
       desc.hashCode +

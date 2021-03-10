@@ -5,7 +5,9 @@ import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/data/model/address.dart';
 import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/data/model/checkOut.dart';
+import 'package:adva/data/model/shipRate.dart';
 import 'package:adva/data/model/user.dart';
+import 'package:adva/data/repository/miscRepo.dart';
 import 'package:adva/paymentScreen.dart';
 import 'package:adva/ui/screens/addAddressScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -16,6 +18,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final User user;
@@ -27,15 +30,21 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   bool checkBoxValue = false;
-  String name = '', email = '', phone = '';
+  TextEditingController name, email, phone;
   String ads = '', country = '', city = '', postal = '';
-  int groupValue = 0;
+  int groupValue = 0, addressId;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
     BlocProvider.of<AddressCubit>(context).getAddresses(widget.user.id);
+    name = TextEditingController();
+    email = TextEditingController();
+    phone = TextEditingController();
+    name.text = widget.user.name;
+    email.text = widget.user.email;
+    phone.text = widget.user.phone;
   }
 
   @override
@@ -46,7 +55,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
         title: Text(
           'Check Out',
           style: TextStyle(
@@ -78,13 +94,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ).tr(),
                 ),
                 TextField(
+                  controller: name,
                   decoration: InputDecoration(
                     hintText: 'Enter your full name'.tr(),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                   onChanged: (val) {
-                    name = val;
+                    // name = val;
                   },
                 ),
                 Padding(
@@ -95,13 +112,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ).tr(),
                 ),
                 TextField(
+                  controller: email,
                   decoration: InputDecoration(
                     hintText: 'Enter your email'.tr(),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                   onChanged: (val) {
-                    email = val;
+                    // email = val;
                   },
                 ),
                 Row(
@@ -126,13 +144,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ).tr(),
                 ),
                 TextField(
+                  controller: phone,
                   decoration: InputDecoration(
                     hintText: 'Enter Phone no'.tr(),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                   ),
                   onChanged: (val) {
-                    phone = val;
+                    // phone = val;
                   },
                 ),
               ],
@@ -297,26 +316,30 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               height: 65,
               width: double.maxFinite,
               child: Text('Proceed to payments',
-                  style: TextStyle(fontSize: 15, color: Colors.white)).tr(),
+                      style: TextStyle(fontSize: 15, color: Colors.white))
+                  .tr(),
               borderColor: Colors.transparent,
               innerColor: primaryColor,
-              onPressed: () {
-                if (name != '' && email != '' && phone != '') {
+              onPressed: () async {
+                ShipRate shipRate = await MiscRepositoryImpl().getShipRate();
+
+                if (name.text != '' && email.text != '' && phone.text != '') {
                   CheckOutInfo checkout = CheckOutInfo(
-                    address: ads,
-                    city: city,
-                    country: country,
-                    phone: phone,
-                    email: email,
-                    name: name,
-                    postal: postal,
-                  );
+                      address: ads,
+                      city: city,
+                      country: country,
+                      phone: phone.text,
+                      email: email.text,
+                      name: name.text,
+                      postal: postal,
+                      addressId: addressId);
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => PaymentScreen(
                               user: widget.user,
                               checkout: checkout,
+                              shipRate: shipRate.shippingRate,
                               total: total,
                               subTotal: subTotal)));
                 } else
@@ -338,6 +361,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           city = addresses[0].city;
           country = addresses[0].country;
           postal = addresses[0].postalCode;
+          addressId = addresses[0].id;
         }
         widgets.add(Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -368,6 +392,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   city = addresses[i].city;
                   country = addresses[i].country;
                   postal = addresses[i].postalCode;
+                  addressId = addresses[i].id;
                   print(ads);
                 });
               },

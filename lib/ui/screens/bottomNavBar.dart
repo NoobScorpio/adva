@@ -72,7 +72,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         // type: BottomNavigationBarType.fixed,
         // showSelectedLabels: false,
         // showUnselectedLabels: false,
-        items: <FFNavigationBarItem>[
+        items: [
           FFNavigationBarItem(
             iconData: Icons.home,
             label: 'Home'.tr(),

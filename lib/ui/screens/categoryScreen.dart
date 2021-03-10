@@ -377,7 +377,11 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                 return buildNotFound();
                               } else
                                 return makeProducts(
-                                    screenHeight, state.products, box, context);
+                                  screenHeight,
+                                  state.products,
+                                  box,
+                                  context,
+                                );
                             }
                           } else if (state is ProductErrorState) {
                             return buildErrorUi(state.message);

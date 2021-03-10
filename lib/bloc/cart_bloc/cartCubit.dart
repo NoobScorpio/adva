@@ -73,4 +73,15 @@ class CartCubit extends Cubit<CartState> {
       return [];
     }
   }
+
+  Future<void> emptyCart() async {
+    try {
+      dynamic sub = 0.0, total = 0.0;
+      await cartRepository.emptyCart();
+
+      emit(CartLoadedState(cartItems: [], subTotal: sub, total: total));
+    } on Exception {
+      emit(CartErrorState(message: "Could not add item"));
+    }
+  }
 }

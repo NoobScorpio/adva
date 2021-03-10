@@ -68,6 +68,22 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
+  Future<bool> updateLocalInfo(User user) async {
+    try {
+      emit(UserLoadingState());
+      bool updated = await userRepository.updateLocalUser(user);
+
+      if (updated) {
+        emit(UserLoadedState(user: user));
+        return true;
+      } else
+        return false;
+    } on Exception {
+      emit(UserErrorState(message: "Could not get user"));
+      return false;
+    }
+  }
+
   Future<bool> updateInfo(User user) async {
     try {
       emit(UserLoadingState());
