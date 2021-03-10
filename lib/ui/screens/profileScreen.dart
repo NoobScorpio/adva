@@ -144,7 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         );
                                         if (res != null && res.length > 0) {
                                           File image = File(res[0].path);
-                                          User user = widget.user;
+
                                           bool updated =
                                               await BlocProvider.of<UserCubit>(
                                                       context)

@@ -9,7 +9,6 @@ import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class AddAddressScreen extends StatefulWidget {
@@ -25,16 +24,16 @@ class AddAddressScreen extends StatefulWidget {
 
 class _AddAddressScreenState extends State<AddAddressScreen> {
   TextEditingController adCont, cityCont, countCont, postalCont;
-  Completer<GoogleMapController> _controller = Completer();
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+  // Completer<GoogleMapController> _controller = Completer();
+  // static final CameraPosition _kGooglePlex = CameraPosition(
+  //   target: LatLng(37.42796133580664, -122.085749655962),
+  //   zoom: 14.4746,
+  // );
+  // static final CameraPosition _kLake = CameraPosition(
+  //     bearing: 192.8334901395799,
+  //     target: LatLng(37.43296265331129, -122.08832357078792),
+  //     tilt: 59.440717697143555,
+  //     zoom: 19.151926040649414);
   @override
   void initState() {
     // TODO: implement initState
@@ -228,15 +227,15 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-            child: GoogleMap(
-              mapType: MapType.hybrid,
-              initialCameraPosition: _kLake,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-              },
-            ),
-          ),
+          // Expanded(
+          //   child: GoogleMap(
+          //     mapType: MapType.hybrid,
+          //     initialCameraPosition: _kLake,
+          //     onMapCreated: (GoogleMapController controller) {
+          //       _controller.complete(controller);
+          //     },
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: MyButton(
@@ -275,7 +274,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
   }
 
   Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+    // final GoogleMapController controller = await _controller.future;
+    // controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }

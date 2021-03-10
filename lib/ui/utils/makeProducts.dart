@@ -1,11 +1,7 @@
-import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/data/model/featured.dart';
 import 'package:adva/data/model/product.dart';
-import 'package:adva/data/model/products.dart';
-import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:adva/ui/utils/productContainer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 Widget makeProducts(screenHeight, products, box, context, {message}) {

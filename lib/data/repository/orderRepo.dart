@@ -13,6 +13,7 @@ abstract class OrderRepository {
   Future<List<Return>> getReturns(int cid);
   Future<int> createOrder({Order order});
   Future<bool> confirmOrder({Order order});
+  Future<bool> returnOrder();
 }
 
 class OrderRepositoryImpl extends OrderRepository {
@@ -179,5 +180,11 @@ class OrderRepositoryImpl extends OrderRepository {
       print("ORDER EXCEPTION $e");
       return null;
     }
+  }
+
+  @override
+  Future<bool> returnOrder() {
+    // TODO: implement returnOrder
+    throw UnimplementedError();
   }
 }

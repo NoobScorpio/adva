@@ -48,8 +48,6 @@ class CartRepositoryImpl extends CartRepository {
       print(e);
       return null;
     }
-    // TODO: implement getItem
-    throw UnimplementedError();
   }
 
   @override

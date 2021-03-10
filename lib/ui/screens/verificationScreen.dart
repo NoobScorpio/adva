@@ -29,7 +29,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
+    // double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
@@ -59,8 +59,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   child: Text(
                 'Verification',
                 style: boldTextStyle,
-              ).tr()
-              ),
+              ).tr()),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -80,16 +79,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   child: Text(
                 'Verification code',
                 style: boldTextStyle,
-              ).tr()
-              ),
+              ).tr()),
             ),
             Center(
                 child: Text(
               'Please enter the 4 digit verification code we have just sent you',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.grey),
-            ).tr()
-            ),
+            ).tr()),
             SizedBox(
               height: 15,
             ),

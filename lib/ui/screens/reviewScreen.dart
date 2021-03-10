@@ -1,10 +1,7 @@
 import 'dart:io';
 import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/product_bloc/postReviewCubit.dart';
-import 'package:adva/bloc/product_bloc/productBloc.dart';
-import 'package:adva/bloc/product_bloc/productEvent.dart';
 import 'package:adva/bloc/product_bloc/productState.dart';
-import 'package:adva/data/model/review.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/imagesRow.dart';
 import 'package:adva/ui/utils/reviewWidget.dart';
@@ -16,7 +13,7 @@ import 'package:images_picker/images_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ReviewScreen extends StatefulWidget {
-  final bool appBar, AddImage;
+  final bool appBar, addImage;
   final int pid, cid, first, last;
   final List<Widget> reviews;
 
@@ -26,7 +23,7 @@ class ReviewScreen extends StatefulWidget {
     this.pid,
     this.reviews,
     this.cid,
-    this.AddImage,
+    this.addImage,
     this.first,
     this.last,
   }) : super(key: key);
@@ -116,7 +113,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
     // TODO: implement initStat
     super.initState();
 
-    if (widget.AddImage) loadAssets();
+    if (widget.addImage) loadAssets();
 
     reviews = widget.reviews;
   }

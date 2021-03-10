@@ -14,7 +14,6 @@ import 'package:adva/ui/screens/bottomNavBar.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -126,61 +125,10 @@ class _SplashScreenState extends State<SplashScreen> {
     //         }));
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Align(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: AnimatedContainer(
-                  duration: Duration(seconds: 10),
-                  height: height,
-                  width: width,
-                  child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Image.asset(
-                        'assets/images/newadva.gif',
-                      ))
-                  // SvgPicture.asset(
-                  //   'assets/images/logo.svg',
-                  // ),
-                  ),
-            ),
-            // if (!show)
-            //   Align(
-            //       alignment: Alignment.center,
-            //       child: Padding(
-            //         padding: const EdgeInsets.only(top: 10.0),
-            //         child: Text(
-            //           'Own your makeup',
-            //           style: TextStyle(color: Colors.white),
-            //         ).tr(),
-            //       )),
-            // if (show)
-            Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Text(
-                    'Own your makeup',
-                    style: TextStyle(color: show ? Colors.black : Colors.white),
-                  ).tr(),
-                )),
-            if (!show)
-              Center(
-                  child: Padding(
-                      padding: const EdgeInsets.only(top: 166.0),
-                      child: Text(''))),
-            if (show)
-              Center(
-                  child: Padding(
-                padding: const EdgeInsets.only(top: 150.0),
-                child: CircularProgressIndicator(
-                  backgroundColor: primaryColor,
-                ),
-              )),
-          ],
+      body: Center(
+        child: Image.asset(
+          'assets/images/intro.gif',
+          scale: 2,
         ),
       ),
     );

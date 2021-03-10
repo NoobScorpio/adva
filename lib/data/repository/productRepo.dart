@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:adva/data/model/pictures.dart';
 import 'package:adva/data/model/product.dart';
 import 'package:adva/res/appStrings.dart';
 import 'package:http/http.dart' as http;

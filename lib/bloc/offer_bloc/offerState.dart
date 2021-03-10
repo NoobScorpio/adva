@@ -1,6 +1,5 @@
 import 'package:adva/data/model/bundle.dart';
 import 'package:adva/data/model/offer.dart';
-import 'package:adva/data/model/products.dart';
 import 'package:equatable/equatable.dart';
 
 //////////////////////    STATES     /////////////////////

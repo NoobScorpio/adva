@@ -3,14 +3,12 @@ import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/ui/screens/categoryScreen.dart';
 import 'package:adva/ui/screens/userScreen.dart';
 import 'package:adva/ui/screens/cartScreen.dart';
-import 'package:adva/ui/screens/categoriesScreen.dart';
 import 'package:adva/ui/screens/galleryScreen.dart';
 import 'package:adva/ui/screens/homeScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:ff_navigation_bar/ff_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class BottomNavBar extends StatefulWidget {

@@ -608,12 +608,14 @@ class _AccountScreenState extends State<AccountScreen> {
                       GestureDetector(
                         onTap: () async {
                           showDialog(
-                              context: context,
-                              builder: (_) => Center(
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: primaryColor,
-                                    ),
-                                  ));
+                            context: context,
+                            builder: (_) => Center(
+                              child: Image.asset(
+                                'assets/images/loader.gif',
+                                scale: 3,
+                              ),
+                            ),
+                          );
                           context.locale = Locale('en', '');
                           await BlocProvider.of<GetCategoryCubit>(context)
                               .getCategories();
@@ -639,12 +641,14 @@ class _AccountScreenState extends State<AccountScreen> {
                       GestureDetector(
                         onTap: () async {
                           showDialog(
-                              context: context,
-                              builder: (_) => Center(
-                                    child: CircularProgressIndicator(
-                                      backgroundColor: primaryColor,
-                                    ),
-                                  ));
+                            context: context,
+                            builder: (_) => Center(
+                              child: Image.asset(
+                                'assets/images/loader.gif',
+                                scale: 3,
+                              ),
+                            ),
+                          );
                           context.locale = Locale('ar', 'AE');
                           await BlocProvider.of<GetCategoryCubit>(context)
                               .getCategories();

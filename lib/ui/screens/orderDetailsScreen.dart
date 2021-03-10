@@ -154,7 +154,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             },
                           )),
                     Align(
-                      alignment: Alignment.topLeft,
+                      alignment: context.locale == Locale('en', '')
+                          ? Alignment.topLeft
+                          : Alignment.topRight,
                       child: Text(
                         'Personal Information',
                         style: TextStyle(color: primaryColor),
@@ -187,7 +189,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     if (widget.cart) getPersonalCartInfo(),
                     //SHIPPING PAYMENT
                     Align(
-                      alignment: Alignment.topLeft,
+                      alignment: context.locale == Locale('en', '')
+                          ? Alignment.topLeft
+                          : Alignment.topRight,
                       child: Text(
                         'Shipping',
                         style: TextStyle(color: primaryColor),
@@ -262,12 +266,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           ).tr(),
                           onPressed: () async {
                             showDialog(
-                                context: context,
-                                builder: (_) => Center(
-                                      child: CircularProgressIndicator(
-                                        backgroundColor: primaryColor,
-                                      ),
-                                    ));
+                              context: context,
+                              builder: (_) => Center(
+                                child: Image.asset(
+                                  'assets/images/loader.gif',
+                                  scale: 3,
+                                ),
+                              ),
+                            );
                             List<Product> products = [];
                             List<CartItem> cartItems =
                                 await CartRepositoryImpl().getItems();
@@ -451,8 +457,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('${cart.pName ?? ""}').tr(),
-                  Text(
-                      '${cart != null ? cart.category : "No Category"} / ${cart.size == "" || cart.size == null ? "No Size" : cart.size}',
+                  Text('${cart != null ? (cart.category) : "No Category"}',
                       style: TextStyle(
                         color: cartTextColor,
                       )).tr()
@@ -744,7 +749,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               ),
             ),
             Align(
-              alignment: Alignment.topLeft,
+              alignment: context.locale == Locale('en', '')
+                  ? Alignment.topLeft
+                  : Alignment.topRight,
               child: Text(
                 'Payment',
                 style: TextStyle(color: primaryColor),
@@ -754,11 +761,15 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   SizedBox(
                     height: 10,
                   ),
-                  Text('Payment method').tr(),
+                  Text('Payment method'.tr()),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Text(
                     '${orderDetail.paymentMethod ?? "No selected"}',
                     style: TextStyle(color: cartTextColor),

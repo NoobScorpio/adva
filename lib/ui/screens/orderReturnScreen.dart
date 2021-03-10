@@ -1,4 +1,3 @@
-import 'package:adva/data/model/cart.dart';
 import 'package:adva/data/model/orderDetail.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -57,11 +56,13 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                 // physics: NeverScrollableScrollPhysics(),
                 children: [
                   Align(
-                    alignment: Alignment.topLeft,
+                    alignment: context.locale == Locale('en', '')
+                        ? Alignment.topLeft
+                        : Alignment.topRight,
                     child: Text(
-                      'Order ID: ${orderDetail.id}',
+                      'Order ID'.tr() + ': ${orderDetail.id}',
                       style: TextStyle(color: primaryColor),
-                    ).tr(),
+                    ),
                   ),
                   getProducts(orderDetail),
                   SizedBox(
@@ -99,7 +100,9 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
             Container(
               height: 55,
               child: RaisedButton(
-                onPressed: () async {},
+                onPressed: () async {
+                  //  TODO: RETURN ORDER
+                },
                 color: primaryColor,
                 child: Text(
                   'Confirm',
@@ -172,14 +175,14 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "${orderDetail.cart[i].product.productName}",
+                            "${context.locale == Locale('en', '') ? orderDetail.cart[i].product.productName : orderDetail.cart[i].product.productArabicName}",
                             style: boldTextStyle,
                           ).tr(),
                           SizedBox(
                             height: 5,
                           ),
-                          Text(
-                              "${orderDetail.cart[i].product != null && orderDetail.cart[i].product.category != null ? orderDetail.cart[i].product.category.categoryName : "Category"} / ${orderDetail.cart[i].size ?? "Size"}").tr(),
+                          Text("${orderDetail.cart[i].product != null && orderDetail.cart[i].product.category != null ? (context.locale == Locale('en', '') ? orderDetail.cart[i].product.category.categoryName : orderDetail.cart[i].product.category.categoryArabicName) : "Category".tr()} ")
+                              .tr(),
                         ],
                       ),
                       SizedBox(
@@ -195,8 +198,8 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                           SizedBox(
                             height: 5,
                           ),
-                          Text(
-                              "Quantity ${orderDetail.cart[i].quantity ?? "?"}").tr(),
+                          Text("Quantity ${orderDetail.cart[i].quantity ?? "?"}")
+                              .tr(),
                         ],
                       ),
                       SizedBox(

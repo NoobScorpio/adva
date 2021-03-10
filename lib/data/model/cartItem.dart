@@ -9,6 +9,7 @@ class CartItem extends Equatable {
   int color;
   dynamic vat;
   String category;
+  String arabicCategory;
   int categoryID;
   int qty;
   int sizeID;
@@ -21,6 +22,7 @@ class CartItem extends Equatable {
       {this.id,
       this.arabicName,
       this.pName,
+      this.arabicCategory,
       this.pid,
       this.color,
       this.category,
@@ -37,6 +39,7 @@ class CartItem extends Equatable {
       this.arabicDesc});
 
   CartItem.fromJson(Map<String, dynamic> json) {
+    arabicCategory = json['arabicCategory'];
     arabicDesc = json['arabicDesc'];
     arabicName = json['arabicName'];
     categoryID = json['categoryID'];
@@ -59,6 +62,7 @@ class CartItem extends Equatable {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
 
+    data['arabicCategory'] = this.arabicCategory;
     data['arabicDesc'] = this.arabicDesc;
     data['arabicName'] = this.arabicName;
     data['categoryID'] = this.categoryID;
@@ -112,6 +116,5 @@ class CartItem extends Equatable {
       size.hashCode;
 
   @override
-  // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }

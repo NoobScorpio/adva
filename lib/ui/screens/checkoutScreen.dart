@@ -3,7 +3,6 @@ import 'package:adva/bloc/address_bloc/addressState.dart';
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/data/model/address.dart';
-import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/data/model/checkOut.dart';
 import 'package:adva/data/model/shipRate.dart';
 import 'package:adva/data/model/user.dart';
@@ -13,17 +12,16 @@ import 'package:adva/ui/screens/addAddressScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
-import 'package:adva/ui/utils/tFContainer.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final User user;
-
-  const CheckoutScreen({Key key, this.user}) : super(key: key);
+  final shipRate;
+  const CheckoutScreen({Key key, this.user, this.shipRate}) : super(key: key);
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
@@ -72,11 +70,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
         ).tr(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: ListView(
-          children: [
-            Column(
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
@@ -156,145 +154,137 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ],
             ),
-            SizedBox(
-              height: screenHeight * 0.02,
-            ),
-            Container(
-              // height: screenHeight * 0.29,
-              width: screenWidth,
-              color: Colors.white,
-              child: Padding(
-                padding: EdgeInsets.only(
-                  top: screenHeight * 0.017,
-                  left: screenWidth * 0.03,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(
-                        'Shipping Address',
-                      ).tr(),
-                    ),
-                    BlocConsumer<AddressCubit, AddressState>(
-                        listener: (context, state) {
-                      if (state is AddressLoadedState) {
-                        if (state.address != null &&
-                            state.address.length != 0) {
-                          setState(() {
-                            groupValue = state.address[0].id;
-                          });
-                        }
+          ),
+          SizedBox(
+            height: screenHeight * 0.02,
+          ),
+          Container(
+            // height: screenHeight * 0.29,
+            width: screenWidth,
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: screenHeight * 0.017,
+                left: screenWidth * 0.03,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Text(
+                      'Shipping Address',
+                    ).tr(),
+                  ),
+                  BlocConsumer<AddressCubit, AddressState>(
+                      listener: (context, state) {
+                    if (state is AddressLoadedState) {
+                      if (state.address != null && state.address.length != 0) {
+                        setState(() {
+                          groupValue = state.address[0].id;
+                        });
                       }
-                      if (state is AddressAddState) {
-                        if (state.address != null &&
-                            state.address.length != 0) {
-                          setState(() {
-                            groupValue = state.address[0].id;
-                          });
-                        }
+                    }
+                    if (state is AddressAddState) {
+                      if (state.address != null && state.address.length != 0) {
+                        setState(() {
+                          groupValue = state.address[0].id;
+                        });
                       }
-                      if (state is AddressDeleteState) {
-                        if (state.address != null &&
-                            state.address.length != 0) {
-                          setState(() {
-                            groupValue = state.address[0].id;
-                          });
-                        }
+                    }
+                    if (state is AddressDeleteState) {
+                      if (state.address != null && state.address.length != 0) {
+                        setState(() {
+                          groupValue = state.address[0].id;
+                        });
                       }
-                    }, builder: (context, state) {
-                      if (state is AddressLoadingState)
-                        return Center(
-                          child: CircularProgressIndicator(
-                            backgroundColor: primaryColor,
-                          ),
-                        );
-                      if (state is AddressLoadingState)
-                        return addresses(addresses: []);
-                      if (state is AddressLoadedState) {
-                        if (state.address != null) {
-                          return addresses(addresses: state.address);
-                        } else
-                          return addresses(addresses: []);
-                      }
-                      if (state is AddressAddState) {
-                        if (state.address != null) {
-                          return addresses(addresses: state.address);
-                        } else
-                          return addresses(addresses: []);
-                      }
-                      if (state is AddressDeleteState) {
-                        if (state.address != null) {
-                          return addresses(addresses: state.address);
-                        } else
-                          return addresses(addresses: []);
-                      }
+                    }
+                  }, builder: (context, state) {
+                    if (state is AddressLoadingState) return buildLoading();
+                    if (state is AddressLoadingState)
                       return addresses(addresses: []);
-                    }),
-                    Divider(
-                      color: cartTextColor,
-                      endIndent: screenWidth * 0.05,
-                      thickness: 1,
-                    ),
-                  ],
-                ),
+                    if (state is AddressLoadedState) {
+                      if (state.address != null) {
+                        return addresses(addresses: state.address);
+                      } else
+                        return addresses(addresses: []);
+                    }
+                    if (state is AddressAddState) {
+                      if (state.address != null) {
+                        return addresses(addresses: state.address);
+                      } else
+                        return addresses(addresses: []);
+                    }
+                    if (state is AddressDeleteState) {
+                      if (state.address != null) {
+                        return addresses(addresses: state.address);
+                      } else
+                        return addresses(addresses: []);
+                    }
+                    return addresses(addresses: []);
+                  }),
+                  Divider(
+                    color: cartTextColor,
+                    endIndent: screenWidth * 0.05,
+                    thickness: 1,
+                  ),
+                ],
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => AddAddressScreen(
-                              user: widget.user,
-                            )));
-              },
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: Material(
-                  elevation: 4,
-                  child: Container(
-                    height: 60,
-                    width: double.maxFinite,
-                    color: primaryColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Container(
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.location_history,
-                                color: primaryColor,
-                              ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => AddAddressScreen(
+                            user: widget.user,
+                          )));
+            },
+            child: Padding(
+              padding: EdgeInsets.all(15),
+              child: Material(
+                elevation: 4,
+                child: Container(
+                  height: 60,
+                  width: double.maxFinite,
+                  color: primaryColor,
+                  child: Padding(
+                    padding: const EdgeInsets.all(2.0),
+                    child: Container(
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.location_history,
+                              color: primaryColor,
                             ),
-                            Text(
-                              'Add Address',
-                              style: TextStyle(color: primaryColor),
-                            ).tr(),
-                          ],
-                        ),
+                          ),
+                          Text(
+                            'Add Address',
+                            style: TextStyle(color: primaryColor),
+                          ).tr(),
+                        ],
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-            BlocBuilder<CartCubit, CartState>(builder: (context, state) {
-              if (state is CartLoadedState) {
-                if (state.cartItems != null && state.cartItems.length != 0) {
-                  return orderPrices(state.total, state.subTotal);
-                }
-                return orderPrices(0.0, 0.0);
+          ),
+          BlocBuilder<CartCubit, CartState>(builder: (context, state) {
+            if (state is CartLoadedState) {
+              if (state.cartItems != null && state.cartItems.length != 0) {
+                return orderPrices(state.total, state.subTotal);
               }
               return orderPrices(0.0, 0.0);
-            })
-          ],
-        ),
+            }
+            return orderPrices(0.0, 0.0);
+          })
+        ],
       ),
     );
   }
@@ -303,51 +293,54 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Container(
       width: double.maxFinite,
       color: Colors.white,
-      child: Column(
-        children: [
-          PaymentColumn(
-            subTotal: subTotal.toString(),
-            total: (total + 10).toString(),
-            flatShippingRate: 10.toString(),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MyButton(
-              height: 65,
-              width: double.maxFinite,
-              child: Text('Proceed to payments',
-                      style: TextStyle(fontSize: 15, color: Colors.white))
-                  .tr(),
-              borderColor: Colors.transparent,
-              innerColor: primaryColor,
-              onPressed: () async {
-                ShipRate shipRate = await MiscRepositoryImpl().getShipRate();
-
-                if (name.text != '' && email.text != '' && phone.text != '') {
-                  CheckOutInfo checkout = CheckOutInfo(
-                      address: ads,
-                      city: city,
-                      country: country,
-                      phone: phone.text,
-                      email: email.text,
-                      name: name.text,
-                      postal: postal,
-                      addressId: addressId);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PaymentScreen(
-                              user: widget.user,
-                              checkout: checkout,
-                              shipRate: shipRate.shippingRate,
-                              total: total,
-                              subTotal: subTotal)));
-                } else
-                  showToast("Please fill all fields", primaryColor);
-              },
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          children: [
+            PaymentColumn(
+              subTotal: subTotal.toString(),
+              total: (total).toString(),
+              flatShippingRate: widget.shipRate.toString(),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MyButton(
+                height: 65,
+                width: double.maxFinite,
+                child: Text('Proceed to payments',
+                        style: TextStyle(fontSize: 15, color: Colors.white))
+                    .tr(),
+                borderColor: Colors.transparent,
+                innerColor: primaryColor,
+                onPressed: () async {
+                  ShipRate shipRate = await MiscRepositoryImpl().getShipRate();
+
+                  if (name.text != '' && email.text != '' && phone.text != '') {
+                    CheckOutInfo checkout = CheckOutInfo(
+                        address: ads,
+                        city: city,
+                        country: country,
+                        phone: phone.text,
+                        email: email.text,
+                        name: name.text,
+                        postal: postal,
+                        addressId: addressId);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PaymentScreen(
+                                user: widget.user,
+                                checkout: checkout,
+                                shipRate: shipRate.shippingRate,
+                                total: total,
+                                subTotal: subTotal)));
+                  } else
+                    showToast("Please fill all fields", primaryColor);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

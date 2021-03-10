@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 class AppRouter {
   Route onGenerateRoute(RouteSettings settings) {
-    final GlobalKey<ScaffoldState> key = settings.arguments;
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(
@@ -14,13 +13,7 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => HomeScreen(),
         );
-      // case '/third':
-      //   return MaterialPageRoute(
-      //     builder: (_) => ThirdScreen(
-      //       title: "Thirst Screen",
-      //       color: Colors.greenAccent,
-      //     ),
-      //   );
+
       default:
         return null;
     }

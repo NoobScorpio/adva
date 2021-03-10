@@ -1,6 +1,7 @@
 class Brand {
   int id;
   String brandName;
+  String brandArabicName;
   String image;
   int featured;
   String createdAt;
@@ -8,6 +9,7 @@ class Brand {
 
   Brand(
       {this.id,
+      this.brandArabicName,
       this.brandName,
       this.image,
       this.featured,
@@ -15,6 +17,7 @@ class Brand {
       this.updatedAt});
 
   Brand.fromJson(Map<String, dynamic> json) {
+    brandArabicName = json['brand_arabic_name'];
     id = json['id'];
     brandName = json['brand_name'];
     image = json['image'];
@@ -25,6 +28,8 @@ class Brand {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+
+    data['brand_arabic_name'] = this.brandArabicName;
     data['id'] = this.id;
     data['brand_name'] = this.brandName;
     data['image'] = this.image;

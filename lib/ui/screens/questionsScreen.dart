@@ -1,6 +1,4 @@
 import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
-import 'package:adva/bloc/product_bloc/productBloc.dart';
-import 'package:adva/bloc/product_bloc/productEvent.dart';
 import 'package:adva/bloc/product_bloc/productState.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/questionWidget.dart';

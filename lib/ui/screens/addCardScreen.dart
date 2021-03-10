@@ -354,8 +354,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
                     } else
                       showToast("Card not saved", primaryColor);
                   } else {
-                    bool added = await BlocProvider.of<PaymentCubit>(context)
-                        .addPayment(payment);
+                    // bool added = await BlocProvider.of<PaymentCubit>(context)
+                    //     .addPayment(payment);
                     var sp = await SharedPreferences.getInstance();
                     sp.setString("tempo", json.encode(payment.toJson()));
                     showToast("Card saved Temporarily", primaryColor);
@@ -372,8 +372,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                   child: Text(
                 'Save',
                 style: TextStyle(color: Colors.white),
-              ).tr()
-              ),
+              ).tr()),
             ),
           ),
         ],

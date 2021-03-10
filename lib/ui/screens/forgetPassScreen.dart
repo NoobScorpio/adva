@@ -1,11 +1,9 @@
-import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/data/repository/userRepo.dart';
 import 'package:adva/ui/screens/verificationScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
@@ -43,8 +41,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   child: Text(
                 'Forgot Password',
                 style: boldTextStyle,
-              ).tr()
-              ),
+              ).tr()),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -64,15 +61,13 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   child: Text(
                 'Verification code will be send to you',
                 style: boldTextStyle,
-              ).tr()
-              ),
+              ).tr()),
             ),
             Center(
                 child: Text(
               'Don\'t worry we are just making sure that its you',
               style: TextStyle(color: Colors.grey),
-            ).tr()
-            ),
+            ).tr()),
             SizedBox(
               height: 15,
             ),

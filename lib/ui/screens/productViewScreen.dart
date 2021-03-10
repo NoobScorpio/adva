@@ -1,15 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:adva/bloc/cart_bloc/cartBloc.dart';
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
-import 'package:adva/bloc/cart_bloc/cartEvent.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
-import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
-import 'package:adva/bloc/product_bloc/productBloc.dart';
-import 'package:adva/bloc/product_bloc/productEvent.dart';
-import 'package:adva/bloc/product_bloc/productState.dart';
 import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/productImage.dart';
@@ -24,7 +16,6 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/imagesRow.dart';
 import 'package:adva/ui/utils/questionWidget.dart';
 import 'package:adva/ui/utils/reviewWidget.dart';
-import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
@@ -52,14 +43,14 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
   ];
   String qtySelected = "QTY".tr() + " 1";
   bool isLoading = true;
-  int colorValue;
-  int sizeValue;
+  // int colorValue;
+  // int sizeValue;
   String pName, arabicName, image, desc, arabicDesc;
   dynamic discount = 0.0;
   dynamic price = 0.0;
   dynamic vat = 0.0;
   TextEditingController quesController;
-  String size = '';
+  // String size = '';
   String category = '';
   int categoryID;
   String message = '';
@@ -67,12 +58,12 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
   List<Widget> reviewsNext = [];
   List<Widget> questions = [];
   List<Widget> questionsNext = [];
-  List<int> sizesIntValues = [];
-  List<String> sizesStringValues = [];
-  Map<int, String> sizesMap = {};
-  bool haveColors = false;
-  bool haveSizes = false;
-  List<DropdownMenuItem<int>> colors = [];
+  // List<int> sizesIntValues = [];
+  // List<String> sizesStringValues = [];
+  // Map<int, String> sizesMap = {};
+  // bool haveColors = false;
+  // bool haveSizes = false;
+  // List<DropdownMenuItem<int>> colors = [];
   Product product;
   double reviewAvg = 0.0;
   @override
@@ -122,6 +113,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     SizedBox(
                       width: screenWidth * 0.03,
                     ),
+                    //
                     Expanded(
                       child: Form(
                         child: Padding(
@@ -138,7 +130,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                       width: 0.1,
                                     ),
                                   ),
-                                  hintText: 'Search',
+                                  hintText: 'Search'.tr(),
                                   contentPadding: EdgeInsets.only(
                                       top: screenHeight * 0.01,
                                       left: screenWidth * 0.03),
@@ -311,7 +303,9 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         //  DESCRIPTION
         Padding(
           padding: const EdgeInsets.all(15.0),
-          child: Text(product.productDescription),
+          child: Text(context.locale == Locale('en', '')
+              ? product.productDescription
+              : product.productArabicDescription),
         ),
         // AVAILABILITY:REMAINING
         Padding(
@@ -347,113 +341,113 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
           ),
         ),
         // MODEL:COLOR
-        Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (haveColors && colors.length > 0)
-                Row(
-                  children: [
-                    Text(
-                      'Colors:',
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ).tr(),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      height: 40,
-                      width: 118,
-                      color: Colors.grey,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Container(
-                          color: Colors.white,
-                          width: double.maxFinite,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: DropdownButton(
-                                value: colorValue,
-                                items: colors,
-                                onChanged: (value) {
-                                  setState(() {
-                                    colorValue = value;
-                                  });
-                                }),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              if (haveSizes && sizesStringValues.length > 0)
-                Row(
-                  children: [
-                    Text(
-                      'Sizes:',
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ).tr(),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      height: 40,
-                      width: 130,
-                      color: Colors.grey,
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Container(
-                          color: Colors.white,
-                          width: double.maxFinite,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 5.0),
-                            child:
-                                // DropdownButton<int>(
-                                //     value: sizeValue,
-                                //     items: sizes,
-                                //
-                                //     onChanged: (value) {
-                                //       setState(() {
-                                //         sizeValue = value;
-                                //       });
-                                //       size = sizesMap[value];
-                                //       print("SIZE SELECTED $sizeValue : $size");
-                                //     },
-                                // ),
-                                DropdownButton<int>(
-                              isExpanded: true,
-                              icon: Icon(
-                                Icons.arrow_drop_down,
-                                color: primaryColor,
-                              ),
-                              iconSize: 42,
-                              value: sizeValue,
-                              focusColor: primaryColor,
-                              items: sizesIntValues.map((int value) {
-                                return DropdownMenuItem<int>(
-                                  value: value,
-                                  child: new Text('${sizesMap[value]}'),
-                                );
-                              }).toList(),
-                              onChanged: (_) {
-                                setState(() {
-                                  sizeValue = _;
-                                  size = sizesMap[_];
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.all(15.0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       if (haveColors && colors.length > 0)
+        //         Row(
+        //           children: [
+        //             Text(
+        //               'Colors:',
+        //               style: TextStyle(fontWeight: FontWeight.w500),
+        //             ).tr(),
+        //             SizedBox(
+        //               width: 10,
+        //             ),
+        //             Container(
+        //               height: 40,
+        //               width: 118,
+        //               color: Colors.grey,
+        //               child: Padding(
+        //                 padding: const EdgeInsets.all(1.0),
+        //                 child: Container(
+        //                   color: Colors.white,
+        //                   width: double.maxFinite,
+        //                   child: Padding(
+        //                     padding:
+        //                         const EdgeInsets.symmetric(horizontal: 5.0),
+        //                     child: DropdownButton(
+        //                         value: colorValue,
+        //                         items: colors,
+        //                         onChanged: (value) {
+        //                           setState(() {
+        //                             colorValue = value;
+        //                           });
+        //                         }),
+        //                   ),
+        //                 ),
+        //               ),
+        //             )
+        //           ],
+        //         ),
+        //       if (haveSizes && sizesStringValues.length > 0)
+        //         Row(
+        //           children: [
+        //             Text(
+        //               'Sizes:',
+        //               style: TextStyle(fontWeight: FontWeight.w500),
+        //             ).tr(),
+        //             SizedBox(
+        //               width: 10,
+        //             ),
+        //             Container(
+        //               height: 40,
+        //               width: 130,
+        //               color: Colors.grey,
+        //               child: Padding(
+        //                 padding: const EdgeInsets.all(1.0),
+        //                 child: Container(
+        //                   color: Colors.white,
+        //                   width: double.maxFinite,
+        //                   child: Padding(
+        //                     padding:
+        //                         const EdgeInsets.symmetric(horizontal: 5.0),
+        //                     child:
+        //                         // DropdownButton<int>(
+        //                         //     value: sizeValue,
+        //                         //     items: sizes,
+        //                         //
+        //                         //     onChanged: (value) {
+        //                         //       setState(() {
+        //                         //         sizeValue = value;
+        //                         //       });
+        //                         //       size = sizesMap[value];
+        //                         //       print("SIZE SELECTED $sizeValue : $size");
+        //                         //     },
+        //                         // ),
+        //                         DropdownButton<int>(
+        //                       isExpanded: true,
+        //                       icon: Icon(
+        //                         Icons.arrow_drop_down,
+        //                         color: primaryColor,
+        //                       ),
+        //                       iconSize: 42,
+        //                       value: sizeValue,
+        //                       focusColor: primaryColor,
+        //                       items: sizesIntValues.map((int value) {
+        //                         return DropdownMenuItem<int>(
+        //                           value: value,
+        //                           child: new Text('${sizesMap[value]}'),
+        //                         );
+        //                       }).toList(),
+        //                       onChanged: (_) {
+        //                         setState(() {
+        //                           sizeValue = _;
+        //                           size = sizesMap[_];
+        //                         });
+        //                       },
+        //                     ),
+        //                   ),
+        //                 ),
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
@@ -577,7 +571,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                         reviews: reviews,
                                         pid: product.id,
                                         appBar: true,
-                                        AddImage: false,
+                                        addImage: false,
                                       )));
                         },
                         child: Padding(
@@ -611,7 +605,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                                 reviews: reviews,
                                                 pid: product.id,
                                                 appBar: true,
-                                                AddImage: false,
+                                                addImage: false,
                                               )));
                                 },
                                 child: Container(
@@ -635,7 +629,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                                       reviews: reviews,
                                                       pid: product.id,
                                                       appBar: true,
-                                                      AddImage: false,
+                                                      addImage: false,
                                                     )));
                                       } else {
                                         message = val;
@@ -673,7 +667,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                                       reviews: reviews,
                                                       pid: product.id,
                                                       appBar: true,
-                                                      AddImage: true,
+                                                      addImage: true,
                                                     )));
                                       },
                                       child: Row(
@@ -718,7 +712,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                                         reviews: reviews,
                                                         pid: product.id,
                                                         appBar: true,
-                                                        AddImage: false,
+                                                        addImage: false,
                                                       )));
                                         },
                                         color: primaryColor,
@@ -865,46 +859,46 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
     quesController = TextEditingController();
     product = await ProductRepositoryImpl().getProductByID(widget.pid);
     print("PRODUCT ID: ${widget.pid}");
-    haveSizes = product.sizes == [] ||
-            product.sizes == null ||
-            product.sizes.length == 0
-        ? false
-        : true;
+    // haveSizes = product.sizes == [] ||
+    //         product.sizes == null ||
+    //         product.sizes.length == 0
+    //     ? false
+    //     : true;
 
-    if (haveSizes) {
-      sizeValue = product.sizes[0].id;
-      for (var si in product.sizes) {
-        if (si.size.toString() != ' ') {
-          sizesIntValues.add(si.id);
-          sizesStringValues.add(si.size);
-          sizesMap[si.id] = si.size;
-          print("IDS : ${si.id}");
-        }
-      }
-    }
-    haveColors = product.colors == [] ||
-            product.colors == null ||
-            product.colors.length == 0
-        ? false
-        : true;
+    // if (haveSizes) {
+    //   sizeValue = product.sizes[0].id;
+    //   for (var si in product.sizes) {
+    //     if (si.size.toString() != ' ') {
+    //       sizesIntValues.add(si.id);
+    //       sizesStringValues.add(si.size);
+    //       sizesMap[si.id] = si.size;
+    //       print("IDS : ${si.id}");
+    //     }
+    //   }
+    // }
+    // haveColors = product.colors == [] ||
+    //         product.colors == null ||
+    //         product.colors.length == 0
+    //     ? false
+    //     : true;
 
-    if (haveColors) {
-      colorValue = product.colors[0].id;
-      for (var clr in product.colors) {
-        if (clr.color.toString() != ' ') {
-          print("COLOR: 1${clr.color.toString()}1");
-          String color = '0xFF' +
-              clr.color
-                  .toString()
-                  .substring(1, clr.color.toString().length - 1);
-          print(color);
-          colors.add(DropdownMenuItem(
-            child: Text('${clr.color}'),
-            value: clr.id,
-          ));
-        }
-      }
-    }
+    // if (haveColors) {
+    //   colorValue = product.colors[0].id;
+    //   for (var clr in product.colors) {
+    //     if (clr.color.toString() != ' ') {
+    //       print("COLOR: 1${clr.color.toString()}1");
+    //       String color = '0xFF' +
+    //           clr.color
+    //               .toString()
+    //               .substring(1, clr.color.toString().length - 1);
+    //       print(color);
+    //       colors.add(DropdownMenuItem(
+    //         child: Text('${clr.color}'),
+    //         value: clr.id,
+    //       ));
+    //     }
+    //   }
+    // }
     if (product.reviews != null)
       for (Reviews rev in product.reviews) {
         if (!(reviews.length > 0)) {
@@ -1072,14 +1066,14 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                     cartItem.pid = product.id;
                                     cartItem.discount = discount;
                                     cartItem.vat = vat;
-                                    cartItem.size = size;
-                                    cartItem.sizeID = sizeValue;
+                                    // cartItem.size = size;
+                                    // cartItem.sizeID = sizeValue;
                                     cartItem.categoryID = categoryID;
                                     cartItem.category = category;
                                     cartItem.qty =
                                         int.parse(qtySelected.split(' ')[1]);
-                                    cartItem.color = colorValue;
-                                    //TODO: CART ITEM ADD
+                                    // cartItem.color = colorValue;
+
                                     bool added =
                                         await BlocProvider.of<CartCubit>(
                                                 context)

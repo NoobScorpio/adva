@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/data/model/cartItem.dart';
+import 'package:adva/data/model/shipRate.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/checkoutScreen.dart';
 import 'package:adva/ui/utils/cartWidgets.dart';
@@ -10,6 +13,7 @@ import 'package:adva/ui/utils/myButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartScreen extends StatefulWidget {
   final cartItems;
@@ -198,14 +202,20 @@ class _CartScreenState extends State<CartScreen> {
                                 .tr(),
                           ),
                           onPressed: () async {
+                            SharedPreferences sp =
+                                await SharedPreferences.getInstance();
+                            String rate = await sp.getString('shipRate');
+                            ShipRate shipRate =
+                                ShipRate.fromJson(json.decode(rate));
                             User user =
                                 await BlocProvider.of<UserCubit>(context)
                                     .getUser();
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        CheckoutScreen(user: user)));
+                                    builder: (context) => CheckoutScreen(
+                                        user: user,
+                                        shipRate: shipRate.shippingRate)));
                           },
                         ),
                       );

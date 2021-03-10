@@ -78,7 +78,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                             ? "No code"
                             : state.aDVAPoints.promo.promoCode;
                         return Text(
-                          'PTS ${state.aDVAPoints.total}',
+                          "PTS".tr() + ' ${state.aDVAPoints.total}',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -86,7 +86,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                         );
                       } else
                         return Text(
-                          'PTS 0.00',
+                          "PTS".tr() + ' 0.00',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
@@ -94,7 +94,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                         ).tr();
                     } else if (state is PointsErrorState)
                       return Text(
-                        'PTS 0.00',
+                        "PTS".tr() + ' 0.00',
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -102,7 +102,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
                       ).tr();
                     else
                       return Text(
-                        'PTS 0.00',
+                        "PTS".tr() + ' 0.00',
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,

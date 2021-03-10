@@ -1,7 +1,6 @@
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/bloc/user_bloc/userState.dart';
 import 'package:adva/ui/screens/accountScreen.dart';
-import 'package:adva/ui/screens/accountsloginScreen.dart';
 import 'package:adva/ui/screens/signin_signup.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';

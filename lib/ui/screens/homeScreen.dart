@@ -8,22 +8,18 @@ import 'package:adva/bloc/featured_bloc/featuredState.dart';
 import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
 import 'package:adva/bloc/offer_bloc/getOffersCubit.dart';
 import 'package:adva/bloc/offer_bloc/offerState.dart';
-import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/seller_bloc/getSellerCubit.dart';
 import 'package:adva/bloc/seller_bloc/sellerState.dart';
 import 'package:adva/data/model/ads.dart';
 import 'package:adva/data/model/bundle.dart';
 import 'package:adva/data/model/category.dart';
 import 'package:adva/data/model/offer.dart';
-import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/seller.dart';
-import 'package:adva/data/repository/offerRepo.dart';
 import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:adva/ui/screens/categoryScreen.dart';
 import 'package:adva/ui/screens/productsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeProducts.dart';
-import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -43,13 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
   }
-
-  ScrollController _scrollController = ScrollController();
-
-  // _scrollToBottom() {
-  //   _scrollController.animateTo(150,
-  //       duration: Duration(seconds: 1), curve: Curves.easeIn);
-  // }
 
   @override
   Widget build(BuildContext context) {

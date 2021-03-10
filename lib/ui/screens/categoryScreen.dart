@@ -13,7 +13,6 @@ import 'package:adva/ui/screens/filterScreen.dart';
 import 'package:adva/ui/utils/appbarContainer.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeProducts.dart';
-import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/notFound.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
@@ -58,8 +57,48 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AppbarContainer(
-                  screenHeight: screenHeight, screenWidth: screenWidth),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/advalogo.png',
+                      scale: 3,
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.03,
+                    ),
+                    Expanded(
+                      child: Form(
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              top: screenHeight * 0.001,
+                              right: screenWidth * 0.03),
+                          child: Container(
+                            height: screenHeight * 0.06,
+                            child: TextFormField(
+                              autovalidateMode: AutovalidateMode.always,
+                              decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      width: 0.1,
+                                    ),
+                                  ),
+                                  hintText: 'Search'.tr(),
+                                  contentPadding: EdgeInsets.only(
+                                      top: screenHeight * 0.01,
+                                      left: screenWidth * 0.03),
+                                  suffixIcon:
+                                      Icon(Icons.search, color: Colors.black)),
+                              onSaved: (String value) {},
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.only(
                     right: screenWidth * 0.05, top: screenHeight * 0.02),

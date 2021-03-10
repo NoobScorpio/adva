@@ -1,5 +1,4 @@
 import 'package:adva/data/model/product.dart';
-import 'package:adva/data/model/products.dart';
 import 'package:adva/data/repository/offerRepo.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeProducts.dart';

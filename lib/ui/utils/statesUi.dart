@@ -16,8 +16,9 @@ Widget buildLoading() {
   return Padding(
     padding: const EdgeInsets.all(25.0),
     child: Center(
-      child: CircularProgressIndicator(
-        backgroundColor: Colors.red,
+      child: Image.asset(
+        'assets/images/loader.gif',
+        scale: 3,
       ),
     ),
   );

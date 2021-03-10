@@ -204,7 +204,7 @@ class _FilterScreenState extends State<FilterScreen> {
         widgets.add(
           ListTile(
             title: Text(
-              '${cat.categoryName}',
+              '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
             ),
             leading: Radio(
               value: cat.id,
@@ -224,7 +224,7 @@ class _FilterScreenState extends State<FilterScreen> {
         widgets.add(
           ListTile(
             title: Text(
-              '${brand.brandName}',
+              '${context.locale == Locale('en', '') ? brand.brandName : brand.brandArabicName}',
             ),
             leading: Radio(
               value: brand.id,

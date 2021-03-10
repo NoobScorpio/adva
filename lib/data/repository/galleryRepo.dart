@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:adva/data/model/post.dart';
 import 'package:adva/res/appStrings.dart';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 abstract class GalleryRepository {

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:adva/bloc/address_bloc/addressCubit.dart';
 import 'package:adva/bloc/ads_bloc/getAdsCubit.dart';
 import 'package:adva/bloc/brand_bloc/getBrandProductCubit.dart';
@@ -37,7 +35,6 @@ import 'package:adva/data/repository/productRepo.dart';
 import 'package:adva/data/repository/sellerRepo.dart';
 import 'package:adva/data/repository/userRepo.dart';
 import 'package:adva/data/repository/wishRepo.dart';
-import 'package:adva/ui/screens/bottomNavBar.dart';
 import 'package:adva/ui/screens/splashScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -51,7 +48,6 @@ void main() {
   runApp(EasyLocalization(
       child: MyApp(),
       supportedLocales: [const Locale('en', ''), const Locale('ar', 'AE')],
-
       path: "assets/translations"));
 }
 
@@ -66,7 +62,6 @@ class _MyAppState extends State<MyApp> {
   SharedPreferences sharedPreferences;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getPrefs();
   }

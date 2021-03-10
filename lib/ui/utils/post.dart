@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-import 'package:adva/bloc/gallery_bloc/postCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/data/model/like.dart';
 import 'package:adva/data/model/post.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/postViewScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
-import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +34,6 @@ class _PostState extends State<Post> {
   int likes = 0;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     post = widget.post;
     likes = post.likes.length;
@@ -157,7 +154,6 @@ class _PostState extends State<Post> {
                     SizedBox(
                       width: 10,
                     ),
-                    //TODO : SHARE FUNCTIONALITY
                     GestureDetector(
                       onTap: () async {
                         const url =
@@ -190,7 +186,7 @@ class _PostState extends State<Post> {
                     width: 10,
                   ),
                   // Image.asset('assets/images/comment.png'),
-                  //TODO : COMMENT FUNCTIONALITY
+
                   Icon(
                     Icons.comment,
                     color: primaryColor,

@@ -1,18 +1,13 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:adva/bloc/gallery_bloc/galleryState.dart';
 import 'package:adva/bloc/gallery_bloc/postCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/data/model/comment.dart';
-import 'package:adva/data/model/like.dart';
 import 'package:adva/data/model/post.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/galleryRepo.dart';
 import 'package:adva/ui/utils/comment.dart';
 import 'package:adva/ui/utils/constants.dart';
-import 'package:adva/ui/utils/post.dart';
-import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
@@ -39,18 +34,14 @@ class _PostsScreenState extends State<PostsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // BlocProvider.of<PostsCubit>(context).getPosts(widget.filter);
   }
 
   CarouselController buttonCarouselController = CarouselController();
 
   getWidgets({height}) async {
-    // print("@HEIGHT $height");
-    int postOuterId = 0;
     List<Widget> widgets = [];
     for (PostModel post in widget.posts) {
       int likes = post.likesCount;
-      int postLikes = post.likesCount;
       widgets.add(StatefulBuilder(builder: (context, setState) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -115,7 +106,7 @@ class _PostsScreenState extends State<PostsScreen> {
                                       if (loggedIn == null ||
                                           loggedIn == false) {
                                         showToast(
-                                            "Not logged in", primaryColor);
+                                            "Not logged In", primaryColor);
                                       } else {
                                         User user =
                                             await BlocProvider.of<UserCubit>(
@@ -215,7 +206,7 @@ class _PostsScreenState extends State<PostsScreen> {
                                                     Container(
                                                       // color: Colors.black,
                                                       width: double.maxFinite,
-                                                      height: height * 0.12,
+                                                      height: 100,
 
                                                       child: Card(
                                                         elevation: 5,
@@ -417,66 +408,6 @@ class _PostsScreenState extends State<PostsScreen> {
                     height: 400.0,
                     initialPage: widget.selected),
               )),
-    );
-    Scaffold(
-      backgroundColor: commentBGColor,
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          BlocBuilder<PostsCubit, GalleryState>(builder: (context, state) {
-            if (state is GalleryInitialState) {
-              return buildLoading();
-            } else if (state is GalleryLoadingState) {
-              return buildLoading();
-            } else if (state is GalleryLoadedState) {
-              if (state.posts == null) {
-                return Center(
-                    child: CircularProgressIndicator(
-                  backgroundColor: primaryColor,
-                ));
-              } else {
-                var posts = state.posts;
-                List<Widget> widts = [];
-                print("POSTS ${posts.length} ");
-                for (int i = 0; i < posts.length; i++) {
-                  print("profile ");
-                  widts.add(Container(
-                    height: 430,
-                    width: double.maxFinite,
-                    // color: Colors.white,
-                    child: Card(
-                      elevation: 5,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Post(
-                            post: posts[i],
-                            filter: 'top',
-                            push: true,
-                            like: null),
-                      ),
-                    ),
-                  ));
-                }
-                widts.add(SizedBox(
-                  height: 300,
-                ));
-                return Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: ListView(
-                    children: widts,
-                  ),
-                );
-              }
-            } else if (state is GalleryErrorState) {
-              return buildErrorUi(state.message ?? "");
-            } else {
-              return buildErrorUi('Could not load data.');
-            }
-          }),
-        ],
-      ),
     );
   }
 

@@ -1,12 +1,7 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
-import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
-import 'package:adva/bloc/product_bloc/productBloc.dart';
-import 'package:adva/bloc/product_bloc/productEvent.dart';
 import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
-import 'package:adva/bloc/wishlist_bloc/wishState.dart';
 import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/user.dart';
@@ -60,7 +55,6 @@ class _ProductContainerState extends State<ProductContainer> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setWishes();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setWishes());
@@ -198,7 +192,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                         ? null
                                         : product.category.categoryName;
                                     cartItem.qty = 1;
-                                    //TODO: CART ITEM ADD
+
                                     bool added =
                                         await BlocProvider.of<CartCubit>(
                                                 context)
@@ -369,7 +363,7 @@ class _ProductContainerState extends State<ProductContainer> {
                               Text(
                                 'Add to Wishlist',
                                 style: TextStyle(color: primaryColor),
-                              ),
+                              ).tr(),
                             ],
                           ),
                         )),
@@ -612,7 +606,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                                           : product.category
                                                               .categoryName;
                                                   cartItem.qty = 1;
-                                                  //TODO: CART ITEM ADD
+
                                                   bool added =
                                                       await BlocProvider.of<
                                                                   CartCubit>(

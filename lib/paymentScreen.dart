@@ -1,23 +1,17 @@
 import 'dart:ui';
 
-import 'package:adva/bloc/payment_bloc/paymentState.dart';
 import 'package:adva/data/model/checkOut.dart';
 import 'package:adva/data/model/discountRate.dart';
 import 'package:adva/data/model/payment.dart';
 import 'package:adva/data/model/promo.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/miscRepo.dart';
-import 'package:adva/ui/screens/addCardScreen.dart';
 import 'package:adva/ui/screens/orderDetailsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
-import 'package:adva/ui/utils/statesUi.dart';
-import 'package:adva/ui/utils/tFContainer.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class PaymentScreen extends StatefulWidget {
@@ -47,7 +41,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   int pointsGroup = 0;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     promoCont = TextEditingController();
     discountCont = TextEditingController();
@@ -376,7 +369,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               'Next',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 18),
-                            ),
+                            ).tr(),
                             borderColor: Colors.transparent,
                             innerColor: primaryColor,
                             onPressed: () {

@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'bottomNavBar.dart';
 
 class AccountsLoginScreen extends StatefulWidget {
   @override
@@ -34,7 +33,14 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        leading: GestureDetector(onTap: (){Navigator.pop(context);}, child: Icon(Icons.arrow_back_ios,color: Colors.black,)),
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
         backgroundColor: Colors.white,
         // toolbarHeight: screenHeight * 0.09,
         title: Text(
@@ -149,9 +155,10 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                         print("USER LOGGED IN $loggedIn");
                         if (loggedIn) {
                           sharedPreferences.setBool('loggedIn', true);
-                          await BlocProvider.of<UserCubit>(context).setStatus(true);
-                          await BlocProvider.of<WishCubit>(context).getWishLists(
-                              User.fromJson(json.decode(
+                          await BlocProvider.of<UserCubit>(context)
+                              .setStatus(true);
+                          await BlocProvider.of<WishCubit>(context)
+                              .getWishLists(User.fromJson(json.decode(
                                       sharedPreferences.getString('user')))
                                   .id);
                           Navigator.pop(context);

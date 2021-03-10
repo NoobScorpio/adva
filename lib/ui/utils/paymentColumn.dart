@@ -1,5 +1,3 @@
-import 'package:adva/ui/screens/cartScreen.dart';
-import 'package:adva/ui/utils/cartWidgets.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -155,7 +153,7 @@ class PaymentColumn extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Total(Inc. Vat)',
+              Text('Total (Inc VAT)',
                       style: TextStyle(fontSize: 15, color: primaryColor))
                   .tr(),
               Row(

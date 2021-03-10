@@ -1,6 +1,5 @@
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/data/model/user.dart';
-import 'package:adva/ui/screens/userInfoScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,3 @@
-import 'package:adva/data/model/address.dart';
 import 'package:adva/data/model/payment.dart';
 import 'package:equatable/equatable.dart';
 

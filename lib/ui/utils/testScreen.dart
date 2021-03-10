@@ -16,7 +16,6 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     adsBloc = BlocProvider.of<AdsBloc>(context);
     adsBloc.add(FetchAdsEvent());
