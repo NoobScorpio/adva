@@ -157,23 +157,6 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<bool> updateUserProfile(User user, File profile) async {
     try {
-      // var request = http.MultipartRequest(
-      //   'POST',
-      //   Uri.parse(baseURL + "/customer/profile/update/${user.id}"),
-      // );
-      // Map<String, String> headers = {"Content-type": "multipart/form-data"};
-      // request.headers.addAll(headers);
-      //
-      // request.files.add(
-      //   http.MultipartFile(
-      //     'file',
-      //     profile.readAsBytes().asStream(),
-      //     profile.lengthSync(),
-      //     filename: profile.path.split("/").last,
-      //     contentType: MediaType('image', 'jpeg'),
-      //   ),
-      // );
-      // var response = await request.send();
       List<int> imageBytes = profile.readAsBytesSync();
       String ext = profile.path.split('/').last.split('.').last;
       print("EXTENSION $ext");

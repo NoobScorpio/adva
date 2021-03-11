@@ -297,6 +297,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 promoCode: widget.promoCode,
                                 discountCode: widget.discountCode,
                                 pointsDiscount: widget.pointsDiscount ?? 0);
+                            print(
+                                "@ ORDER BOIS ${order.customerId} ${order.promoCode} ${order.discountCode} ${order.pointsDiscount}");
                             if (widget.personal.paymentMethod ==
                                 'CashonDelivery') {
                               int ordered = await OrderRepositoryImpl()

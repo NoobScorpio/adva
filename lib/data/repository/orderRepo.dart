@@ -96,7 +96,10 @@ class OrderRepositoryImpl extends OrderRepository {
 
   @override
   Future<int> createOrder({Order order}) async {
-    // print('ORDER');
+    print('@ORDER ID ${order.id}');
+    print("@ORDER PROMO ${order.promoCode}");
+    print("@ORDER DISCOUNT ${order.discountCode}");
+    print("@ORDER POINTS ${order.pointsDiscount}");
     try {
       var response = await http.post(baseURL + "/order/create", body: {
         "customer_id": order.customerId.toString(),
@@ -105,8 +108,8 @@ class OrderRepositoryImpl extends OrderRepository {
         "email": order.email.toString(),
         "address_id": order.addressId.toString(),
         "payment_type": order.paymentType.toString(),
-        "promo_code": order.promoCode ?? '',
-        "discount_code": order.discountCode ?? '',
+        "promo_code": order.promoCode,
+        "discount_code": order.discountCode,
         "points_discount": order.pointsDiscount.toString(),
         "products": json.encode(order.products),
         "is_mobile": true.toString(),
@@ -136,6 +139,9 @@ class OrderRepositoryImpl extends OrderRepository {
   @override
   Future<bool> confirmOrder({Order order}) async {
     print('@ORDER ID ${order.id}');
+    print("@ORDER PROMO ${order.promoCode}");
+    print("@ORDER DISCOUNT ${order.discountCode}");
+    print("@ORDER POINTS ${order.pointsDiscount}");
     try {
       var response =
           await http.post(baseURL + "/customer/payment/confirm", body: {
@@ -146,8 +152,8 @@ class OrderRepositoryImpl extends OrderRepository {
         "email": order.email.toString(),
         "address_id": order.addressId.toString(),
         "payment_type": order.paymentType.toString(),
-        "promo_code": order.promoCode ?? '',
-        "discount_code": order.discountCode ?? '',
+        "promo_code": order.promoCode,
+        "discount_code": order.discountCode,
         "points_discount": order.pointsDiscount.toString(),
         "products": json.encode(order.products),
         "is_mobile": true.toString(),
