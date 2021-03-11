@@ -13,7 +13,7 @@ abstract class PaymentRepository {
 class PaymentRepositoryImpl implements PaymentRepository {
   @override
   Future<List<Payment>> addPayment(Payment payment) async {
-    var response = await http.post(baseURL + "/paymentcard/create", body: {
+    var response = await http.post(Uri.parse(baseURL + "/paymentcard/create"), body: {
       "customer_id": payment.customerId,
       "name_on_card": payment.nameOnCard,
       "card_number": payment.cardNumber,
@@ -45,7 +45,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
   @override
   Future<bool> deletePayment(Payment payment) async {
     var response =
-        await http.post(baseURL + "/paymentcard/delete/${payment.id}");
+        await http.post(Uri.parse(baseURL + "/paymentcard/delete/${payment.id}"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
     } else if (response.statusCode == 400) {
@@ -62,7 +62,7 @@ class PaymentRepositoryImpl implements PaymentRepository {
 
   @override
   Future<List<Payment>> getPayments(int cid) async {
-    var response = await http.get(baseURL + "/paymentcard/$cid");
+    var response = await http.get(Uri.parse(baseURL + "/paymentcard/$cid"));
     if (response.statusCode == 200) {
       try {
         var data = json.decode(response.body);

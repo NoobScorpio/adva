@@ -15,7 +15,7 @@ class WishRepositoryImpl implements WishRepository {
   Future<int> addWishListItem(int cid, int pid) async {
     print("ADD WISH: $cid $pid");
     try {
-      var response = await http.post(baseURL + "/wishlist/create",
+      var response = await http.post(Uri.parse(baseURL + "/wishlist/create"),
           body: {"customer_id": cid.toString(), "product_id": pid.toString()});
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -40,7 +40,7 @@ class WishRepositoryImpl implements WishRepository {
   Future<List<WishList>> getWishListItems(int cid) async {
     try {
       var response = await http.get(
-        baseURL + "/wishlist/$cid",
+        Uri.parse(baseURL + "/wishlist/$cid"),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -67,7 +67,7 @@ class WishRepositoryImpl implements WishRepository {
   Future<bool> removeWishListItem(int cid, int wid) async {
     try {
       print("REMOVE WISH : $cid $wid");
-      var response = await http.post(baseURL + "/wishlist/delete",
+      var response = await http.post(Uri.parse(baseURL + "/wishlist/delete"),
           body: {"customer_id": cid.toString(), "wishlist_id": wid.toString()});
 
       if (response.statusCode == 200 || response.statusCode == 201) {

@@ -18,7 +18,6 @@ class UserReturnsScreen extends StatefulWidget {
 class _UserReturnsScreenState extends State<UserReturnsScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<ReturnCubit>(context).getReturns(widget.user.id);
   }

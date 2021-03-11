@@ -15,7 +15,7 @@ class AddressRepositoryImpl implements AddressRepository {
   @override
   Future<List<Address>> getAddresses(int cid) async {
     // print("GET ADDRESS ID: $cid");
-    var response = await http.get(baseURL + "/address/$cid");
+    var response = await http.get(Uri.parse(baseURL + "/address/$cid"));
     // print("GET ADDRESS RESPONSE: ${response.statusCode}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
@@ -39,7 +39,7 @@ class AddressRepositoryImpl implements AddressRepository {
   @override
   Future<List<Address>> addAddress({Address address}) async {
     var response = await http.post(
-        baseURL + "/customer/address/create/${address.customerId}",
+        Uri.parse(baseURL + "/customer/address/create/${address.customerId}"),
         body: {
           "address": address.address,
           "country": address.country,
@@ -67,7 +67,7 @@ class AddressRepositoryImpl implements AddressRepository {
   @override
   Future<List<Address>> deleteAddress({Address address}) async {
     var response = await http
-        .post(baseURL + "/customer/address/delete/${address.id}", body: {
+        .post(Uri.parse(baseURL + "/customer/address/delete/${address.id}"), body: {
       "customer_id": address.customerId.toString(),
     });
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -98,7 +98,7 @@ class AddressRepositoryImpl implements AddressRepository {
       print("updateAddress CITY ${address.city}");
       print("updateAddress POSTAL-CODE ${address.postalCode}");
       var response = await http.post(
-          baseURL + "/customer/address/update/${address.id.toString()}",
+          Uri.parse(baseURL + "/customer/address/update/${address.id.toString()}"),
           body: {
             "customer_id": address.customerId.toString(),
             "address": address.address,

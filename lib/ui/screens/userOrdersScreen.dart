@@ -20,7 +20,6 @@ class UserOrdersScreen extends StatefulWidget {
 class _UserOrdersScreenState extends State<UserOrdersScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<OrderCubit>(context).getOrders(widget.user.id);
   }

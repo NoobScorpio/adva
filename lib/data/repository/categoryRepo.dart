@@ -12,7 +12,7 @@ abstract class CategoryRepository {
 class CategoryRepositoryImpl implements CategoryRepository {
   @override
   Future<List<Category>> getCategories() async {
-    var response = await http.get(baseURL + "/category");
+    var response = await http.get(Uri.parse(baseURL + "/category"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -39,7 +39,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
 
   @override
   Future<List<Product>> getCategoryProducts(String catName) async {
-    var response = await http.get(baseURL + "/product/index?category=$catName");
+    var response = await http.get(Uri.parse(baseURL + "/product/index?category=$catName"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data['data']);

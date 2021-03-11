@@ -31,7 +31,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<User> logIn({String email, String password}) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     print("LOGIN : INSIDE $email and $password");
-    var response = await http.post(baseURL + "/customers/login",
+    var response = await http.post(Uri.parse(baseURL + "/customers/login"),
         body: {"email": email, "password": password});
     print("LOGIN : ${response.body}");
     if (response.statusCode == 200) {
@@ -65,7 +65,7 @@ class UserRepositoryImpl implements UserRepository {
       String pass,
       String cPass}) async {
     print("createAccount : INSIDE $email and $pass");
-    var response = await http.post(baseURL + "/customer/create", body: {
+    var response = await http.post(Uri.parse(baseURL + "/customer/create"), body: {
       "email": email,
       "password": pass,
       "first_name": fName,
@@ -102,7 +102,7 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<bool> updatePass(User user, String pass, String newPass) async {
     var response = await http
-        .post(baseURL + "/customer/password/update/${user.id}", body: {
+        .post(Uri.parse(baseURL + "/customer/password/update/${user.id}"), body: {
       "current_password": pass,
       "password": newPass,
       "confirm_password": newPass,
@@ -126,7 +126,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<bool> updateUser(User user) async {
     // print("createAccount : INSIDE $email and $pass");
     var response =
-        await http.post(baseURL + "/customer/update/${user.id}", body: {
+        await http.post(Uri.parse(baseURL + "/customer/update/${user.id}"), body: {
       "email": user.email,
       "first_name": user.firstName,
       "last_name": user.lastName,
@@ -162,7 +162,7 @@ class UserRepositoryImpl implements UserRepository {
       print("EXTENSION $ext");
       String baseImage = base64Encode(imageBytes);
       var response = await http.post(
-          baseURL + "/customer/basedecode/profile/update/${user.id}",
+          Uri.parse(baseURL + "/customer/basedecode/profile/update/${user.id}"),
           body: {"profile_image": baseImage, "extension": ext});
       print(baseImage);
       // debugPrint(response.body, wrapWidth: 1024);
@@ -205,7 +205,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<int> sendForgetPasswordCodeVerifyRequest(
       String email, String code) async {
     print("sendForgetPasswordCodeVerifyRequest : ");
-    var response = await http.post(baseURL + "/customer/verifycode",
+    var response = await http.post(Uri.parse(baseURL + "/customer/verifycode"),
         body: {"email": email, "code": code});
     print("createAccount : ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -226,7 +226,7 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<bool> sendForgetPasswordNewRequest(String email) async {
     var response = await http
-        .post(baseURL + "/customer/recoverpassword", body: {"email": email});
+        .post(Uri.parse(baseURL + "/customer/recoverpassword"), body: {"email": email});
     print("createAccount : ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
@@ -244,7 +244,7 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> resetPassword({int cid, String pass}) async {
-    var response = await http.post(baseURL + "/customer/resetpassword", body: {
+    var response = await http.post(Uri.parse(baseURL + "/customer/resetpassword"), body: {
       "customer_id": cid.toString(),
       "password": pass,
       "confirm_password": pass

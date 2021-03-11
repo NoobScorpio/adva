@@ -14,7 +14,7 @@ abstract class OfferRepository {
 class OfferRepositoryImpl implements OfferRepository {
   @override
   Future<List<Offer>> getOffers() async {
-    var response = await http.get(baseURL + "/offer/index");
+    var response = await http.get(Uri.parse(baseURL + "/offer/index"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       print('OFFER DATA: $data AND ${data.runtimeType}');
@@ -35,7 +35,7 @@ class OfferRepositoryImpl implements OfferRepository {
 
   @override
   Future<List<Bundle>> getOffersBundle() async {
-    var response = await http.get(baseURL + "/offer/index");
+    var response = await http.get(Uri.parse(baseURL + "/offer/index"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
 
@@ -56,7 +56,7 @@ class OfferRepositoryImpl implements OfferRepository {
 
   @override
   Future<List<Product>> getOfferProducts({oid}) async {
-    var response = await http.get(baseURL + "/product/index?offer=$oid");
+    var response = await http.get(Uri.parse(baseURL + "/product/index?offer=$oid"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
 

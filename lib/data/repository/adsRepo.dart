@@ -12,7 +12,7 @@ abstract class AdsRepository {
 class AdsRepositoryImpl implements AdsRepository {
   @override
   Future<List<Ads>> getAds() async {
-    var response = await http.get(baseURL + "/ads");
+    var response = await http.get(Uri.parse(baseURL + "/ads"));
     if (response.statusCode == 200) {
       try {
         var data = json.decode(response.body);

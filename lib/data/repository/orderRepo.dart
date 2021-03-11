@@ -13,14 +13,14 @@ abstract class OrderRepository {
   Future<List<Return>> getReturns(int cid);
   Future<int> createOrder({Order order});
   Future<bool> confirmOrder({Order order});
-  Future<bool> returnOrder();
+  Future<bool> returnOrder({ids, oid, reason, cid});
 }
 
 class OrderRepositoryImpl extends OrderRepository {
   @override
   Future<List<OrderDetails>> getOrders(int cid) async {
     try {
-      var response = await http.get(baseURL + "/order/$cid");
+      var response = await http.get(Uri.parse(baseURL + "/order/$cid"));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("OrderDetails  ${response.statusCode}");
         var data = json.decode(response.body);
@@ -46,7 +46,8 @@ class OrderRepositoryImpl extends OrderRepository {
   @override
   Future<OrderDetail> getOrderDetail(int cid, int oid) async {
     try {
-      var response = await http.get(baseURL + "/order/details/$cid/$oid");
+      var response =
+          await http.get(Uri.parse(baseURL + "/order/details/$cid/$oid"));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("OrderDetail  ${response.statusCode}");
         var data = json.decode(response.body);
@@ -72,7 +73,8 @@ class OrderRepositoryImpl extends OrderRepository {
   @override
   Future<List<Return>> getReturns(int cid) async {
     try {
-      var response = await http.get(baseURL + "/returned/orders/$cid");
+      var response =
+          await http.get(Uri.parse(baseURL + "/returned/orders/$cid"));
       if (response.statusCode == 200 || response.statusCode == 201) {
         // print("OrderDetails  ${response.statusCode}");
         var data = json.decode(response.body);
@@ -101,7 +103,8 @@ class OrderRepositoryImpl extends OrderRepository {
     print("@ORDER DISCOUNT ${order.discountCode}");
     print("@ORDER POINTS ${order.pointsDiscount}");
     try {
-      var response = await http.post(baseURL + "/order/create", body: {
+      var response =
+          await http.post(Uri.parse(baseURL + "/order/create"), body: {
         "customer_id": order.customerId.toString(),
         "total": order.total.toString(),
         "phone": order.phone.toString(),
@@ -112,7 +115,7 @@ class OrderRepositoryImpl extends OrderRepository {
         "discount_code": order.discountCode,
         "points_discount": order.pointsDiscount.toString(),
         "products": json.encode(order.products),
-        "is_mobile": true.toString(),
+        "is_mobile": true,
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -143,8 +146,8 @@ class OrderRepositoryImpl extends OrderRepository {
     print("@ORDER DISCOUNT ${order.discountCode}");
     print("@ORDER POINTS ${order.pointsDiscount}");
     try {
-      var response =
-          await http.post(baseURL + "/customer/payment/confirm", body: {
+      var response = await http
+          .post(Uri.parse(baseURL + "/customer/payment/confirm"), body: {
         "id": order.id,
         "customer_id": order.customerId.toString(),
         "total": order.total.toString(),
@@ -189,8 +192,33 @@ class OrderRepositoryImpl extends OrderRepository {
   }
 
   @override
-  Future<bool> returnOrder() {
-    // TODO: implement returnOrder
-    throw UnimplementedError();
+  Future<bool> returnOrder({ids, oid, reason, cid}) async {
+    print("@RETURN STRING $oid $cid $ids");
+    try {
+      // TODO: ASK KASIF ABOUT ERROR
+      var response =
+          await http.post(Uri.parse(baseURL + "/orders/return/$cid"), body: {
+        "cartitems": json.encode(ids),
+        "order_id": oid.toString(),
+        "return_reason": reason,
+        "is_mobile": true.toString()
+      });
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else if (response.statusCode == 400) {
+        print('Response 400:${response.body}');
+        return null;
+      } else if (response.statusCode == 500) {
+        print('Response 500:${response.body}');
+        return null;
+      } else {
+        print('Something went wrong');
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }

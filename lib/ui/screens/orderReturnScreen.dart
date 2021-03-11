@@ -1,7 +1,9 @@
 import 'package:adva/data/model/orderDetail.dart';
 import 'package:adva/data/model/user.dart';
+import 'package:adva/data/repository/orderRepo.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/paymentColumn.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -83,7 +85,7 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                     height: 50,
                     width: double.maxFinite,
                     child: TextField(
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
@@ -101,7 +103,25 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
               height: 55,
               child: RaisedButton(
                 onPressed: () async {
-                  //  TODO: RETURN ORDER
+                  if (returnReason.length >= 10) {
+                    bool returned = await OrderRepositoryImpl().returnOrder(
+                        oid: orderDetail.id,
+                        ids: ids,
+                        reason: returnReason,
+                        cid: orderDetail.customerId);
+
+                    if (returned != null && returned == true) {
+                      showToast('Order Returned', primaryColor);
+                      int count = 0;
+                      Navigator.popUntil(context, (route) {
+                        return count++ == 2;
+                      });
+                    } else {
+                      showToast('Something went wrong', primaryColor);
+                    }
+                  } else
+                    showToast(
+                        'Please enter at least 10 characters', primaryColor);
                 },
                 color: primaryColor,
                 child: Text(

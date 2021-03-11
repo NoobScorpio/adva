@@ -10,7 +10,7 @@ abstract class SellerRepository {
 class SellerRepositoryImpl implements SellerRepository {
   @override
   Future<List<Seller>> getSellings() async {
-    var response = await http.get(baseURL + "/topsellings");
+    var response = await http.get(Uri.parse(baseURL + "/topsellings"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data);

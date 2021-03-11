@@ -12,7 +12,7 @@ class PointsRepositoryImpl extends PointsRepository {
   @override
   Future<ADVAPoints> getPoints(int cid) async {
     try {
-      var response = await http.get(baseURL + "/customer/points/$cid");
+      var response = await http.get(Uri.parse(baseURL + "/customer/points/$cid"));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("ADVA POINTS ${response.statusCode}");
         var data = json.decode(response.body);

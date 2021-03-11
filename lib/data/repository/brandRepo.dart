@@ -13,7 +13,7 @@ abstract class BrandRepository {
 class BrandRepositoryImpl implements BrandRepository {
   @override
   Future<List<Brand>> getBrands() async {
-    var response = await http.get(baseURL + "/brand");
+    var response = await http.get(Uri.parse(baseURL + "/brand"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -41,7 +41,8 @@ class BrandRepositoryImpl implements BrandRepository {
 
   @override
   Future<List<Product>> getBrandProducts(String brand) async {
-    var response = await http.get(baseURL + "/product/index?brand=$brand");
+    var response =
+        await http.get(Uri.parse(baseURL + "/product/index?brand=$brand"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data);

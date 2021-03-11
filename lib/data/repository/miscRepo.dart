@@ -22,7 +22,7 @@ class MiscRepositoryImpl extends MiscRepository {
   @override
   Future<CODRate> getCODRate() async {
     sp = await SharedPreferences.getInstance();
-    var response = await http.get(baseURL + "/setting/cod/get");
+    var response = await http.get(Uri.parse(baseURL + "/setting/cod/get"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -47,7 +47,7 @@ class MiscRepositoryImpl extends MiscRepository {
     print("@MISC DISCOUNT $discount");
     sp = await SharedPreferences.getInstance();
     var response = await http
-        .post(baseURL + "/discount/check", body: {"discount_code": discount});
+        .post(Uri.parse(baseURL + "/discount/check"), body: {"discount_code": discount});
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -71,7 +71,7 @@ class MiscRepositoryImpl extends MiscRepository {
   Future<Promo> getPromo({String promo}) async {
     sp = await SharedPreferences.getInstance();
     var response =
-        await http.post(baseURL + "/promo/check", body: {"promo_code": promo});
+        await http.post(Uri.parse(baseURL + "/promo/check"), body: {"promo_code": promo});
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -94,7 +94,7 @@ class MiscRepositoryImpl extends MiscRepository {
   @override
   Future<ShipRate> getShipRate() async {
     sp = await SharedPreferences.getInstance();
-    var response = await http.get(baseURL + "/setting/shippingrate/get");
+    var response = await http.get(Uri.parse(baseURL + "/setting/shippingrate/get"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -117,7 +117,7 @@ class MiscRepositoryImpl extends MiscRepository {
   @override
   Future<TaxRate> getTaxRate() async {
     sp = await SharedPreferences.getInstance();
-    var response = await http.get(baseURL + "/setting/tax/get");
+    var response = await http.get(Uri.parse(baseURL + "/setting/tax/get"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);

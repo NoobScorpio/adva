@@ -44,10 +44,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await EasyLocalization.ensureInitialized();
   runApp(EasyLocalization(
       child: MyApp(),
       supportedLocales: [const Locale('en', ''), const Locale('ar', 'AE')],
+      fallbackLocale: Locale('en', ''),
       path: "assets/translations"));
 }
 

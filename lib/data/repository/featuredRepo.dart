@@ -10,7 +10,7 @@ abstract class FeaturedRepository {
 class FeaturedRepositoryImpl implements FeaturedRepository {
   @override
   Future<List<Featured>> getFeatured() async {
-    var response = await http.get(baseURL + "/product/featured");
+    var response = await http.get(Uri.parse(baseURL + "/product/featured"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data);

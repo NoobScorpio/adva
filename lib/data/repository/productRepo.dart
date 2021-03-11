@@ -17,7 +17,7 @@ abstract class ProductRepository {
 class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<List<Product>> getProducts() async {
-    var response = await http.get(baseURL + "/product/featured");
+    var response = await http.get(Uri.parse(baseURL + "/product/featured"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data);
@@ -39,7 +39,7 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<Product> getProductByID(int pid) async {
     try {
       // print('FETCH EVENT CALEED');
-      var response = await http.get(baseURL + "/product/$pid");
+      var response = await http.get(Uri.parse(baseURL + "/product/$pid"));
       if (response.statusCode == 200 || response.statusCode == 201) {
         var data = json.decode(response.body);
         // print(data);
@@ -63,8 +63,8 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<bool> addQuestion({String question, int pid, int cid}) async {
     print("PID : $pid , CID: $cid , QUES: $question");
-    var response = await http.post(baseURL +
-        "/qa/create?product_id=$pid&customer_id=$cid&question=$question");
+    var response = await http.post(Uri.parse(baseURL +
+        "/qa/create?product_id=$pid&customer_id=$cid&question=$question"));
     if (response.statusCode == 200) {
       print("PostProductQuestionScreenEvent 200 RESPONSE");
       return true;
@@ -135,8 +135,8 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<List<Product>> getFilterProducts({int brand, int category}) async {
-    var response = await http.get(baseURL +
-        "/product/index?category=${category ?? ""}&brand=${brand ?? ""}");
+    var response = await http.get(Uri.parse(baseURL +
+        "/product/index?category=${category ?? ""}&brand=${brand ?? ""}"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data);
@@ -155,7 +155,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<List<Product>> getSortProducts({String sort}) async {
-    var response = await http.get(baseURL + "/product/index?sort=$sort");
+    var response = await http.get(Uri.parse(baseURL + "/product/index?sort=$sort"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data);

@@ -15,7 +15,7 @@ abstract class GalleryRepository {
 class GalleryRepositoryImpl implements GalleryRepository {
   @override
   Future<List<PostModel>> getPosts({String filter}) async {
-    var response = await http.get(baseURL + "/posts?filter=$filter");
+    var response = await http.get(Uri.parse(baseURL + "/posts?filter=$filter"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -39,7 +39,7 @@ class GalleryRepositoryImpl implements GalleryRepository {
     try {
       List<int> imageBytes = image.readAsBytesSync();
       String baseImage = base64Encode(imageBytes);
-      var response = await http.post(baseURL + "/media/create/post", body: {
+      var response = await http.post(Uri.parse(baseURL + "/media/create/post"), body: {
         "customer_id": "$cid",
         "description": "$desc",
         "image": baseImage
@@ -73,7 +73,7 @@ class GalleryRepositoryImpl implements GalleryRepository {
 
   @override
   Future<List<PostModel>> postLike({int pid, int cid}) async {
-    var response = await http.post(baseURL + "/customer/like/$pid",
+    var response = await http.post(Uri.parse(baseURL + "/customer/like/$pid"),
         body: {"customer_id": cid.toString()});
     print("GALLERY RESPONSE: ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -96,7 +96,7 @@ class GalleryRepositoryImpl implements GalleryRepository {
 
   @override
   Future<bool> postComment({int pid, int cid, String comment}) async {
-    var response = await http.post(baseURL + "/media/comment/$pid",
+    var response = await http.post(Uri.parse(baseURL + "/media/comment/$pid"),
         body: {"customer_id": cid.toString(), "comment": comment});
     print("GALLERY RESPONSE: ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
