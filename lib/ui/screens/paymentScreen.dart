@@ -17,14 +17,15 @@ import 'package:easy_localization/easy_localization.dart';
 class PaymentScreen extends StatefulWidget {
   final User user;
   final CheckOutInfo checkout;
-  final dynamic total, subTotal, shipRate;
+  final dynamic total, subTotal, shipRate, codRate;
   const PaymentScreen(
       {Key key,
       this.user,
       this.checkout,
       this.total,
       this.subTotal,
-      this.shipRate})
+      this.shipRate,
+      this.codRate})
       : super(key: key);
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -416,84 +417,122 @@ class _PaymentScreenState extends State<PaymentScreen> {
           EdgeInsets.only(left: screenWidth * 0.02, right: screenWidth * 0.02),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
+          if (points >= 100)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('10%'),
+                  Text('20%'),
+                  Text('30%'),
+                  Text('40%'),
+                  Text('50%'),
+                ],
+              ),
+            ),
+          if (points < 100)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '10%',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    '20%',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    '30%',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    '40%',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  Text(
+                    '50%',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          if (points < 100)
+            Center(
+              child: Icon(
+                Icons.lock,
+                color: Colors.grey,
+              ),
+            ),
+          if (points >= 100)
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('10%'),
-                Text('20%'),
-                Text('30%'),
-                Text('40%'),
-                Text('50%'),
+                Radio(
+                  value: 1,
+                  groupValue: pointsGroup,
+                  onChanged: (val) {
+                    setState(() {
+                      if (points >= 100)
+                        pointsGroup = val;
+                      else
+                        showToast('Not enough points', primaryColor);
+                    });
+                  },
+                ),
+                Radio(
+                  value: 2,
+                  groupValue: pointsGroup,
+                  onChanged: (val) {
+                    setState(() {
+                      if (points >= 200)
+                        pointsGroup = val;
+                      else
+                        showToast('Not enough points', primaryColor);
+                    });
+                  },
+                ),
+                Radio(
+                  value: 3,
+                  groupValue: pointsGroup,
+                  onChanged: (val) {
+                    setState(() {
+                      if (points >= 300)
+                        pointsGroup = val;
+                      else
+                        showToast('Not enough points', primaryColor);
+                    });
+                  },
+                ),
+                Radio(
+                  value: 4,
+                  groupValue: pointsGroup,
+                  onChanged: (val) {
+                    setState(() {
+                      if (points >= 400)
+                        pointsGroup = val;
+                      else
+                        showToast('Not enough points', primaryColor);
+                    });
+                  },
+                ),
+                Radio(
+                  value: 5,
+                  groupValue: pointsGroup,
+                  onChanged: (val) {
+                    setState(() {
+                      if (points >= 500)
+                        pointsGroup = val;
+                      else
+                        showToast('Not enough points', primaryColor);
+                    });
+                  },
+                ),
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Radio(
-                value: 1,
-                groupValue: pointsGroup,
-                onChanged: (val) {
-                  setState(() {
-                    if (points >= 100)
-                      pointsGroup = val;
-                    else
-                      showToast('Not enough points', primaryColor);
-                  });
-                },
-              ),
-              Radio(
-                value: 2,
-                groupValue: pointsGroup,
-                onChanged: (val) {
-                  setState(() {
-                    if (points >= 200)
-                      pointsGroup = val;
-                    else
-                      showToast('Not enough points', primaryColor);
-                  });
-                },
-              ),
-              Radio(
-                value: 3,
-                groupValue: pointsGroup,
-                onChanged: (val) {
-                  setState(() {
-                    if (points >= 300)
-                      pointsGroup = val;
-                    else
-                      showToast('Not enough points', primaryColor);
-                  });
-                },
-              ),
-              Radio(
-                value: 4,
-                groupValue: pointsGroup,
-                onChanged: (val) {
-                  setState(() {
-                    if (points >= 400)
-                      pointsGroup = val;
-                    else
-                      showToast('Not enough points', primaryColor);
-                  });
-                },
-              ),
-              Radio(
-                value: 5,
-                groupValue: pointsGroup,
-                onChanged: (val) {
-                  setState(() {
-                    if (points >= 500)
-                      pointsGroup = val;
-                    else
-                      showToast('Not enough points', primaryColor);
-                  });
-                },
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -521,6 +560,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
         points = total * ((pointsGroup * 10) / 100);
         tOTAL = tOTAL - points;
       });
+    }
+    if (groupValue1 == 2) {
+      tOTAL = tOTAL + widget.codRate;
     }
     overAllTotal = tOTAL;
     return PaymentColumn(
