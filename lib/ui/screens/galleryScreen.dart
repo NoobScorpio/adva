@@ -1,12 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:adva/bloc/gallery_bloc/galleryState.dart';
 import 'package:adva/bloc/gallery_bloc/postCubit.dart';
 import 'package:adva/data/model/user.dart';
+import 'package:adva/ui/screens/createPostScreen.dart';
 import 'package:adva/ui/screens/postsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/statesUi.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:images_picker/images_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -18,7 +22,6 @@ class GalleryScreen extends StatefulWidget {
 class _GalleryScreenState extends State<GalleryScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<PostsCubit>(context).getPosts('');
   }
@@ -119,6 +122,36 @@ class _GalleryScreenState extends State<GalleryScreen> {
             }),
           ))
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryColor,
+        onPressed: () async {
+          try {
+            List<Media> res = await ImagesPicker.pick(
+              count: 1,
+              pickType: PickType.image,
+              cropOpt: CropOption(
+                aspectRatio: CropAspectRatio.custom,
+                cropType: CropType.rect, // currently for android
+              ),
+            );
+            if (res != null && res.length > 0) {
+              File image = File(res[0].path);
+              SharedPreferences sp = await SharedPreferences.getInstance();
+              User user = User.fromJson(json.decode(sp.getString('user')));
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) =>
+                          CreatePostScreen(image: image, user: user)));
+            }
+          } catch (e) {
+            print(e);
+            showToast("Something went wrong", primaryColor);
+          }
+          BlocProvider.of<PostsCubit>(context).getPosts('');
+        },
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

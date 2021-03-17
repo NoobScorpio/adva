@@ -10,11 +10,12 @@ import 'package:adva/bloc/product_bloc/productState.dart';
 import 'package:adva/data/model/brand.dart';
 import 'package:adva/data/model/category.dart';
 import 'package:adva/ui/screens/filterScreen.dart';
-import 'package:adva/ui/utils/appbarContainer.dart';
+import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeProducts.dart';
 import 'package:adva/ui/utils/notFound.dart';
 import 'package:adva/ui/utils/statesUi.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,8 +23,9 @@ import 'package:easy_localization/easy_localization.dart';
 class ShopCategoryScreen extends StatefulWidget {
   final cid;
   final bool brand;
-
-  const ShopCategoryScreen({Key key, this.cid, this.brand}) : super(key: key);
+  final search;
+  const ShopCategoryScreen({Key key, this.cid, this.brand, this.search})
+      : super(key: key);
   @override
   _ShopCategoryScreenState createState() => _ShopCategoryScreenState(brand);
 }
@@ -40,10 +42,13 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
   String sortVal = 'Sort by'.tr();
   bool sort = false;
   _ShopCategoryScreenState(this.brand);
+  List suggestionList;
+  GlobalKey<AutoCompleteTextFieldState<String>> keyCat = new GlobalKey();
+  var suggestionTFC = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    suggestionList = widget.search;
   }
 
   @override
@@ -76,21 +81,75 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                               right: screenWidth * 0.03),
                           child: Container(
                             height: screenHeight * 0.06,
-                            child: TextFormField(
-                              autovalidateMode: AutovalidateMode.always,
+                            child: AutoCompleteTextField(
+                              key: keyCat,
+                              controller: suggestionTFC,
+                              suggestions: suggestionList,
+                              clearOnSubmit: true,
                               decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 0.1,
-                                    ),
-                                  ),
+                                      borderSide: BorderSide(
+                                        width: 0.1,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
                                   hintText: 'Search'.tr(),
                                   contentPadding: EdgeInsets.only(
                                       top: screenHeight * 0.01,
                                       left: screenWidth * 0.03),
-                                  suffixIcon:
-                                      Icon(Icons.search, color: Colors.black)),
-                              onSaved: (String value) {},
+                                  suffixIcon: GestureDetector(
+                                      onTap: () async {
+                                        // List<SearchProduct> prods =
+                                        //     await ProductRepositoryImpl()
+                                        //         .getAllProducts(
+                                        //             search:
+                                        //                 suggestionTFC.text);
+                                        // if (prods != null) {
+                                        //   setState(() {
+                                        //     suggestionList = prods;
+                                        //   });
+                                        // }
+                                      },
+                                      child: Icon(Icons.search,
+                                          color: Colors.black))),
+                              itemFilter: (item, query) {
+                                return item.productName
+                                    .toLowerCase()
+                                    .startsWith(query.toLowerCase());
+                              },
+                              itemSorter: (a, b) {
+                                return a.productName.compareTo(b.productName);
+                              },
+                              itemSubmitted: (item) {
+                                suggestionTFC.text = item.text;
+                              },
+                              itemBuilder: (context, item) {
+                                return Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    ProductViewScreen(
+                                                      pid: item.id,
+                                                    )));
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            item.productName,
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -100,8 +159,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                    right: screenWidth * 0.05, top: screenHeight * 0.02),
+                padding: EdgeInsets.only(right: screenWidth * 0.05, top: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -122,9 +180,10 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                         }
                       },
                       child: Container(
-                        width: screenWidth * 0.24,
-                        height: screenHeight * 0.05,
+                        width: 95,
+                        height: 40,
                         decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
                             border:
                                 Border.all(width: 0.1, color: Colors.black)),
                         child: Row(
@@ -149,9 +208,10 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                       padding:
                           EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                       child: Container(
-                        width: screenWidth * 0.27,
-                        height: screenHeight * 0.05,
+                        width: 110,
+                        height: 40,
                         decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
                             border:
                                 Border.all(width: 0.1, color: Colors.black)),
                         child: Padding(
@@ -203,9 +263,10 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        width: screenWidth * 0.1,
-                        height: screenHeight * 0.05,
+                        width: 40,
+                        height: 40,
                         decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
                             border:
                                 Border.all(width: 0.1, color: Colors.black)),
                         child: GestureDetector(
@@ -224,8 +285,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
               ),
               //SHOP BY BRAND AND CATEGORY
               Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: screenHeight * 0.02, horizontal: 15),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 child: Container(
                   // screenHeight: screenHeight * 0.26,
                   width: screenWidth,
@@ -275,7 +335,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              horizontal: 14),
+                                              horizontal: 10),
                                           child: ShopSlideContainer(
                                             img: bnd.image,
                                           ),
@@ -302,20 +362,17 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                              top: screenHeight * 0.017,
-                              bottom: screenHeight * 0.01),
+                              top: screenHeight * 0.017, bottom: 15),
                           child: Text(
                             'Shop by category',
                             style:
                                 TextStyle(color: Colors.black, fontSize: 14.5),
                           ).tr(),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
+
                         //CATEGORY
                         Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Container(
                             height: 45,
                             child: BlocBuilder<GetCategoryCubit, CategoryState>(
@@ -358,12 +415,15 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(20))),
                                             height: 40,
-                                            width: 150,
-                                            child: Center(
-                                              child: Text(
-                                                '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
-                                                style: TextStyle(
-                                                    color: Colors.black),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Center(
+                                                child: Text(
+                                                  '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -384,9 +444,6 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                               },
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 20,
                         ),
                       ],
                     ),
@@ -556,20 +613,14 @@ class ShopSlideContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.14,
-      decoration:
-          BoxDecoration(border: Border.all(width: 0.3, color: primaryColor)),
-      child: FittedBox(
-        fit: BoxFit.cover,
-        child: img == null
-            ? Icon(
-                Icons.image,
-                color: Colors.grey,
-              )
-            : Image.network(
-                img,
-                fit: BoxFit.cover,
-              ),
+      width: MediaQuery.of(context).size.width * 0.145,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        border: Border.all(width: 0.3, color: primaryColor),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: NetworkImage(img),
+        ),
       ),
     );
   }

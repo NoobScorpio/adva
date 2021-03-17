@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:adva/data/model/product.dart';
+import 'package:adva/data/model/searchProduct.dart';
 import 'package:adva/res/appStrings.dart';
 import 'package:http/http.dart' as http;
 
@@ -8,10 +9,11 @@ abstract class ProductRepository {
   Future<List<Product>> getProducts();
   Future<Product> getProductByID(int pid);
   Future<bool> addQuestion({String question, int pid, int cid});
-  Future<dynamic> addReview(
+  Future<String> addReview(
       {String message, int pid, int cid, int stars, List<File> pictures});
   Future<List<Product>> getFilterProducts({int brand, int category});
   Future<List<Product>> getSortProducts({String sort});
+  Future<List<SearchProduct>> getAllProducts({search});
 }
 
 class ProductRepositoryImpl implements ProductRepository {
@@ -32,6 +34,27 @@ class ProductRepositoryImpl implements ProductRepository {
       throw UnimplementedError('Internal server error.');
     } else {
       throw UnimplementedError('Something went wrong');
+    }
+  }
+
+  @override
+  Future<List<SearchProduct>> getAllProducts({search}) async {
+    var response =
+        await http.get(Uri.parse(baseURL + "/search?search=$search"));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      var data = json.decode(response.body);
+      // print(data);
+      List<SearchProduct> search =
+          SearchProductResultModel.fromJson(data).searchProduct;
+      print("@SEARCH DATA : $data");
+      print("@SEARCH LENGTH ${search.length}");
+      return search;
+    } else if (response.statusCode == 400) {
+      return null;
+    } else if (response.statusCode == 500) {
+      return null;
+    } else {
+      return null;
     }
   }
 
@@ -75,61 +98,57 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<dynamic> addReview(
+  Future<String> addReview(
       {String message,
       int pid,
       int cid,
       int stars,
       List<File> pictures}) async {
     try {
-      var uri = Uri.parse(baseURL + "/review/create");
-      var request = http.MultipartRequest(
-        "POST",
-        uri,
-      );
+      List<dynamic> images = [];
 
       for (File file in pictures) {
-        var stream = new http.ByteStream(http.ByteStream(file.openRead()));
-        var length = await file.length();
-        var multipartFileSign = new http.MultipartFile('photo', stream, length,
-            filename: file.path.split("/").last);
-        request.files.add(multipartFileSign);
-      }
-      request.fields['product_id'] = pid.toString();
-      request.fields['customer_id'] = cid.toString();
-      request.fields['review_message'] = message.toString();
-      request.fields['stars'] = stars.toString();
+        List<int> imageBytes = file.readAsBytesSync();
+        String ext = file.path.split('/').last.split('.').last;
 
-      var response = await request.send();
+        String baseImage = base64Encode(imageBytes);
+
+        images.add({"image": baseImage, "filetype": ext});
+      }
+
+      var response = await http.post(
+        Uri.parse(baseURL + "/review/basedecode/create"),
+        body: {
+          "images": json.encode(images),
+          "product_id": pid.toString(),
+          "customer_id": cid.toString(),
+          "stars": stars.toString(),
+          "review_message": message.toString()
+        },
+      );
       //  headers: {"Content-Type": "multipart/form-data"},
-      //   body: {
-      //     "images": [],
-      //     "product_id": pid.toString(),
-      //     "customer_id": cid.toString(),
-      //     "stars": stars.toString(),
-      //     "review_message": message.toString()
-      //   },
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("PostProductReviewScreenEvent 200 RESPONSE");
-        return true;
+        return "Success";
       } else if (response.statusCode == 400) {
-        print('Bad Request');
+        print('Bad Request ${response.body}');
         print(response.statusCode);
-        print(response.stream);
+
         return 'You have to purchase this product.';
         // throw UnimplementedError('This data does not exist.');
       } else if (response.statusCode == 500) {
         print('Internal server error.');
-        return false;
+        return null;
         // throw UnimplementedError('Internal server error.');
       } else {
         // print(response.body);
         print('Something went wrong');
-        return false;
+        return null;
       }
     } catch (e) {
       print(e);
-      return false;
+      return null;
     }
   }
 
@@ -155,7 +174,8 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<List<Product>> getSortProducts({String sort}) async {
-    var response = await http.get(Uri.parse(baseURL + "/product/index?sort=$sort"));
+    var response =
+        await http.get(Uri.parse(baseURL + "/product/index?sort=$sort"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       var data = json.decode(response.body);
       // print(data);

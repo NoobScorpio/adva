@@ -1,7 +1,7 @@
 class OrderProduct {
   int id;
   int newQuantity;
-  int price;
+  dynamic price;
 
   OrderProduct({this.id, this.newQuantity, this.price});
 

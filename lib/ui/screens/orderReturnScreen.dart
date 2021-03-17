@@ -1,3 +1,4 @@
+import 'package:adva/bloc/order_bloc/orderCubit.dart';
 import 'package:adva/data/model/orderDetail.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/orderRepo.dart';
@@ -6,6 +7,8 @@ import 'package:adva/ui/utils/paymentColumn.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:adva/data/model/returnOrderProduct.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OrderReturnScreen extends StatefulWidget {
   final User user;
@@ -21,7 +24,7 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
   List<bool> bools = [];
   OrderDetail orderDetail;
   String returnReason = '';
-  List<int> ids = [];
+  List<OrderReturnProduct> ids = [];
   @override
   Widget build(BuildContext context) {
     orderDetail = widget.orderDetail;
@@ -103,6 +106,7 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
               height: 55,
               child: RaisedButton(
                 onPressed: () async {
+                  showToast('Returning order', primaryColor);
                   if (returnReason.length >= 10) {
                     bool returned = await OrderRepositoryImpl().returnOrder(
                         oid: orderDetail.id,
@@ -113,6 +117,8 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                     if (returned != null && returned == true) {
                       showToast('Order Returned', primaryColor);
                       int count = 0;
+                      await BlocProvider.of<OrderCubit>(context)
+                          .getOrders(widget.user.id);
                       Navigator.popUntil(context, (route) {
                         return count++ == 2;
                       });
@@ -139,12 +145,18 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
   Widget getPrices(OrderDetail orderDetail) {
     dynamic total = 0.0;
     dynamic subTotal = 0.0;
+    print("@ORDER RETUrN LENGTH${orderDetail.cart.length}");
+    print("@ORDER RETUrN 0 PRice ${orderDetail.cart[0].total}");
+    print("@ORDER RETUrN IDS len ${ids.length}");
     for (int i = 0; i < orderDetail.cart.length; i++) {
-      if (ids.contains(orderDetail.cart[i].id)) {
-        total += orderDetail.cart[i].total;
-        subTotal += orderDetail.cart[i].subTotal;
+      for (int j = 0; j < ids.length; j++) {
+        if (ids[j].productId == orderDetail.cart[i].id) {
+          total += orderDetail.cart[i].total;
+          subTotal += orderDetail.cart[i].subTotal;
+        }
       }
     }
+    print("@ORDER RETUrN $total");
     return PaymentColumn(
       total: total.toString(),
       flatShippingRate: '10',
@@ -169,25 +181,36 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        height: 70,
-                        width: 70,
-                        child: orderDetail.cart[i].product != null &&
-                                orderDetail
-                                        .cart[i].product.productimages.length !=
-                                    0
-                            ? FittedBox(
+                      if (orderDetail.cart[i].product != null &&
+                          orderDetail.cart[i].product.productimages.length != 0)
+                        Container(
+                          height: 70,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
                                 fit: BoxFit.cover,
-                                child: Image.network(orderDetail.cart[i].product
+                                image: NetworkImage(orderDetail.cart[i].product
                                     .productimages[0].pictureReference),
-                              )
-                            : Center(
-                                child: Icon(
-                                  Icons.image,
-                                  color: Colors.grey,
-                                ),
                               ),
-                      ),
+                              border: Border.all(
+                                color: Colors.grey[300], // red as border color
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          width: 70,
+                        ),
+                      if (!(orderDetail.cart[i].product != null &&
+                          orderDetail.cart[i].product.productimages.length !=
+                              0))
+                        Container(
+                          height: 70,
+                          width: 70,
+                          child: Center(
+                            child: Icon(
+                              Icons.image,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
                       SizedBox(
                         width: 5,
                       ),
@@ -212,14 +235,14 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "SAR. ${orderDetail.cart[i].total}",
+                            "SAR".tr() + ". ${orderDetail.cart[i].total}",
                             style: boldTextStyle,
-                          ).tr(),
+                          ),
                           SizedBox(
                             height: 5,
                           ),
-                          Text("Quantity ${orderDetail.cart[i].quantity ?? "?"}")
-                              .tr(),
+                          Text("Quantity".tr() +
+                              " ${orderDetail.cart[i].quantity ?? "?"}"),
                         ],
                       ),
                       SizedBox(
@@ -236,11 +259,23 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                           bools[i] = !bools[i];
                         });
                         if (bools[i]) {
-                          ids.add(orderDetail.cart[i].id);
+                          ids.add(OrderReturnProduct(
+                              productId: orderDetail.cart[i].id,
+                              price: orderDetail.cart[i].price,
+                              quantity: orderDetail.cart[i].quantity,
+                              total: orderDetail.cart[i].total));
                         } else {
-                          if (ids.contains(orderDetail.cart[i].id)) {
-                            ids.remove(orderDetail.cart[i].id);
+                          for (int i = 0; i < orderDetail.cart.length; i++) {
+                            for (int j = 0; j < ids.length; j++) {
+                              if (ids[j].productId == orderDetail.cart[i].id) {
+                                ids.removeAt(j);
+                              }
+                            }
                           }
+
+                          // if (ids.contains(orderDetail.cart[i].id)) {
+                          //   ids.remove(orderDetail.cart[i]);
+                          // }
                         }
                       },
                       checkColor: Colors.white,

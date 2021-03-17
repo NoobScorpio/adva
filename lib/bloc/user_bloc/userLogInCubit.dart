@@ -26,26 +26,24 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  Future<bool> createUser(String email, String pass, String cPass, String phone,
+  Future<int> createUser(String email, String pass, String cPass, String phone,
       String fName, String lName) async {
     try {
       emit(UserLoadingState());
-      bool user = await userRepository.createAccount(
+      int user = await userRepository.createAccount(
           email: email,
           pass: pass,
           cPass: cPass,
           phone: phone,
           fName: fName,
           lName: lName);
-      emit(UserCreatedState(created: user));
+      if (user != null) emit(UserCreatedState(created: true));
+      else emit(UserCreatedState(created: false));
       setStatus(false);
-      if (user)
-        return true;
-      else
-        return false;
+      return user;
     } on Exception {
       emit(UserErrorState(message: "Could not get user"));
-      return false;
+      return null;
     }
   }
 
@@ -115,18 +113,21 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
-  Future<bool> updateProfile(User user, File image) async {
+  Future<User> updateProfile(User user, File image) async {
     try {
       emit(UserLoadingState());
-      bool updated = await userRepository.updateUserProfile(user, image);
-      emit(UserLoadedState(user: user));
-      if (updated)
-        return true;
+      User updated = await userRepository.updateUserProfile(user, image);
+      
+      if (user!=null)
+       {
+         emit(UserLoadedState(user: updated));
+          return user;
+       }
       else
-        return false;
+        return null;
     } on Exception {
       emit(UserErrorState(message: "Could not get user"));
-      return false;
+      return null;
     }
   }
 

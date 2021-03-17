@@ -4,10 +4,11 @@ import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/data/model/address.dart';
 import 'package:adva/data/model/checkOut.dart';
+import 'package:adva/data/model/codRate.dart';
 import 'package:adva/data/model/shipRate.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/miscRepo.dart';
-import 'package:adva/paymentScreen.dart';
+import 'file:///C:/Users/CIFER/AndroidStudioProjects/adva/lib/ui/screens/paymentScreen.dart';
 import 'package:adva/ui/screens/addAddressScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
@@ -29,11 +30,10 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   bool checkBoxValue = false;
   TextEditingController name, email, phone;
-  String ads = '', country = '', city = '', postal = '';
+  String ads = '', country = '', city = '', postal = '', label = '';
   int groupValue = 0, addressId;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     BlocProvider.of<AddressCubit>(context).getAddresses(widget.user.id);
@@ -313,8 +313,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 borderColor: Colors.transparent,
                 innerColor: primaryColor,
                 onPressed: () async {
-                  ShipRate shipRate = await MiscRepositoryImpl().getShipRate();
-
+                  showDialog(
+                    context: context,
+                    builder: (_) => Center(
+                      child: Image.asset(
+                        'assets/images/loader.gif',
+                        scale: 3,
+                      ),
+                    ),
+                  );
+                  var misc = MiscRepositoryImpl();
+                  ShipRate shipRate = await misc.getShipRate();
+                  CODRate codRate = await misc.getCODRate();
                   if (name.text != '' && email.text != '' && phone.text != '') {
                     CheckOutInfo checkout = CheckOutInfo(
                         address: ads,
@@ -331,6 +341,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             builder: (context) => PaymentScreen(
                                 user: widget.user,
                                 checkout: checkout,
+                                codRate: codRate.charges,
                                 shipRate: shipRate.shippingRate,
                                 total: total,
                                 subTotal: subTotal)));
@@ -355,6 +366,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           country = addresses[0].country;
           postal = addresses[0].postalCode;
           addressId = addresses[0].id;
+          label = addresses[0].label;
         }
         widgets.add(Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -363,7 +375,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Address ${addresses[i].id}').tr(),
+                Row(
+                  children: [
+                    Text('Address ${addresses[i].id}').tr(),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      height: 22,
+                      width: 50,
+                      color: Color(0xFF4369D3),
+                      child: Center(
+                        child: Text(
+                          addresses[i].label ?? "Home",
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(
                   width: 10,
                 ),

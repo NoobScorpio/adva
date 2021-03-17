@@ -21,15 +21,17 @@ class PostReviewCubit extends Cubit<ProductState> {
     }
   }
 
-  Future<void> postReviewScreen(
+  Future<String> postReviewScreen(
       String message, int pid, int cid, int stars, List<File> files) async {
     try {
       emit(ProductLoadingState());
       final posted = await productRepository.addReview(
           message: message, pid: pid, cid: cid, stars: stars, pictures: files);
       emit(ProductPostReviewScreenState(posted: posted));
+      return posted;
     } on Exception {
       emit(ProductErrorState());
+      return null;
     }
   }
 }

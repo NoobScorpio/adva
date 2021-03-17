@@ -1,3 +1,4 @@
+import 'package:adva/data/model/orderProduct.dart';
 import 'package:adva/data/model/product.dart';
 
 class Order {
@@ -12,7 +13,7 @@ class Order {
   int pointsDiscount;
   String phone;
   bool isMobile;
-  List<Product> products;
+  List<OrderProduct> products;
 
   Order(
       {this.customerId,
@@ -41,9 +42,9 @@ class Order {
     discountCode = json['discount_code'];
     pointsDiscount = json['points_discount'];
     if (json['products'] != null) {
-      products = new List<Product>();
+      products = new List<OrderProduct>();
       json['products'].forEach((v) {
-        products.add(new Product.fromJson(v));
+        products.add(new OrderProduct.fromJson(v));
       });
     }
   }

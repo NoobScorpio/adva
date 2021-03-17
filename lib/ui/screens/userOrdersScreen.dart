@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adva/bloc/order_bloc/orderCubit.dart';
 import 'package:adva/bloc/order_bloc/orderState.dart';
 import 'package:adva/data/model/orderDetails.dart';
@@ -24,6 +26,8 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
     BlocProvider.of<OrderCubit>(context).getOrders(widget.user.id);
   }
 
+  TextEditingController searchCont = TextEditingController();
+  bool search = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,15 +72,49 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
                 Container(
                   height: 60,
                   child: TextFormField(
+                    controller: searchCont,
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       hintText: 'Enter order id'.tr(),
-                      suffix: IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Icons.search,
-                          color: primaryColor,
-                        ),
-                      ),
+                      suffix: !search
+                          ? IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  search = true;
+                                  // searchCont.text = '';
+                                });
+                                BlocProvider.of<OrderCubit>(context)
+                                    .getOrders(widget.user.id);
+                                FocusScopeNode currentFocus =
+                                    FocusScope.of(context);
+                                if (!currentFocus.hasPrimaryFocus) {
+                                  currentFocus.unfocus();
+                                }
+                              },
+                              icon: Icon(
+                                Icons.search,
+                                color: primaryColor,
+                              ),
+                            )
+                          : IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  search = false;
+                                  searchCont.text = '';
+                                });
+                                Timer(Duration(milliseconds: 500), () {
+                                  FocusScopeNode currentFocus =
+                                      FocusScope.of(context);
+                                  if (!currentFocus.hasPrimaryFocus) {
+                                    currentFocus.unfocus();
+                                  }
+                                });
+                              },
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.red,
+                              ),
+                            ),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                     ),
@@ -140,72 +178,143 @@ class _UserOrdersScreenState extends State<UserOrdersScreen> {
       widgets.add(Divider(
         color: Colors.grey,
       ));
+      print("@SEARCh $search");
       for (OrderDetails order in orderDetails) {
-        widgets.add(GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => OrderDetailsScreen(
-                        user: widget.user,
-                        cid: widget.user.id,
-                        oid: order.id,
-                        cart: false)));
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5.0),
-            child: Container(
-                width: double.maxFinite,
-                height: 60,
-                child: Card(
-                  elevation: 8,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          '${order.id}',
-                          style: TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.underline),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                            child: Center(
-                                child:
-                                    Text('${order.updatedAt.split("T")[0]}'))),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+        if (search) {
+          if (order.id.toString().contains(searchCont.text)) {
+            widgets.add(GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => OrderDetailsScreen(
+                            user: widget.user,
+                            cid: widget.user.id,
+                            oid: order.id,
+                            cart: false)));
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: Container(
+                    width: double.maxFinite,
+                    height: 60,
+                    child: Card(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Icon(
-                              order.status == 'returned'
-                                  ? Icons.keyboard_return_outlined
-                                  : (order.status == 'completed'
-                                      ? Icons.done
-                                      : Icons.timelapse),
-                              size: 20,
+                            Text(
+                              '${order.id}',
+                              style: TextStyle(
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                  decoration: TextDecoration.underline),
                             ),
                             SizedBox(
-                              width: 5,
+                              width: 15,
                             ),
-                            Text('${order.status}').tr(),
+                            Expanded(
+                                child: Center(
+                                    child: Text(
+                                        '${order.updatedAt.split("T")[0]}'))),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                                child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  order.status == 'returned'
+                                      ? Icons.keyboard_return_outlined
+                                      : (order.status == 'completed'
+                                          ? Icons.done
+                                          : Icons.timelapse),
+                                  size: 20,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text('${order.status}').tr(),
+                              ],
+                            )),
+                            Text('SAR'.tr() + '. ${order.total}'),
                           ],
-                        )),
-                        Text('SAR'.tr() + '. ${order.total}'),
-                      ],
+                        ),
+                      ),
+                    )),
+              ),
+            ));
+          }
+        } else {
+          widgets.add(GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => OrderDetailsScreen(
+                          user: widget.user,
+                          cid: widget.user.id,
+                          oid: order.id,
+                          cart: false)));
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Container(
+                  width: double.maxFinite,
+                  height: 60,
+                  child: Card(
+                    elevation: 8,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            '${order.id}',
+                            style: TextStyle(
+                                color: primaryColor,
+                                fontWeight: FontWeight.w500,
+                                decoration: TextDecoration.underline),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                              child: Center(
+                                  child: Text(
+                                      '${order.updatedAt.split("T")[0]}'))),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
+                                order.status == 'returned'
+                                    ? Icons.keyboard_return_outlined
+                                    : (order.status == 'completed'
+                                        ? Icons.done
+                                        : Icons.timelapse),
+                                size: 20,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text('${order.status}').tr(),
+                            ],
+                          )),
+                          Text('SAR'.tr() + '. ${order.total}'),
+                        ],
+                      ),
                     ),
-                  ),
-                )),
-          ),
-        ));
+                  )),
+            ),
+          ));
+        }
       }
       return ListView(
         shrinkWrap: true,

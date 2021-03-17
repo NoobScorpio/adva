@@ -15,6 +15,7 @@ abstract class MiscRepository {
   Future<TaxRate> getTaxRate();
   Future<Promo> getPromo({String promo});
   Future<DiscountRate> getDiscount({String discount});
+  Future<String> getAnswer({question});
 }
 
 class MiscRepositoryImpl extends MiscRepository {
@@ -46,8 +47,8 @@ class MiscRepositoryImpl extends MiscRepository {
   Future<DiscountRate> getDiscount({String discount}) async {
     print("@MISC DISCOUNT $discount");
     sp = await SharedPreferences.getInstance();
-    var response = await http
-        .post(Uri.parse(baseURL + "/discount/check"), body: {"discount_code": discount});
+    var response = await http.post(Uri.parse(baseURL + "/discount/check"),
+        body: {"discount_code": discount});
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -70,8 +71,8 @@ class MiscRepositoryImpl extends MiscRepository {
   @override
   Future<Promo> getPromo({String promo}) async {
     sp = await SharedPreferences.getInstance();
-    var response =
-        await http.post(Uri.parse(baseURL + "/promo/check"), body: {"promo_code": promo});
+    var response = await http
+        .post(Uri.parse(baseURL + "/promo/check"), body: {"promo_code": promo});
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -94,7 +95,8 @@ class MiscRepositoryImpl extends MiscRepository {
   @override
   Future<ShipRate> getShipRate() async {
     sp = await SharedPreferences.getInstance();
-    var response = await http.get(Uri.parse(baseURL + "/setting/shippingrate/get"));
+    var response =
+        await http.get(Uri.parse(baseURL + "/setting/shippingrate/get"));
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -133,6 +135,28 @@ class MiscRepositoryImpl extends MiscRepository {
     } else if (response.statusCode == 500) {
       return null;
     } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<String> getAnswer({question}) async {
+    try {
+      final newURI = Uri.parse(baseURL + "/chatbot")
+          .replace(queryParameters: {"question": question});
+      var response = await http.get(newURI);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("@CHATBOT ${response.body}");
+        return response.body;
+      } else if (response.statusCode == 400) {
+        return null;
+      } else if (response.statusCode == 500) {
+        return null;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
       return null;
     }
   }

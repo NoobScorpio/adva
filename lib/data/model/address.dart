@@ -7,7 +7,7 @@ class Address {
   String postalCode;
   String createdAt;
   String updatedAt;
-
+  String label;
   Address(
       {this.id,
       this.customerId,
@@ -15,11 +15,13 @@ class Address {
       this.country,
       this.city,
       this.postalCode,
+      this.label,
       this.createdAt,
       this.updatedAt});
 
   Address.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    label = json['label'];
     customerId = json['customer_id'];
     address = json['address'];
     country = json['country'];
@@ -32,6 +34,7 @@ class Address {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['label'] = this.label;
     data['customer_id'] = this.customerId;
     data['address'] = this.address;
     data['country'] = this.country;

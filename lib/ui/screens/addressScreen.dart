@@ -124,7 +124,19 @@ class _AddressScreenState extends State<AddressScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Details').tr(),
+                    Row(
+                      children: [
+                        Text('Details').tr(),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          '${address.label ?? "Home"}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 12),
+                        ).tr(),
+                      ],
+                    ),
                     Row(
                       children: [
                         GestureDetector(

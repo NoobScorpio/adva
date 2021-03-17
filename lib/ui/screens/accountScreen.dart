@@ -5,9 +5,11 @@ import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/bloc/user_bloc/userState.dart';
 import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
+import 'package:adva/data/model/cart.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/addressScreen.dart';
 import 'package:adva/ui/screens/advaPointsScreen.dart';
+import 'package:adva/ui/screens/chatbotScreen.dart';
 import 'package:adva/ui/screens/claimScreen.dart';
 import 'package:adva/ui/screens/myPaymentScreen.dart';
 import 'package:adva/ui/screens/profileScreen.dart';
@@ -461,8 +463,8 @@ class _AccountScreenState extends State<AccountScreen> {
             onTap: () async {
               showToast("Logging out...", primaryColor);
               SharedPreferences sp = await SharedPreferences.getInstance();
-              sp.setString('user', null);
-              sp.setString('cart', null);
+              sp.setString('user', json.encode(User().toJson()));
+              sp.setString('cart', json.encode(Cart().toJson()));
               sp.setBool('loggedIn', false);
               BlocProvider.of<UserCubit>(context).setStatus(false);
               BlocProvider.of<UserCubit>(context).logOut();
@@ -581,6 +583,14 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ],
       )),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryColor,
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (_) => ChatBotScreen()));
+        },
+        child: Icon(Icons.question_answer_outlined),
+      ),
     );
   }
 
@@ -621,6 +631,8 @@ class _AccountScreenState extends State<AccountScreen> {
                               .getCategories();
                           await BlocProvider.of<GetFeaturedCubit>(context)
                               .getSellers();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: ListTile(
                           title: Text('English'),
@@ -654,6 +666,8 @@ class _AccountScreenState extends State<AccountScreen> {
                               .getCategories();
                           await BlocProvider.of<GetFeaturedCubit>(context)
                               .getSellers();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         child: ListTile(
                           title: Text('Arabic'),

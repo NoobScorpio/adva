@@ -159,7 +159,7 @@
   "Enter full address": "أدخل العنوان الكامل" ,
   "Country": "دولة" ,
   "Postal Code": "رمز بريدي" ,
-  "Forget Password?": "نسيت كلمة المرور" ,
+  "Forgot Password?": "هل نسيت كلمة السر؟" ,
   "Login with": "تسجيل الدخول مع" ,
   "Create New Account": "انشاء حساب جديد" ,
   "or": "أو",
@@ -221,5 +221,14 @@
   "Order ID": "رقم التعريف الخاص بالطلب",
   "Return Status": "حالة العودة",
   "Copied": "نسخ",
-  "Origin": "أصل"
+  "Origin": "أصل",
+  "Sign In": "تسجيل الدخول",
+  "Sign Up": "اشتراك",
+  "English": "الإنجليزية",
+  "Arabic": "عربي",
+  "Invalid credentials": "بيانات الاعتماد غير صالحة",
+  "Or":"أو",
+  "VERIFY":"تحقق",
+  "Chatbot":"الشات بوت",
+  "Enter question":"أدخل السؤال"
 }

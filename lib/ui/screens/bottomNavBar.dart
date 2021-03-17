@@ -1,5 +1,8 @@
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
+import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
 import 'package:adva/data/model/cartItem.dart';
+import 'package:adva/data/model/featured.dart';
+import 'package:adva/data/model/searchProduct.dart';
 import 'package:adva/ui/screens/categoryScreen.dart';
 import 'package:adva/ui/screens/userScreen.dart';
 import 'package:adva/ui/screens/cartScreen.dart';
@@ -34,21 +37,31 @@ class _BottomNavBarState extends State<BottomNavBar> {
     cartItems = await BlocProvider.of<CartCubit>(context).getItems();
   }
 
+  List<SearchProduct> searches = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    getSearch();
     getItems();
+  }
+
+  getSearch() async {
+    List<Featured> feat =
+        await BlocProvider.of<GetFeaturedCubit>(context).getSellers();
+    for (Featured f in feat) {
+      searches.add(SearchProduct(
+          productName: context.locale == Locale('en', '')
+              ? f.productName
+              : f.productArabicName,
+          id: f.id));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      HomeScreen(),
-      ShopCategoryScreen(
-        cid: "Makeup",
-        brand: false,
-      ),
+      HomeScreen(search: searches),
+      ShopCategoryScreen(cid: "Makeup", brand: false, search: searches),
       CartScreen(
         cartItems: cartItems,
       ),
@@ -67,9 +80,6 @@ class _BottomNavBarState extends State<BottomNavBar> {
           selectedItemIconColor: Colors.white,
           selectedItemLabelColor: Colors.black,
         ),
-        // type: BottomNavigationBarType.fixed,
-        // showSelectedLabels: false,
-        // showUnselectedLabels: false,
         items: [
           FFNavigationBarItem(
             iconData: Icons.home,
@@ -91,142 +101,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
             iconData: Icons.person_outlined,
             label: 'Account'.tr(),
           ),
-          // FFNavigationBarItem(
-          //   activeIcon: Column(
-          //     children: [
-          //       // Icon(
-          //       //   Icons.home_filled,
-          //       //   color: primaryColor,
-          //       // ),
-          //       SvgPicture.asset(
-          //         'assets/icons/Home-active.svg',
-          //       ),
-          //       // Image.asset('assets/icons/Home-active.svg'),
-          //       Text(
-          //         'Home',
-          //         style: TextStyle(color: primaryColor),
-          //       )
-          //     ],
-          //   ),
-          //   label: 'Home',
-          //   icon: Column(
-          //     children: [
-          //       // Icon(
-          //       //   Icons.home_filled,
-          //       // ),
-          //       SvgPicture.asset(
-          //         'assets/icons/Home-grey.svg',
-          //       ),
-          //
-          //       Text(
-          //         'Home',
-          //         style: TextStyle(color: Colors.grey),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          // FFNavigationBarItem(
-          //   activeIcon: Column(
-          //     children: [
-          //       SvgPicture.asset(
-          //         'assets/icons/Categories-active.svg',
-          //       ),
-          //       Text(
-          //         'Categories',
-          //         style: TextStyle(color: primaryColor),
-          //       )
-          //     ],
-          //   ),
-          //   label: 'Products',
-          //   icon: Column(
-          //     children: [
-          //       SvgPicture.asset(
-          //         'assets/icons/Categories-grey.svg',
-          //       ),
-          //       Text(
-          //         'Products',
-          //         style: TextStyle(color: Colors.grey),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          // FFNavigationBarItem(
-          //   activeIcon: CircleAvatar(
-          //     backgroundColor: primaryColor,
-          //     radius: 25,
-          //     child: SvgPicture.asset(
-          //       'assets/icons/Cart-icon.svg',
-          //       height: 25,
-          //       width: 25,
-          //     ),
-          //   ),
-          //   label: 'Cart',
-          //   icon: CircleAvatar(
-          //     backgroundColor: primaryColor,
-          //     radius: 25,
-          //     child: SvgPicture.asset(
-          //       'assets/icons/Cart-icon.svg',
-          //       height: 30,
-          //       width: 30,
-          //     ),
-          //   ),
-          // ),
-          // FFNavigationBarItem(
-          //   activeIcon: Column(
-          //     children: [
-          //       SvgPicture.asset(
-          //         'assets/icons/Gallery-active.svg',
-          //       ),
-          //       Text(
-          //         'Gallery',
-          //         style: TextStyle(color: primaryColor),
-          //       )
-          //     ],
-          //   ),
-          //   label: 'Gallery',
-          //   icon: Column(
-          //     children: [
-          //       SvgPicture.asset(
-          //         'assets/icons/Gallery-grey.svg',
-          //       ),
-          //       Text(
-          //         'Gallery',
-          //         style: TextStyle(color: Colors.grey),
-          //       )
-          //     ],
-          //   ),
-          // ),
-          // FFNavigationBarItem(
-          //   activeIcon: Column(
-          //     children: [
-          //       SvgPicture.asset(
-          //         'assets/icons/Accounts-active.svg',
-          //       ),
-          //       Text(
-          //         'Account',
-          //         style: TextStyle(color: primaryColor),
-          //       )
-          //     ],
-          //   ),
-          //   label: 'Account',
-          //   icon: Column(
-          //     children: [
-          //       SvgPicture.asset(
-          //         'assets/icons/Accounts-grey.svg',
-          //       ),
-          //       Text(
-          //         'Account',
-          //         style: TextStyle(color: Colors.grey),
-          //       )
-          //     ],
-          //   ),
-          // ),
         ],
         selectedIndex: _selectedIndex,
-        // selectedItemColor: primaryColor,
         onSelectTab: _onItemTapped,
-        // backgroundColor: Color(0xffffffff),
-        // unselectedItemColor: Colors.grey,
       ),
     );
   }

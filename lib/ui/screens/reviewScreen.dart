@@ -273,21 +273,30 @@ class _ReviewScreenState extends State<ReviewScreen> {
                           height: 55,
                           width: screenWidth / 2.5,
                           child: RaisedButton(
-                            onPressed: () {
+                            onPressed: () async {
+                              showToast('Sending review', primaryColor);
                               if (controller.text.length >= 10) {
                                 if (files.length < 1) {
                                   showToast(
                                       'Attach at least 1 image.', primaryColor);
                                 } else {
                                   message = controller.text;
-                                  BlocProvider.of<PostReviewCubit>(context)
-                                      .postReviewScreen(message, widget.pid, 0,
-                                          _rating.toInt(), files);
-
-                                  controller.text = '';
-                                  // setState(() {
-                                  //   print("FILES $files");
-                                  // });
+                                  String posted =
+                                      await BlocProvider.of<PostReviewCubit>(
+                                              context)
+                                          .postReviewScreen(message, widget.pid,
+                                              0, _rating.toInt(), files);
+                                  if (posted != null) {
+                                    controller.text = '';
+                                    if (posted ==
+                                        "You have to purchase this product.") {
+                                      showToast(
+                                          'You have to purchase this product.',
+                                          primaryColor);
+                                    } else if (posted == "Success") {
+                                      showToast('Success', primaryColor);
+                                    }
+                                  }
                                 }
                               } else {
                                 showToast(

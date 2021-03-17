@@ -43,10 +43,11 @@ class _ProductContainerState extends State<ProductContainer> {
   bool wish = false;
   List<WishList> wishes = [];
   bool english;
-
+  Icon wishIcon;
   SharedPreferences sp;
 
   pressed() async {
+    print(widget.pid);
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -58,6 +59,10 @@ class _ProductContainerState extends State<ProductContainer> {
     super.initState();
     setWishes();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setWishes());
+    wishIcon = Icon(
+      Icons.favorite_border,
+      color: primaryColor,
+    );
   }
 
   setWishes() async {
@@ -88,7 +93,7 @@ class _ProductContainerState extends State<ProductContainer> {
     double screenHeight = MediaQuery.of(context).size.height;
     return widget.box
         ? Container(
-            width: screenHeight * 0.216,
+            width: 250,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 border: Border.all(width: 0.6, color: primaryColor)),
@@ -97,7 +102,7 @@ class _ProductContainerState extends State<ProductContainer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: screenHeight * 0.32,
+                  height: 250,
                   width: double.maxFinite,
                   child: Stack(
                     children: [
@@ -121,13 +126,16 @@ class _ProductContainerState extends State<ProductContainer> {
                                 ? Alignment.topLeft
                                 : Alignment.topRight,
                             child: Container(
-                                height: 25,
+                                height: 30,
+                                width: tag == "New" || tag == "جديد" ? 50 : 100,
                                 color: tagBool ? Colors.black : Colors.red,
                                 child: Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: Text(
-                                    tag,
-                                    style: TextStyle(color: Colors.white),
+                                  child: Center(
+                                    child: Text(
+                                      tag,
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 )),
                           ),
@@ -228,6 +236,62 @@ class _ProductContainerState extends State<ProductContainer> {
                                 color: Colors.white,
                               ),
                             ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Align(
+                          alignment: context.locale == Locale('en', '')
+                              ? Alignment.topRight
+                              : Alignment.topLeft,
+                          child: InkWell(
+                            onTap: () async {
+                              showToast("Adding product", primaryColor);
+                              if (!wish) {
+                                SharedPreferences sp =
+                                    await SharedPreferences.getInstance();
+                                sp = await SharedPreferences.getInstance();
+                                if (sp.getBool('loggedIn') == null ||
+                                    sp.getBool('loggedIn') == false) {
+                                  showToast(
+                                      "You are not logged in", primaryColor);
+                                } else {
+                                  int response =
+                                      await BlocProvider.of<WishCubit>(context)
+                                          .addWishListItem(
+                                              User.fromJson(json.decode(
+                                                      sp.getString('user')))
+                                                  .id,
+                                              widget.pid);
+                                  print('WISH ADDED $response');
+
+                                  if (response == 200) {
+                                    showToast(
+                                        "Added to wish list", primaryColor);
+                                    setState(() {
+                                      wish = true;
+                                      wishIcon = Icon(Icons.favorite_rounded,
+                                          color: primaryColor);
+                                    });
+                                  } else if (response == 400) {
+                                    setState(() {
+                                      wish = false;
+                                      wishIcon = Icon(
+                                          Icons.favorite_border_outlined,
+                                          color: primaryColor);
+                                    });
+                                    showToast(
+                                        "Added to wish list", primaryColor);
+                                  } else if (response == 500) {
+                                    showToast(
+                                        "Not added to wish list", primaryColor);
+                                  }
+                                }
+                              } else
+                                showToast("Item already added", primaryColor);
+                            },
+                            child: wishIcon,
                           ),
                         ),
                       ),
@@ -396,17 +460,22 @@ class _ProductContainerState extends State<ProductContainer> {
                                         top: 8,
                                         left: 8,
                                         child: Container(
-                                            height: 25,
+                                            height: 30,
+                                            width: tag == "New" || tag == "جديد"
+                                                ? 50
+                                                : 100,
                                             color: tagBool
                                                 ? Colors.black
                                                 : Colors.red,
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(5.0),
-                                              child: Text(
-                                                tag,
-                                                style: TextStyle(
-                                                    color: Colors.white),
+                                              child: Center(
+                                                child: Text(
+                                                  tag,
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
                                               ),
                                             )),
                                         // BlocConsumer<WishCubit, WishListState>(

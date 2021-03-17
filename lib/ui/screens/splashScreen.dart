@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:adva/bloc/featured_bloc/getFeaturedCubit.dart';
-import 'package:easy_localization/easy_localization.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -73,7 +72,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -84,7 +82,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     Timer(
         Duration(seconds: 7),
-        () => Navigator.of(context).push(PageRouteBuilder(
+        () => Navigator.of(context).pushAndRemoveUntil(
+            PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   BottomNavBar(),
               transitionsBuilder:
@@ -101,7 +100,8 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: child,
                 );
               },
-            )));
+            ),
+            (route) => false));
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
     //   setState(() {
     //     height = 100;
@@ -124,10 +124,10 @@ class _SplashScreenState extends State<SplashScreen> {
     //           show = true;
     //         }));
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bg,
       body: Center(
         child: Image.asset(
-          'assets/images/intro.gif',
+          'assets/images/intro_black.gif',
           scale: 2,
         ),
       ),

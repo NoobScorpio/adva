@@ -45,6 +45,7 @@ class AddressRepositoryImpl implements AddressRepository {
           "country": address.country,
           "city": address.city,
           "postal_code": address.postalCode,
+          "label": address.label ?? "Home"
         });
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
@@ -66,10 +67,11 @@ class AddressRepositoryImpl implements AddressRepository {
 
   @override
   Future<List<Address>> deleteAddress({Address address}) async {
-    var response = await http
-        .post(Uri.parse(baseURL + "/customer/address/delete/${address.id}"), body: {
-      "customer_id": address.customerId.toString(),
-    });
+    var response = await http.post(
+        Uri.parse(baseURL + "/customer/address/delete/${address.id}"),
+        body: {
+          "customer_id": address.customerId.toString(),
+        });
     if (response.statusCode == 200 || response.statusCode == 201) {
       try {
         var data = json.decode(response.body);
@@ -91,20 +93,22 @@ class AddressRepositoryImpl implements AddressRepository {
   @override
   Future<bool> updateAddress({Address address}) async {
     try {
-      print("updateAddress ID ${address.id}");
-      print("updateAddress CID ${address.customerId}");
-      print("updateAddress ADDRESS ${address.address}");
-      print("updateAddress COUNTRY ${address.country}");
-      print("updateAddress CITY ${address.city}");
-      print("updateAddress POSTAL-CODE ${address.postalCode}");
+      // print("updateAddress ID ${address.id}");
+      // print("updateAddress CID ${address.customerId}");
+      // print("updateAddress ADDRESS ${address.address}");
+      // print("updateAddress COUNTRY ${address.country}");
+      // print("updateAddress CITY ${address.city}");
+      // print("updateAddress POSTAL-CODE ${address.postalCode}");
       var response = await http.post(
-          Uri.parse(baseURL + "/customer/address/update/${address.id.toString()}"),
+          Uri.parse(
+              baseURL + "/customer/address/update/${address.id.toString()}"),
           body: {
             "customer_id": address.customerId.toString(),
             "address": address.address,
             "country": address.country,
             "city": address.city,
             "postal_code": address.postalCode,
+            "label": address.label ?? "Home"
           });
       print("updateAddress: ${response.statusCode}");
       if (response.statusCode == 200 || response.statusCode == 201) {

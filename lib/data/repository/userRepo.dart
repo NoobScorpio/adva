@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/res/appStrings.dart';
+import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,9 +13,9 @@ abstract class UserRepository {
   Future<User> getUser();
   Future<bool> updateUser(User user);
   Future<bool> updateLocalUser(User user);
-  Future<bool> updateUserProfile(User user, File profile);
+  Future<User> updateUserProfile(User user, File profile);
   Future<bool> updatePass(User user, String pass, String newPass);
-  Future<bool> createAccount(
+  Future<int> createAccount(
       {String fName,
       String lName,
       String email,
@@ -21,6 +23,8 @@ abstract class UserRepository {
       String pass,
       String cPass});
   Future<int> sendForgetPasswordCodeVerifyRequest(String email, String code);
+  Future<bool> sendVerifyRequest(
+      String email, String code, int id, bool register);
   Future<bool> sendForgetPasswordNewRequest(String email);
   Future<bool> resetPassword({int cid, String pass});
 }
@@ -57,7 +61,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<bool> createAccount(
+  Future<int> createAccount(
       {String fName,
       String lName,
       String email,
@@ -65,7 +69,8 @@ class UserRepositoryImpl implements UserRepository {
       String pass,
       String cPass}) async {
     print("createAccount : INSIDE $email and $pass");
-    var response = await http.post(Uri.parse(baseURL + "/customer/create"), body: {
+    var response =
+        await http.post(Uri.parse(baseURL + "/customer/create"), body: {
       "email": email,
       "password": pass,
       "first_name": fName,
@@ -80,16 +85,19 @@ class UserRepositoryImpl implements UserRepository {
       var data = json.decode(response.body);
       User user = User.fromJson(data);
       sp.setString('user', json.encode(user.toJson()));
-      return true;
+      return user.id;
     } else if (response.statusCode == 400) {
+      showToast("Email or phone already taken", primaryColor);
       print('This data does not exist.');
-      return false;
+      return null;
     } else if (response.statusCode == 500) {
+      showToast('Internal server error.', primaryColor);
       print('Internal server error.');
-      return false;
+      return null;
     } else {
       print('Something went wrong');
-      return false;
+      showToast('Something went wrong', primaryColor);
+      return null;
     }
   }
 
@@ -101,12 +109,13 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> updatePass(User user, String pass, String newPass) async {
-    var response = await http
-        .post(Uri.parse(baseURL + "/customer/password/update/${user.id}"), body: {
-      "current_password": pass,
-      "password": newPass,
-      "confirm_password": newPass,
-    });
+    var response = await http.post(
+        Uri.parse(baseURL + "/customer/password/update/${user.id}"),
+        body: {
+          "current_password": pass,
+          "password": newPass,
+          "confirm_password": newPass,
+        });
     print("createAccount : ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
@@ -125,8 +134,8 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<bool> updateUser(User user) async {
     // print("createAccount : INSIDE $email and $pass");
-    var response =
-        await http.post(Uri.parse(baseURL + "/customer/update/${user.id}"), body: {
+    var response = await http
+        .post(Uri.parse(baseURL + "/customer/update/${user.id}"), body: {
       "email": user.email,
       "first_name": user.firstName,
       "last_name": user.lastName,
@@ -155,7 +164,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<bool> updateUserProfile(User user, File profile) async {
+  Future<User> updateUserProfile(User user, File profile) async {
     try {
       List<int> imageBytes = profile.readAsBytesSync();
       String ext = profile.path.split('/').last.split('.').last;
@@ -165,39 +174,30 @@ class UserRepositoryImpl implements UserRepository {
           Uri.parse(baseURL + "/customer/basedecode/profile/update/${user.id}"),
           body: {"profile_image": baseImage, "extension": ext});
       print(baseImage);
-      // debugPrint(response.body, wrapWidth: 1024);
       print("IMAGE RESPONSE ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // SharedPreferences sp=await SharedPreferences.getInstance();
-        // var data=json.decode(response.);
         print("IMAGE RESPONSE ${response.statusCode}");
-
-        return true;
+        var data = response.body;
+        User user = User.fromJson(json.decode(data));
+        SharedPreferences sp = await SharedPreferences.getInstance();
+        await sp.setString('user', json.encode(user.toJson()));
+        return user;
       } else if (response.statusCode == 400) {
         print("IMAGE RESPONSE ${response.statusCode}");
-        // response.stream.transform(utf8.decoder).listen((value) {
-        //   print(value);
-        // });
         print('This data does not exist.');
-        return false;
+        return null;
       } else if (response.statusCode == 500) {
         print("IMAGE RESPONSE ${response.statusCode}");
-        // response.stream.transform(utf8.decoder).listen((value) {
-        //   print(value);
-        // });
         print('Internal server error.');
-        return false;
+        return null;
       } else {
         print("IMAGE RESPONSE ${response.statusCode}");
-        // response.stream.transform(utf8.decoder).listen((value) {
-        //   print(value);
-        // });
         print('Something went wrong');
-        return false;
+        return null;
       }
     } catch (e) {
       print(e);
-      return false;
+      return null;
     }
   }
 
@@ -225,8 +225,9 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> sendForgetPasswordNewRequest(String email) async {
-    var response = await http
-        .post(Uri.parse(baseURL + "/customer/recoverpassword"), body: {"email": email});
+    var response = await http.post(
+        Uri.parse(baseURL + "/customer/recoverpassword"),
+        body: {"email": email});
     print("createAccount : ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       return true;
@@ -244,7 +245,8 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> resetPassword({int cid, String pass}) async {
-    var response = await http.post(Uri.parse(baseURL + "/customer/resetpassword"), body: {
+    var response = await http
+        .post(Uri.parse(baseURL + "/customer/resetpassword"), body: {
       "customer_id": cid.toString(),
       "password": pass,
       "confirm_password": pass
@@ -273,6 +275,34 @@ class UserRepositoryImpl implements UserRepository {
     } catch (e) {
       print("@USER LOCAL UPDATE $e");
       return false;
+    }
+  }
+
+  @override
+  Future<bool> sendVerifyRequest(
+      String email, String code, int id, bool register) async {
+    print("sendForgetPasswordCodeVerifyRequest : ");
+    var response;
+    if (register)
+      response = await http.post(Uri.parse(baseURL + "/customer/verify?id=$id"),
+          body: {"code": code});
+    else
+      response = await http.post(Uri.parse(baseURL + "/customer/verify"),
+          body: {"email": email, "code": code});
+    print("createAccount : ${response.body}");
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      showToast("Email Verified", primaryColor);
+      // int id = json.decode(response.body)['id'];
+      return true;
+    } else if (response.statusCode == 400) {
+      print('This data does not exist.');
+      return null;
+    } else if (response.statusCode == 500) {
+      print('Internal server error.');
+      return null;
+    } else {
+      print('Something went wrong');
+      return null;
     }
   }
 }

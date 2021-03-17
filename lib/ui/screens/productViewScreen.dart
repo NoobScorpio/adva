@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:adva/bloc/cart_bloc/cartCubit.dart';
 import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/bloc/product_bloc/postQuestionCubit.dart';
+import 'package:adva/bloc/wishlist_bloc/wishCubit.dart';
 import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/productImage.dart';
@@ -10,6 +11,7 @@ import 'package:adva/data/model/relatedProduct.dart';
 import 'package:adva/data/model/review.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/productRepo.dart';
+import 'package:adva/ui/screens/productImageViewScreen.dart';
 import 'package:adva/ui/screens/questionsScreen.dart';
 import 'package:adva/ui/screens/reviewScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -21,6 +23,8 @@ import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_share/flutter_share.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -34,6 +38,7 @@ class ProductViewScreen extends StatefulWidget {
 
 class _ProductViewScreenState extends State<ProductViewScreen> {
   double _rating = 3.5;
+  bool wish = false;
   List<String> qtyValue = [
     "QTY".tr() + " 1",
     "QTY".tr() + " 2",
@@ -68,112 +73,131 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
   double reviewAvg = 0.0;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => settings());
   }
 
   Widget getCarousel(screenWidth, screenHeight) {
     List<Widget> images = [];
-
-    for (Productimages img in product.productimages) {
-      images.add(Container(
-          width: screenWidth,
-          child: FittedBox(
-              fit: BoxFit.cover, child: Image.network(img.pictureReference))));
-    }
-    print("IMAGES ${product.productimages.length}");
-    return Stack(
-      children: [
-        Container(
-          height: 450,
-          width: double.maxFinite,
-          child: Carousel(
-            autoplayDuration: Duration(seconds: 10),
-            boxFit: BoxFit.contain,
-            dotBgColor: Colors.transparent,
-            overlayShadowColors: Color(0xFF00000029),
-            images: images,
-          ),
-        ),
-        Column(
-          children: [
-            Container(
-              height: screenHeight * 0.09,
-              width: screenWidth,
-              color: Colors.white.withOpacity(0.9),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      'assets/images/advalogo.png',
-                      scale: 2,
-                    ),
-                    SizedBox(
-                      width: screenWidth * 0.03,
-                    ),
-                    //
-                    Expanded(
-                      child: Form(
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              top: screenHeight * 0.001,
-                              right: screenWidth * 0.03),
-                          child: Container(
-                            height: screenHeight * 0.06,
-                            child: TextFormField(
-                              autovalidateMode: AutovalidateMode.always,
-                              decoration: InputDecoration(
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 0.1,
-                                    ),
-                                  ),
-                                  hintText: 'Search'.tr(),
-                                  contentPadding: EdgeInsets.only(
-                                      top: screenHeight * 0.01,
-                                      left: screenWidth * 0.03),
-                                  suffixIcon:
-                                      Image.asset('assets/images/search.png')),
-                              onSaved: (String value) {},
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+    if (product != null && product.productimages != null) {
+      for (Productimages img in product.productimages) {
+        images.add(InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) =>
+                        ProductImageViewScreen(images: product.productimages)));
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(img.pictureReference),
+                  ),
+                  border: Border.all(
+                    color: Colors.grey[300], // red as border color
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              // width: screenWidth - 50,
+              // height: 150,
             ),
-          ],
-        ),
-        Positioned(
-            top: screenHeight * 0.10,
-            right: 15,
-            child: Column(
-              children: [
-                CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.favorite_border_outlined,
-                      color: Colors.black,
-                    )),
-                SizedBox(
-                  height: 10,
-                ),
-                CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.share,
-                      color: Colors.black,
-                    )),
-              ],
-            )),
-      ],
-    );
+          ),
+        ));
+      }
+      print("IMAGES ${product.productimages.length}");
+      return Stack(
+        children: [
+          Container(
+              height: 450,
+              width: double.maxFinite,
+              child: Swiper(
+                itemBuilder: (BuildContext context, int index) {
+                  return images[index];
+                },
+                itemCount: images.length,
+                viewportFraction: 0.70,
+                scale: 0.65,
+              )),
+          Positioned(
+              top: screenHeight * 0.10,
+              right: 15,
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () async {
+                      showToast("Adding product", primaryColor);
+                      if (!wish) {
+                        SharedPreferences sp =
+                            await SharedPreferences.getInstance();
+                        sp = await SharedPreferences.getInstance();
+                        if (sp.getBool('loggedIn') == null ||
+                            sp.getBool('loggedIn') == false) {
+                          showToast("You are not logged in", primaryColor);
+                        } else {
+                          int response =
+                              await BlocProvider.of<WishCubit>(context)
+                                  .addWishListItem(
+                                      User.fromJson(
+                                              json.decode(sp.getString('user')))
+                                          .id,
+                                      widget.pid);
+                          print('WISH ADDED $response');
+                          setState(() {
+                            if (response == 200) {
+                              showToast("Added to wish list", primaryColor);
+                              setState(() {
+                                wish = true;
+                              });
+                            } else if (response == 400) {
+                              showToast("Added to wish list", primaryColor);
+                            } else if (response == 500) {
+                              showToast("Not added to wish list", primaryColor);
+                            }
+                          });
+                        }
+                      } else
+                        showToast("Item already added", primaryColor);
+                    },
+                    child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          wish
+                              ? Icons.favorite
+                              : Icons.favorite_border_outlined,
+                          color: Colors.black,
+                        )),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      await FlutterShare.share(
+                        title: 'ADVA',
+                        text:
+                            'Do check out this amazing product, visit the link below',
+                        linkUrl:
+                            'https://www.advabeauty.com/#/products/details/${product.id}',
+                      );
+                    },
+                    child: CircleAvatar(
+                        radius: 20,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.share,
+                          color: Colors.black,
+                        )),
+                  ),
+                ],
+              )),
+        ],
+      );
+    } else
+      return Container();
   }
 
   Widget getDetails(screenWidth, screenHeight) {
@@ -182,11 +206,16 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
     price = product.price;
     desc = product.productDescription;
     arabicDesc = product.productArabicDescription;
-    image = product.productimages[0].pictureReference;
-    discount = product.discountedAmount + 0.0 ?? 0.0;
-    vat += product.vat + 0.0 ?? 0.0;
+    image = product.productimages == null
+        ? ""
+        : product.productimages[0].pictureReference;
+    discount = product.discountedAmount == null
+        ? 0.0
+        : product.discountedAmount + 0.0 ?? 0.0;
+    vat += product.vat == null ? 0.0 : product.vat + 0.0 ?? 0.0;
 
-    category = product.category.categoryName ?? "";
+    category =
+        product.category == null ? "" : product.category.categoryName ?? "";
     categoryID = product.categoryId ?? 1;
 
     return Column(
@@ -196,7 +225,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            product.productName,
+            product.productName ?? "",
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20),
           ),
@@ -231,7 +260,8 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     fontSize: 14),
               ),
               Text(
-                'SAR.'.tr() + ' ${product.price - product.discountedAmount}',
+                'SAR.'.tr() +
+                    ' ${(product.price ?? 0) - (product.discountedAmount ?? 0)}',
                 style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
@@ -293,7 +323,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
               Padding(
                 padding: const EdgeInsets.only(left: 5.0),
                 child: Text(
-                  '(${product.reviews.length})',
+                  '(${product.reviews == null ? 0 : product.reviews.length})',
                   style: TextStyle(fontSize: 18),
                 ),
               )
@@ -304,8 +334,8 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(context.locale == Locale('en', '')
-              ? product.productDescription
-              : product.productArabicDescription),
+              ? (product.productDescription ?? "")
+              : (product.productArabicDescription ?? "")),
         ),
         // AVAILABILITY:REMAINING
         Padding(
@@ -320,7 +350,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     width: 10,
                   ),
                   Text(
-                    product.quantity > 0 ? 'In Stock' : 'Out of Stock',
+                    (product.quantity ?? 0) > 0 ? 'In Stock' : 'Out of Stock',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ).tr(),
                 ],
@@ -340,143 +370,36 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
             ],
           ),
         ),
-        // MODEL:COLOR
-        // Padding(
-        //   padding: const EdgeInsets.all(15.0),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children: [
-        //       if (haveColors && colors.length > 0)
-        //         Row(
-        //           children: [
-        //             Text(
-        //               'Colors:',
-        //               style: TextStyle(fontWeight: FontWeight.w500),
-        //             ).tr(),
-        //             SizedBox(
-        //               width: 10,
-        //             ),
-        //             Container(
-        //               height: 40,
-        //               width: 118,
-        //               color: Colors.grey,
-        //               child: Padding(
-        //                 padding: const EdgeInsets.all(1.0),
-        //                 child: Container(
-        //                   color: Colors.white,
-        //                   width: double.maxFinite,
-        //                   child: Padding(
-        //                     padding:
-        //                         const EdgeInsets.symmetric(horizontal: 5.0),
-        //                     child: DropdownButton(
-        //                         value: colorValue,
-        //                         items: colors,
-        //                         onChanged: (value) {
-        //                           setState(() {
-        //                             colorValue = value;
-        //                           });
-        //                         }),
-        //                   ),
-        //                 ),
-        //               ),
-        //             )
-        //           ],
-        //         ),
-        //       if (haveSizes && sizesStringValues.length > 0)
-        //         Row(
-        //           children: [
-        //             Text(
-        //               'Sizes:',
-        //               style: TextStyle(fontWeight: FontWeight.w500),
-        //             ).tr(),
-        //             SizedBox(
-        //               width: 10,
-        //             ),
-        //             Container(
-        //               height: 40,
-        //               width: 130,
-        //               color: Colors.grey,
-        //               child: Padding(
-        //                 padding: const EdgeInsets.all(1.0),
-        //                 child: Container(
-        //                   color: Colors.white,
-        //                   width: double.maxFinite,
-        //                   child: Padding(
-        //                     padding:
-        //                         const EdgeInsets.symmetric(horizontal: 5.0),
-        //                     child:
-        //                         // DropdownButton<int>(
-        //                         //     value: sizeValue,
-        //                         //     items: sizes,
-        //                         //
-        //                         //     onChanged: (value) {
-        //                         //       setState(() {
-        //                         //         sizeValue = value;
-        //                         //       });
-        //                         //       size = sizesMap[value];
-        //                         //       print("SIZE SELECTED $sizeValue : $size");
-        //                         //     },
-        //                         // ),
-        //                         DropdownButton<int>(
-        //                       isExpanded: true,
-        //                       icon: Icon(
-        //                         Icons.arrow_drop_down,
-        //                         color: primaryColor,
-        //                       ),
-        //                       iconSize: 42,
-        //                       value: sizeValue,
-        //                       focusColor: primaryColor,
-        //                       items: sizesIntValues.map((int value) {
-        //                         return DropdownMenuItem<int>(
-        //                           value: value,
-        //                           child: new Text('${sizesMap[value]}'),
-        //                         );
-        //                       }).toList(),
-        //                       onChanged: (_) {
-        //                         setState(() {
-        //                           sizeValue = _;
-        //                           size = sizesMap[_];
-        //                         });
-        //                       },
-        //                     ),
-        //                   ),
-        //                 ),
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //     ],
-        //   ),
-        // ),
       ],
     );
   }
 
   Widget getReviewsAndQuestions(screenWidth, screenHeight) {
-    for (Reviews rev in product.reviews) {
-      if (!(reviews.length > 0)) {
-        reviewAvg += rev.stars.toDouble();
-        if (reviews.length < 3) {
-          reviews.add(ReviewWidget(
-            screenwidth: screenWidth,
-            profile:
-                rev.customer == null ? null : rev.customer.profileImage ?? '',
-            firstName:
-                rev.customer == null ? "Anon" : rev.customer.firstName ?? '',
-            lastName: rev.customer == null ? "" : rev.customer.lastName ?? '',
-            rating: rev.stars ?? 0,
-            message: rev.reviewMessage ?? '',
-            network: true,
-            images: rev.pictures,
-          ));
-        } else {
-          break;
+    if (product.reviews != null)
+      for (Reviews rev in product.reviews) {
+        if (!(reviews.length > 0)) {
+          reviewAvg += rev.stars.toDouble();
+          if (reviews.length < 3) {
+            reviews.add(ReviewWidget(
+              screenwidth: screenWidth,
+              profile:
+                  rev.customer == null ? null : rev.customer.profileImage ?? '',
+              firstName:
+                  rev.customer == null ? "Anon" : rev.customer.firstName ?? '',
+              lastName: rev.customer == null ? "" : rev.customer.lastName ?? '',
+              rating: rev.stars ?? 0,
+              message: rev.reviewMessage ?? '',
+              network: true,
+              images: rev.pictures,
+            ));
+          } else {
+            break;
+          }
         }
       }
-    }
 
     if (!(questions.length > 0)) {
-      if (product.qas.length > 0) {
+      if (product.qas != null) if (product.qas.length > 0) {
         for (Qas qas in product.qas) {
           if (questions.length < 3) {
             print("QUESTS LENGTH ${questions.length}");
@@ -906,7 +829,10 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         }
       }
     setState(() {
-      isLoading = false;
+      if (product == null)
+        isLoading = true;
+      else
+        isLoading = false;
     });
   }
 
@@ -947,6 +873,32 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
+        actions: [
+          Expanded(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                child: Image.asset(
+                  'assets/images/advalogo.png',
+                  scale: 2,
+                ),
+              ),
+            ],
+          ))
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -27,7 +27,7 @@ class _CartScreenState extends State<CartScreen> {
   List<CartItem> cartItems;
   @override
   void initState() {
-    // TODO: implement initState
+
     super.initState();
     cartItems = widget.cartItems;
 
@@ -204,7 +204,7 @@ class _CartScreenState extends State<CartScreen> {
                           onPressed: () async {
                             SharedPreferences sp =
                                 await SharedPreferences.getInstance();
-                            String rate = await sp.getString('shipRate');
+                            String rate =  sp.getString('shipRate');
                             ShipRate shipRate =
                                 ShipRate.fromJson(json.decode(rate));
                             User user =

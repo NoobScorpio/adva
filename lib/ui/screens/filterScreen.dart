@@ -93,8 +93,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                 ));
                               } else {
                                 // categoryGroup = state.category[0].id;
-                                return makeRadios(
-                                    values: state.category, context: context);
+                                return makeRadios(values: state.category);
                               }
                             } else if (state is CategoryErrorState) {
                               return buildErrorUi(state.message);
@@ -134,8 +133,7 @@ class _FilterScreenState extends State<FilterScreen> {
                                 ));
                               } else {
                                 // brandGroup = state.brands[0].id;
-                                return makeRadios(
-                                    values: state.brands, context: context);
+                                return makeRadios(values: state.brands);
                               }
                             } else if (state is BrandErrorState) {
                               return buildErrorUi(state.message);
@@ -197,7 +195,7 @@ class _FilterScreenState extends State<FilterScreen> {
     );
   }
 
-  Widget makeRadios({values, context}) {
+  Widget makeRadios({values}) {
     List<Widget> widgets = [];
     if (values[0].runtimeType == Category) {
       for (Category cat in values) {

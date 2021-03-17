@@ -32,7 +32,7 @@ Widget makeProducts(screenHeight, products, box, context, {message}) {
               padding: const EdgeInsets.all(15),
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: screenHeight * 0.00069,
+              childAspectRatio: 0.50,
               children: widgets,
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),

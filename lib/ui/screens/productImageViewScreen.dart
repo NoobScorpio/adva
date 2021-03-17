@@ -1,13 +1,26 @@
+import 'package:adva/data/model/productImage.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ProductImageViewScreen extends StatefulWidget {
+  final List<Productimages> images;
+
+  const ProductImageViewScreen({Key key, this.images}) : super(key: key);
   @override
   _ProductImageViewScreenState createState() => _ProductImageViewScreenState();
 }
 
 class _ProductImageViewScreenState extends State<ProductImageViewScreen> {
+  String image;
+  int selected = 1;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    image = widget.images[0].pictureReference;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +58,7 @@ class _ProductImageViewScreenState extends State<ProductImageViewScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '1 of 4',
+                      '$selected of ${widget.images.length}',
                       style: boldTextStyle,
                     )
                   ],
@@ -56,7 +69,7 @@ class _ProductImageViewScreenState extends State<ProductImageViewScreen> {
                 height: 400,
                 child: FittedBox(
                   fit: BoxFit.cover,
-                  child: Image.asset('assets/images/eye.png'),
+                  child: Image.network(image),
                 ),
               ),
               SizedBox(
@@ -65,54 +78,39 @@ class _ProductImageViewScreenState extends State<ProductImageViewScreen> {
               Container(
                 width: double.maxFinite,
                 height: 220,
-                child: ListView(
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 140,
-                        child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: Image.asset('assets/images/eye.png'),
+                  itemCount: widget.images.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () {
+                        setState(() {
+                          image = widget.images[index].pictureReference;
+                          selected = index + 1;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 200,
+                          width: 150,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(
+                                    widget.images[index].pictureReference),
+                              ),
+                              border: Border.all(
+                                color: Colors.grey[300], // red as border color
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          // width: screenWidth - 50,
+                          // height: 150,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 140,
-                        child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: Image.asset('assets/images/eye.png'),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 140,
-                        child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: Image.asset('assets/images/eye.png'),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 100,
-                        height: 140,
-                        child: FittedBox(
-                          fit: BoxFit.cover,
-                          child: Image.asset('assets/images/eye.png'),
-                        ),
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ),
             ],

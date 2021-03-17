@@ -24,16 +24,8 @@ class AddAddressScreen extends StatefulWidget {
 
 class _AddAddressScreenState extends State<AddAddressScreen> {
   TextEditingController adCont, cityCont, countCont, postalCont;
-  // Completer<GoogleMapController> _controller = Completer();
-  // static final CameraPosition _kGooglePlex = CameraPosition(
-  //   target: LatLng(37.42796133580664, -122.085749655962),
-  //   zoom: 14.4746,
-  // );
-  // static final CameraPosition _kLake = CameraPosition(
-  //     bearing: 192.8334901395799,
-  //     target: LatLng(37.43296265331129, -122.08832357078792),
-  //     tilt: 59.440717697143555,
-  //     zoom: 19.151926040649414);
+  String address = '', country = '', city = '', postal = '';
+  int group = 1;
   @override
   void initState() {
     // TODO: implement initState
@@ -42,19 +34,24 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     cityCont = TextEditingController();
     countCont = TextEditingController();
     postalCont = TextEditingController();
+
     if (widget.edit != null && widget.edit != false) {
       adCont.text = widget.address.address;
       cityCont.text = widget.address.city;
       countCont.text = widget.address.country;
       postalCont.text = widget.address.postalCode;
+
       address = adCont.text;
       country = cityCont.text;
       city = countCont.text;
       postal = postalCont.text;
+      if (widget.address.label == null || widget.address.label == 'Home') {
+        group = 1;
+      } else {
+        group = 2;
+      }
     }
   }
-
-  String address = '', country = '', city = '', postal = '';
 
   @override
   void dispose() {
@@ -163,6 +160,40 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  'Label',
+                  style: normalTextStyle,
+                ).tr(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Radio(
+                    value: 1,
+                    activeColor: primaryColor,
+                    groupValue: group,
+                    onChanged: (val) {
+                      setState(() {
+                        group = val;
+                      });
+                    },
+                  ),
+                  Text('Home'),
+                  Radio(
+                    value: 2,
+                    activeColor: primaryColor,
+                    groupValue: group,
+                    onChanged: (val) {
+                      setState(() {
+                        group = val;
+                      });
+                    },
+                  ),
+                  Text('Office'),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: MyButton(
                   height: 55,
                   innerColor: primaryColor,
@@ -181,6 +212,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                       addressObj.postalCode =
                           postal == '' ? widget.address.postalCode : postal;
                       addressObj.customerId = widget.user.id;
+                      addressObj.label = group == 1 ? "Home" : "Office";
                       if (widget.edit != null && widget.edit != false) {
                         addressObj.id = widget.address.id;
                       }

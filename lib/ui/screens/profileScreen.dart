@@ -16,10 +16,22 @@ class ProfileScreen extends StatefulWidget {
 
   const ProfileScreen({Key key, this.user}) : super(key: key);
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState(user);
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  User user;
+  String photoUrl;
+
+  _ProfileScreenState(this.user);
+
+  @override
+  void initState() {
+    super.initState();
+
+    photoUrl = user.profileImage;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${widget.user.firstName + " " + widget.user.lastName}',
+                  '${user.firstName + " " + user.lastName}',
                   style: TextStyle(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
@@ -56,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Text(
-                  widget.user.email ?? '',
+                  user.email ?? '',
                   style: normalTextStyle,
                 ),
               ],
@@ -85,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      UserInfoScreen(user: widget.user)));
+                                      UserInfoScreen(user: user)));
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),
@@ -109,12 +121,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             CircleAvatar(
                               radius: 60,
-                              backgroundImage: widget.user.profileImage ==
-                                          null ||
-                                      widget.user.profileImage == ''
+                              backgroundImage: photoUrl == null ||
+                                      photoUrl == ''
                                   ? NetworkImage(
                                       "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")
-                                  : NetworkImage('${widget.user.profileImage}'),
+                                  : NetworkImage('$photoUrl'),
                             ),
                             Positioned(
                               bottom: 2,
@@ -135,24 +146,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   child: GestureDetector(
                                     onTap: () async {
-                                      showToast("Uploading", primaryColor);
+                                      
                                       try {
                                         List<Media> res =
                                             await ImagesPicker.pick(
                                           count: 1,
                                           pickType: PickType.image,
+                                            cropOpt: CropOption(
+                                              aspectRatio: CropAspectRatio.custom,
+                                              cropType: CropType.rect, // currently for android
+                                            ),
                                         );
                                         if (res != null && res.length > 0) {
                                           File image = File(res[0].path);
-
-                                          bool updated =
+                                          showToast("Uploading", primaryColor);
+                                          User updated =
                                               await BlocProvider.of<UserCubit>(
                                                       context)
                                                   .updateProfile(
                                                       widget.user, image);
-                                          if (updated)
+                                          if (updated != null) {
                                             showToast("Uploaded", primaryColor);
-                                          else
+                                            setState(() {
+                                              user = updated;
+                                              photoUrl = user.profileImage;
+                                            });
+                                          } else
                                             showToast(
                                                 "Not Uploaded", primaryColor);
                                         }
@@ -194,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                     child: Text(
-                      '${widget.user.firstName ?? ""}',
+                      '${user.firstName ?? ""}',
                       style: boldTextStyle,
                     ),
                   ),
@@ -212,7 +231,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 15.0, right: 15.0),
                     child: Text(
-                      '${widget.user.lastName ?? ""}',
+                      '${user.lastName ?? ""}',
                       style: boldTextStyle,
                     ),
                   ),

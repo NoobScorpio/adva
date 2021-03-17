@@ -8,6 +8,7 @@ import 'package:adva/data/model/cartItem.dart';
 import 'package:adva/data/model/checkOut.dart';
 import 'package:adva/data/model/order.dart';
 import 'package:adva/data/model/orderDetail.dart';
+import 'package:adva/data/model/orderProduct.dart';
 import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/cartRepo.dart';
@@ -274,13 +275,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 ),
                               ),
                             );
-                            List<Product> products = [];
+                            List<OrderProduct> products = [];
                             List<CartItem> cartItems =
                                 await CartRepositoryImpl().getItems();
                             for (var item in cartItems) {
-                              products.add(Product(
-                                  productArabicName: item.arabicName,
-                                  productName: item.pName,
+                              products.add(OrderProduct(
                                   id: item.pid,
                                   price: item.price,
                                   newQuantity: item.qty));
@@ -410,7 +409,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       onPressed: () {
                         int count = 0;
                         Navigator.popUntil(context, (route) {
-                          return count++ == 4;
+                          return count++ == 5;
                         });
                       },
                       child: Text(
@@ -791,10 +790,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ],
               ),
             )),
-            if (orderDetail.cart.length > 0)
+            if (orderDetail.cart.length > 0 && orderDetail.status != "returned")
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  print("@BEFORE ${orderDetail.cart[0].total}");
+                  await Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (_) => OrderReturnScreen(

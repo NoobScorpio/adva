@@ -52,7 +52,9 @@ dependencies:
   # dio: ^3.0.10
   flutter_share: ^1.0.5
   webview_flutter:
-  list_wheel_scroll_view_x: ^0.0.2
+  autocomplete_textfield: ^1.7.3
+  flutter_swiper: ^1.1.6
+#  list_wheel_scroll_view_x: ^0.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

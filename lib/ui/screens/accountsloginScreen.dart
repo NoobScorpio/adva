@@ -7,9 +7,11 @@ import 'package:adva/ui/screens/createAccount.dart';
 import 'package:adva/ui/screens/forgetPassScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -74,6 +76,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           hintText: 'Enter Email or Phone no'.tr(),
                           border: OutlineInputBorder(
@@ -126,7 +129,7 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
                       child: Text(
-                        'Forget Password?',
+                        'Forgot Password?',
                         style: boldTextStyle,
                       ).tr(),
                     ),
@@ -144,11 +147,12 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                     width: screenWidth,
                     child: Text(
                       'SIGN IN',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ).tr(),
                     onPressed: () async {
                       if (username != '' && pass != '') {
-                        showToast("Logging In", primaryColor);
+                        showDialog(
+                            context: context, builder: (_) => buildLoading());
                         bool loggedIn =
                             await BlocProvider.of<UserCubit>(context)
                                 .loginUser(username, pass);
@@ -162,12 +166,17 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                                       sharedPreferences.getString('user')))
                                   .id);
                           Navigator.pop(context);
+                          Navigator.pop(context);
                         } else {
+                          Navigator.pop(context);
+
+                          showToast("Invalid credentials", primaryColor);
                           sharedPreferences.setBool('loggedIn', false);
                           BlocProvider.of<UserCubit>(context).setStatus(false);
                         }
-                      } else
+                      } else {
                         showToast("Please fill the fields", primaryColor);
+                      }
                     },
                   ),
                 ),
@@ -187,11 +196,13 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset('assets/socialmedia/facebooklogo.png'),
+                      SvgPicture.asset("assets/images/facebook.svg",
+                          semanticsLabel: 'facebook Logo'),
                       SizedBox(
                         width: 15,
                       ),
-                      Image.asset('assets/socialmedia/googlelogo.png'),
+                      SvgPicture.asset("assets/images/google-symbol.svg",
+                          semanticsLabel: 'google logo'),
                     ],
                   ),
                 ),

@@ -7,7 +7,7 @@ import 'package:equatable/equatable.dart';
 class AdsBloc extends Bloc<AdsEvent, AdsState> {
   final AdsRepository repository;
 
-  AdsBloc({@required this.repository}) : super(null);
+  AdsBloc({this.repository}) : super(null);
 
   AdsState get initialState => AdsInitialState();
 
@@ -53,7 +53,7 @@ class AdsLoadingState extends AdsState {
 class AdsLoadedState extends AdsState {
   final List<Ads> ads;
 
-  AdsLoadedState({@required this.ads});
+  AdsLoadedState({this.ads});
 
   @override
   // TODO: implement props
@@ -63,7 +63,7 @@ class AdsLoadedState extends AdsState {
 class AdsErrorState extends AdsState {
   final String message;
 
-  AdsErrorState({@required this.message});
+  AdsErrorState({this.message});
 
   @override
   // TODO: implement props

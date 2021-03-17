@@ -86,6 +86,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     ).tr(),
                     onPressed: () async {
                       if (desc != '') {
+                        showToast('Posting', primaryColor);
                         bool posted = await BlocProvider.of<PostsCubit>(context)
                             .postMedia(widget.image, desc, widget.user.id);
                         if (posted) {

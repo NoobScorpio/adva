@@ -23,7 +23,6 @@ class ADVAPointsScreen extends StatefulWidget {
 class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<PointsCubit>(context).getPoints(widget.user.id);
   }
@@ -33,10 +32,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Container(
-            height: 60,
-            width: 60,
-            child: Image.asset('assets/images/advalogo.png')),
+        title: Image.asset('assets/images/advalogo.png',scale: 2,),
         leading: GestureDetector(
           child: Padding(
             padding: const EdgeInsets.all(15.0),

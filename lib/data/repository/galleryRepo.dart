@@ -39,10 +39,14 @@ class GalleryRepositoryImpl implements GalleryRepository {
     try {
       List<int> imageBytes = image.readAsBytesSync();
       String baseImage = base64Encode(imageBytes);
-      var response = await http.post(Uri.parse(baseURL + "/media/create/post"), body: {
+      String ext = image.path.split('/').last.split('.').last;
+      print("#GALLERY $ext");
+      var response = await http
+          .post(Uri.parse(baseURL + "/media/basedecode/create/post"), body: {
         "customer_id": "$cid",
         "description": "$desc",
-        "image": baseImage
+        "image": baseImage,
+        "extenstion": ext
       });
       print("${response.body} ");
       if (response.statusCode == 200 || response.statusCode == 201) {

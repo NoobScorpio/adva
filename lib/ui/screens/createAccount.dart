@@ -1,5 +1,6 @@
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
 import 'package:adva/ui/screens/accountsloginScreen.dart';
+import 'package:adva/ui/screens/verifyEmailScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
@@ -21,7 +22,15 @@ class _CreateAccountState extends State<CreateAccount> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            )),
+        // automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         // toolbarHeight: screenHeight * 0.09,
         title: Text(
@@ -82,7 +91,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Email'.tr(),
+                          hintText: 'Email'.tr() + " (Optional)",
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                         ),
@@ -174,27 +183,64 @@ class _CreateAccountState extends State<CreateAccount> {
                       if (pass == cPass) {
                         if (fName == '' ||
                             lName == "" ||
-                            email == '' ||
                             pass == '' ||
                             cPass == '' ||
                             phone == '') {
                           showToast("Please fill all fields", primaryColor);
                         } else {
-                          bool created =
+                          int created =
                               await BlocProvider.of<UserCubit>(context)
-                                  .createUser(
-                                      email, pass, cPass, phone, fName, lName);
-                          if (created) {
+                                  .createUser(email ?? "", pass, cPass, phone,
+                                      fName, lName);
+                          if (created != null) {
                             showToast(
                                 'User created successfully', primaryColor);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => VerifyEmailScreen(
+                                        register: true, id: created)));
                             Navigator.pop(context);
                           } else {
-                            showToast('Please try again later', primaryColor);
+                            // showToast('Please try again later', primaryColor);
                           }
                         }
                       } else {
                         showToast("Passwords do not match", primaryColor);
                       }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  'Or',
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 14,
+                  ),
+                ).tr(),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: MyButton(
+                    height: 60,
+                    borderColor: Colors.transparent,
+                    innerColor: primaryColor,
+                    width: screenWidth,
+                    child: Text(
+                      'VERIFY',
+                      style: TextStyle(color: Colors.white),
+                    ).tr(),
+                    onPressed: () async {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => VerifyEmailScreen(
+                                  register: false, id: null)));
                     },
                   ),
                 ),

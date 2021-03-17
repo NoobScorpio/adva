@@ -29,15 +29,16 @@ class CartRepositoryImpl extends CartRepository {
         await sharedPreferences.setString('cart', json.encode(cart.toJson()));
       } else {
         cart = MyCart.fromJson(json.decode(getCart));
-        // cartItem.id=cart.cartItem.length+1;
-        for (int i = 0; i < cart.cartItem.length; i++) {
-          if (cartItem == cart.cartItem[i]) {
-            cart.cartItem[i].qty += cartItem.qty;
-            await sharedPreferences.setString(
-                'cart', json.encode(cart.toJson()));
-            return cart.cartItem;
+        if (cart.cartItem != null && cart.cartItem.length != 0)
+          for (int i = 0; i < cart.cartItem.length; i++) {
+            if (cartItem == cart.cartItem[i]) {
+              cart.cartItem[i].qty += cartItem.qty;
+              await sharedPreferences.setString(
+                  'cart', json.encode(cart.toJson()));
+              return cart.cartItem;
+            }
           }
-        }
+        if (cart.cartItem == null) cart.cartItem = [];
         cart.cartItem.add(cartItem);
         await sharedPreferences.setString('cart', json.encode(cart.toJson()));
       }

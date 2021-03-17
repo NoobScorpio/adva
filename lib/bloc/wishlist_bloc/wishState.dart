@@ -19,7 +19,7 @@ class WishListLoadingState extends WishListState {
 class WishListLoadedState extends WishListState {
   final List<WishList> wishLists;
 
-  WishListLoadedState({@required this.wishLists});
+  WishListLoadedState({this.wishLists});
 
   @override
   // TODO: implement props
@@ -29,7 +29,7 @@ class WishListLoadedState extends WishListState {
 class WishListErrorState extends WishListState {
   final String message;
 
-  WishListErrorState({@required this.message});
+  WishListErrorState({this.message});
 
   @override
   // TODO: implement props

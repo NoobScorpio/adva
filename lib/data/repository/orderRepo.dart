@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:adva/data/model/order.dart';
 import 'package:adva/data/model/orderDetails.dart';
 import 'package:adva/data/model/orderDetail.dart';
+import 'package:adva/data/model/orderProduct.dart';
+import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/return.dart';
+import 'package:adva/data/model/returnOrderProduct.dart';
 import 'package:adva/res/appStrings.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,7 +16,7 @@ abstract class OrderRepository {
   Future<List<Return>> getReturns(int cid);
   Future<int> createOrder({Order order});
   Future<bool> confirmOrder({Order order});
-  Future<bool> returnOrder({ids, oid, reason, cid});
+  Future<bool> returnOrder({List<OrderReturnProduct> ids, oid, reason, cid});
 }
 
 class OrderRepositoryImpl extends OrderRepository {
@@ -102,6 +105,14 @@ class OrderRepositoryImpl extends OrderRepository {
     print("@ORDER PROMO ${order.promoCode}");
     print("@ORDER DISCOUNT ${order.discountCode}");
     print("@ORDER POINTS ${order.pointsDiscount}");
+    List<dynamic> products = [];
+    for (OrderProduct prod in order.products) {
+      products.add({
+        "id": prod.id,
+        "newQuantity": prod.newQuantity,
+        "price": prod.price
+      });
+    }
     try {
       var response =
           await http.post(Uri.parse(baseURL + "/order/create"), body: {
@@ -111,11 +122,16 @@ class OrderRepositoryImpl extends OrderRepository {
         "email": order.email.toString(),
         "address_id": order.addressId.toString(),
         "payment_type": order.paymentType.toString(),
-        "promo_code": order.promoCode,
-        "discount_code": order.discountCode,
-        "points_discount": order.pointsDiscount.toString(),
+        "promo_code":
+            order.promoCode == null ? 0.toString() : order.promoCode.toString(),
+        "discount_code": order.discountCode == null
+            ? 0.toString()
+            : order.discountCode.toString(),
+        "points_discount": order.pointsDiscount == null
+            ? 0.toString()
+            : order.pointsDiscount.toString(),
         "products": json.encode(order.products),
-        "is_mobile": true,
+        "is_mobile": true.toString(),
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -192,13 +208,17 @@ class OrderRepositoryImpl extends OrderRepository {
   }
 
   @override
-  Future<bool> returnOrder({ids, oid, reason, cid}) async {
-    print("@RETURN STRING $oid $cid $ids");
+  Future<bool> returnOrder(
+      {List<OrderReturnProduct> ids, oid, reason, cid}) async {
+    print("@RETURN STRING  $ids");
     try {
-      // TODO: ASK KASIF ABOUT ERROR
+      var prods = [];
+      for (var ord in ids) {
+        prods.add(ord.toJson());
+      }
       var response =
           await http.post(Uri.parse(baseURL + "/orders/return/$cid"), body: {
-        "cartitems": json.encode(ids),
+        "cartitems": json.encode(prods),
         "order_id": oid.toString(),
         "return_reason": reason,
         "is_mobile": true.toString()

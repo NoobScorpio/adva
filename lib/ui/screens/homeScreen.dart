@@ -21,23 +21,32 @@ import 'package:adva/ui/screens/productsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeProducts.dart';
 import 'package:adva/ui/utils/statesUi.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:list_wheel_scroll_view_x/list_wheel_scroll_view_x.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class HomeScreen extends StatefulWidget {
+  final search;
+
+  const HomeScreen({Key key, this.search}) : super(key: key);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var suggestionTFC = TextEditingController();
+  var value;
+
+  List suggestionList;
+  GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    suggestionList = widget.search;
   }
 
   @override
@@ -52,12 +61,14 @@ class _HomeScreenState extends State<HomeScreen> {
           shrinkWrap: true,
           children: [
             Container(
-              height: screenHeight * 0.09,
+              height: 60,
               width: screenWidth,
               color: Colors.white,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.asset(
                       'assets/images/advalogo.png',
@@ -73,22 +84,76 @@ class _HomeScreenState extends State<HomeScreen> {
                               top: screenHeight * 0.001,
                               right: screenWidth * 0.03),
                           child: Container(
-                            height: screenHeight * 0.06,
-                            child: TextFormField(
-                              autovalidateMode: AutovalidateMode.always,
+                            height: 130,
+                            child: AutoCompleteTextField(
+                              key: key,
+                              controller: suggestionTFC,
+                              suggestions: suggestionList,
+                              clearOnSubmit: true,
                               decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 0.1,
-                                    ),
-                                  ),
+                                      borderSide: BorderSide(
+                                        width: 0.1,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
                                   hintText: 'Search'.tr(),
                                   contentPadding: EdgeInsets.only(
                                       top: screenHeight * 0.01,
                                       left: screenWidth * 0.03),
-                                  suffixIcon:
-                                      Icon(Icons.search, color: Colors.black)),
-                              onSaved: (String value) {},
+                                  suffixIcon: GestureDetector(
+                                      onTap: () async {
+                                        // List<SearchProduct> prods =
+                                        //     await ProductRepositoryImpl()
+                                        //         .getAllProducts(
+                                        //             search:
+                                        //                 suggestionTFC.text);
+                                        // if (prods != null) {
+                                        //   setState(() {
+                                        //     suggestionList = prods;
+                                        //   });
+                                        // }
+                                      },
+                                      child: Icon(Icons.search,
+                                          color: Colors.black))),
+                              itemFilter: (item, query) {
+                                return item.productName
+                                    .toLowerCase()
+                                    .startsWith(query.toLowerCase());
+                              },
+                              itemSorter: (a, b) {
+                                return a.productName.compareTo(b.productName);
+                              },
+                              itemSubmitted: (item) {
+                                suggestionTFC.text = item.productName;
+                              },
+                              itemBuilder: (context, item) {
+                                return Container(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    ProductViewScreen(
+                                                      pid: item.id,
+                                                    )));
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            item.productName,
+                                            style:
+                                                TextStyle(color: Colors.black),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
@@ -123,21 +188,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             List<Widget> images = [];
                             for (Ads ad in ads) {
                               images.add(Container(
-                                  width: double.maxFinite,
-                                  height: screenHeight * 0.365,
-                                  child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Image.network(
-                                      ad.media,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )));
+                                width: double.maxFinite,
+                                height: screenHeight * 0.365,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(ad.media),
+                                  ),
+                                ),
+                              ));
                             }
 
                             return Carousel(
                               autoplayDuration: Duration(seconds: 25),
                               boxFit: BoxFit.contain,
+                              dotColor: Colors.white.withOpacity(0.25),
                               dotBgColor: Colors.transparent,
+                              dotIncreasedColor: Colors.white,
+                              dotIncreaseSize: 1.2,
                               overlayShadowColors: Color(0xFF00000029),
                               images: images,
                             );
@@ -150,46 +218,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  Positioned(
-                      bottom: 0.0,
-                      child: Container(
-                        height: 100,
-                        width: 250,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.5),
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(100),
-                          ),
-                        ),
-                        child: Center(
-                            child: Column(
-                          children: [
-                            Text(
-                              "Header Text",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              "Sub Title Text",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                          ],
-                        )),
-                      ))
                 ],
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 20,
             ),
             //CATEGORIES
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15),
+              padding: const EdgeInsets.only(bottom: 15),
               child: Container(
                 height: 45,
                 child: BlocBuilder<GetCategoryCubit, CategoryState>(
@@ -235,11 +272,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20))),
                                 height: 40,
-                                width: 150,
+                                // width: 150,
                                 child: Center(
-                                  child: Text(
-                                    '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
-                                    style: TextStyle(color: Colors.black),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -414,7 +454,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               List<Seller> selling = state.seller;
                               List<Widget> widgets = [];
                               for (Seller selling in selling) {
-                                widgets.add(GestureDetector(
+                                widgets.add(InkWell(
                                   onTap: () async {
                                     Navigator.push(
                                         context,
@@ -440,18 +480,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20))),
-                                      // height: 120,
-                                      width: 160,
+                                      width: 100,
+                                      height: 150,
                                     ),
                                   ),
                                 ));
                               }
 
-                              return ListWheelScrollViewX(
-                                  diameterRatio: 2.5,
-                                  scrollDirection: Axis.horizontal,
-                                  itemExtent: 180,
-                                  children: widgets);
+                              return Swiper(
+                                itemBuilder: (BuildContext context, int index) {
+                                  return widgets[index];
+                                },
+                                itemCount: widgets.length,
+                                viewportFraction: 0.45,
+                                scale: 0.70,
+                              );
+                              // ListWheelScrollViewX.useDelegate(
+                              //     itemExtent: 180,
+                              //     diameterRatio: 2.5,
+                              //     scrollDirection: Axis.horizontal,
+                              //     childDelegate:
+                              //         ListWheelChildLoopingListDelegate(
+                              //             children: widgets));
                             }
                           } else if (state is SellerErrorState) {
                             return buildErrorUi(state.message);

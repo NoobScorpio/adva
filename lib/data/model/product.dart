@@ -150,18 +150,6 @@ class Product {
         qas.add(new Qas.fromJson(v));
       });
     }
-    if (json['sizes'] != null) {
-      sizes = new List<Sizes>();
-      json['sizes'].forEach((v) {
-        sizes.add(new Sizes.fromJson(v));
-      });
-    }
-    if (json['colors'] != null) {
-      colors = new List<ProductColors>();
-      json['colors'].forEach((v) {
-        colors.add(new ProductColors.fromJson(v));
-      });
-    }
   }
 
   Map<String, dynamic> toJson() {
@@ -183,7 +171,9 @@ class Product {
     if (this.relatedProducts != null) {
       data['related_products'] =
           this.relatedProducts.map((v) => v.toJson()).toList();
-    }
+    } else
+      data['related_products'] = [];
+
     data['cost_price'] = this.costPrice;
     data['tax'] = this.tax;
     data['vat'] = this.vat;
@@ -205,26 +195,30 @@ class Product {
     data['updated_at'] = this.updatedAt;
     if (this.category != null) {
       data['category'] = this.category.toJson();
-    }
+    } else
+      data['category'] = [];
+
     if (this.reviews != null) {
       data['reviews'] = this.reviews.map((v) => v.toJson()).toList();
-    }
+    } else
+      data['reviews'] = [];
+
     if (this.brand != null) {
       data['brand'] = this.brand.toJson();
-    }
+    } else
+      data['brand'] = [];
+
     if (this.productimages != null) {
       data['productimages'] =
           this.productimages.map((v) => v.toJson()).toList();
-    }
+    } else
+      data['productimages'] = [];
+
     if (this.qas != null) {
       data['qas'] = this.qas.map((v) => v.toJson()).toList();
-    }
-    if (this.sizes != null) {
-      data['sizes'] = this.sizes.map((v) => v.toJson()).toList();
-    }
-    if (this.colors != null) {
-      data['colors'] = this.colors.map((v) => v.toJson()).toList();
-    }
+    } else
+      data['qas'] = [];
+
     return data;
   }
 }
