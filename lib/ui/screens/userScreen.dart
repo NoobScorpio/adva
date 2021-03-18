@@ -22,12 +22,7 @@ class _UserScreenState extends State<UserScreen> {
     }, builder: (context, state) {
       print(state);
       if (state is UserInitialState) {
-        // if (state.user.id == null) {
-        //   print("UserInitialState: ${state.loggedIn}");
-        //   return AccountsLoginScreen();
-        // } else
-        //   return AccountScreen();
-        return buildLoading();
+        return SignInSignUp();
       } else if (state is UserLoadingState)
         return buildLoading();
       else if (state is UserLoadedState) {

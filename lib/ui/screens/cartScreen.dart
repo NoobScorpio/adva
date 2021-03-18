@@ -27,7 +27,6 @@ class _CartScreenState extends State<CartScreen> {
   List<CartItem> cartItems;
   @override
   void initState() {
-
     super.initState();
     cartItems = widget.cartItems;
 
@@ -130,6 +129,60 @@ class _CartScreenState extends State<CartScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Text('VAT',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  )).tr(),
+                              Row(
+                                children: [
+                                  Text('SAR'.tr(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      )).tr(),
+                                  Text('. ${state.vat}',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: screenHeight * 0.025,
+                              left: screenWidth * 0.032,
+                              right: screenWidth * 0.032),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Discount',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                  )).tr(),
+                              Row(
+                                children: [
+                                  Text("-" + 'SAR'.tr(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      )).tr(),
+                                  Text('. ${state.discount}',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                      ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: screenHeight * 0.025,
+                              left: screenWidth * 0.032,
+                              right: screenWidth * 0.032),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
                               Text('Total (Inc VAT)',
                                   style: TextStyle(
                                     fontSize: 18,
@@ -149,28 +202,29 @@ class _CartScreenState extends State<CartScreen> {
                             ],
                           ),
                         ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset('assets/images/mada.png'),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Image.asset('assets/images/visa.png'),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Image.asset('assets/images/mCard.png'),
+                              ),
+                              Image.asset('assets/images/cashondelivery.png'),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),
                 ));
-                widgets.add(Padding(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset('assets/images/mada.png'),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Image.asset('assets/images/visa.png'),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Image.asset('assets/images/mCard.png'),
-                      ),
-                      Image.asset('assets/images/cashondelivery.png'),
-                    ],
-                  ),
-                ));
+
                 return Expanded(
                   child: ListView(
                     children: widgets,
@@ -204,7 +258,7 @@ class _CartScreenState extends State<CartScreen> {
                           onPressed: () async {
                             SharedPreferences sp =
                                 await SharedPreferences.getInstance();
-                            String rate =  sp.getString('shipRate');
+                            String rate = sp.getString('shipRate');
                             ShipRate shipRate =
                                 ShipRate.fromJson(json.decode(rate));
                             User user =

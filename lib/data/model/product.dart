@@ -19,7 +19,7 @@ class Product {
   String productArabicDescription;
   dynamic price;
   dynamic rewardPoints;
-  int discountedAmount;
+  dynamic discountedAmount;
   List<RelatedProducts> relatedProducts;
   dynamic costPrice;
   dynamic tax;

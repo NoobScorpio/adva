@@ -21,8 +21,18 @@ class CartCubit extends Cubit<CartState> {
         }
         total = sub + vat - discount;
       }
-      emit(CartItemAddedState(added: added, total: total, subTotal: sub));
-      emit(CartLoadedState(cartItems: added, total: total, subTotal: sub));
+      emit(CartItemAddedState(
+          added: added,
+          total: total,
+          subTotal: sub,
+          vat: vat,
+          discount: discount));
+      emit(CartLoadedState(
+          cartItems: added,
+          total: total,
+          subTotal: sub,
+          vat: vat,
+          discount: discount));
       return added == null || added.length == 0 ? false : true;
     } on Exception {
       emit(CartErrorState(message: "Could not add item"));

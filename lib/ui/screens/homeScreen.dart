@@ -15,6 +15,7 @@ import 'package:adva/data/model/bundle.dart';
 import 'package:adva/data/model/category.dart';
 import 'package:adva/data/model/offer.dart';
 import 'package:adva/data/model/seller.dart';
+import 'package:adva/data/repository/miscRepo.dart';
 import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:adva/ui/screens/categoryScreen.dart';
 import 'package:adva/ui/screens/productsScreen.dart';
@@ -28,6 +29,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   final search;
@@ -40,13 +42,23 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var suggestionTFC = TextEditingController();
   var value;
-
+  dynamic shipRate = 0.0;
   List suggestionList;
   GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
   @override
   void initState() {
     super.initState();
     suggestionList = widget.search;
+    getShipRate();
+  }
+
+  getShipRate() async {
+    // SharedPreferences sp = await SharedPreferences.getInstance();
+    dynamic rate = await MiscRepositoryImpl().getFreeShipRate();
+    if (rate != null)
+      setState(() {
+        shipRate = rate;
+      });
   }
 
   @override
@@ -60,6 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           shrinkWrap: true,
           children: [
+            SizedBox(
+              height: 10,
+            ),
             Container(
               height: 60,
               width: screenWidth,
@@ -192,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: screenHeight * 0.365,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                     image: NetworkImage(ad.media),
                                   ),
                                 ),
@@ -201,7 +216,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             return Carousel(
                               autoplayDuration: Duration(seconds: 25),
-                              boxFit: BoxFit.contain,
+                              boxFit: BoxFit.fill,
                               dotColor: Colors.white.withOpacity(0.25),
                               dotBgColor: Colors.transparent,
                               dotIncreasedColor: Colors.white,
@@ -218,6 +233,80 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
+                  if (context.locale == Locale('en', ''))
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Container(
+                        height: 80,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.5),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(80),
+                          ),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Free Shipping",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 2.0),
+                              ).tr(),
+                              Text(
+                                "above".tr() + " $shipRate",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 2.0),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (!(context.locale == Locale('en', '')))
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        height: 80,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.5),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(80),
+                          ),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Free Shipping",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 2.0),
+                              ).tr(),
+                              Text(
+                                "above".tr() + " $shipRate",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: 2.0),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -264,6 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             )));
                               },
                               child: Container(
+                                constraints: BoxConstraints(minWidth: 50),
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     border: Border.all(
@@ -271,7 +361,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(20))),
-                                height: 40,
+
+                                // height: 40,
+
                                 // width: 150,
                                 child: Center(
                                   child: Padding(
@@ -312,7 +404,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: Container(
-                height: 150,
+                // height: 150,
                 child: BlocBuilder<GetOfferCubit, OfferState>(
                   builder: (context, state) {
                     if (state is OfferInitialState) {
@@ -328,11 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       } else {
                         List<Offer> offers = state.offer;
                         List<Bundle> bundles = state.bundle;
-                        List<Widget> widgets = [
-                          SizedBox(
-                            width: 10,
-                          )
-                        ];
+                        List<Widget> widgets = [];
                         for (Offer offer in offers) {
                           widgets.add(GestureDetector(
                             onTap: () async {
@@ -347,19 +435,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                   const EdgeInsets.symmetric(horizontal: 5),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color:
-                                        Colors.grey[300], // red as border color
-                                  ),
-                                ),
-                                height: 150,
-                                width: 150,
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
-                                  child: Image.network(
-                                    offer.image,
-                                  ),
-                                ),
+                                    image: DecorationImage(
+                                      fit: BoxFit.fill,
+                                      image: NetworkImage(offer.image),
+                                    ),
+                                    border: Border.all(
+                                      color: Colors
+                                          .grey[300], // red as border color
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                width: screenWidth * 0.25,
+                                height: 120,
                               ),
                             ),
                           ));
@@ -380,28 +467,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors
-                                          .grey[300], // red as border color
-                                    ),
-                                  ),
-                                  height: 150,
-                                  width: 150,
-                                  child: FittedBox(
-                                    fit: BoxFit.cover,
-                                    child: Image.network(
-                                      bundle
-                                          .productimages.first.pictureReference,
-                                    ),
-                                  ),
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(bundle.productimages
+                                            .first.pictureReference),
+                                      ),
+                                      border: Border.all(
+                                        color: Colors
+                                            .grey[300], // red as border color
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(20))),
+                                  width: screenWidth * 0.25,
+                                  height: 120,
                                 ),
                               ),
                             ));
                           }
-                        return ListView(
-                          scrollDirection: Axis.horizontal,
+                        return GridView.count(
+                          crossAxisCount: 3,
+                          padding: const EdgeInsets.all(10),
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          // childAspectRatio: 0.5,
                           children: widgets,
+                          shrinkWrap: true,
+
+                          physics: NeverScrollableScrollPhysics(),
                         );
+                        // return ListView(
+                        //   scrollDirection: Axis.horizontal,
+                        //   children: widgets,
+                        // );
                       }
                     } else if (state is OfferErrorState) {
                       return buildErrorUi(state.message);
@@ -564,13 +661,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     SharedPreferences sp = await SharedPreferences.getInstance();
-      //     User u = User.fromJson(json.decode(sp.getString('user')));
-      //     print(u.id);
-      //   },
-      // ),
     );
   }
 }

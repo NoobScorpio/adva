@@ -58,8 +58,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(15.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: ListView(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,6 +150,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 width: double.maxFinite,
                 child: RaisedButton(
                   onPressed: () async {
+                    showToast("Updating", primaryColor);
                     if (fName.text != '' && lName.text != "") {
                       User user = widget.user;
                       user.firstName = fName.text;
@@ -177,7 +177,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                   ).tr(),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

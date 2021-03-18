@@ -21,8 +21,13 @@ class CartLoadingState extends CartState {
 
 class CartLoadedState extends CartState {
   final List<CartItem> cartItems;
-  final total, subTotal;
-  CartLoadedState({this.total, this.subTotal, @required this.cartItems});
+  final total, subTotal, vat, discount;
+  CartLoadedState(
+      {this.total,
+      this.subTotal,
+      @required this.cartItems,
+      this.vat,
+      this.discount});
 
   @override
   // TODO: implement props
@@ -41,8 +46,13 @@ class CartErrorState extends CartState {
 
 class CartItemAddedState extends CartState {
   final List<CartItem> added;
-  final total, subTotal;
-  CartItemAddedState({this.total, this.subTotal, @required this.added});
+  final total, subTotal, vat, discount;
+  CartItemAddedState(
+      {this.total,
+      this.subTotal,
+      @required this.added,
+      this.vat,
+      this.discount});
 
   @override
   // TODO: implement props

@@ -163,15 +163,15 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ).tr(),
                 onPressed: () async {
                   showToast("Verifying", primaryColor);
-                  bool verify = await UserRepositoryImpl()
-                      .sendVerifyRequest(email, verificationCode, widget.id, widget.register);
-                      
+                  bool verify = await UserRepositoryImpl().sendVerifyRequest(
+                      email, verificationCode, widget.id, widget.register);
+
                   if (verify != null) {
+                    showToast("Verified", primaryColor);
                     Navigator.pop(context);
-                  } else{
+                  } else {
                     showToast("Please try again", primaryColor);
                   }
-                    
                 },
               ),
             ),

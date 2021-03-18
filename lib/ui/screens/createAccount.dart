@@ -1,9 +1,11 @@
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
+import 'package:adva/data/repository/userRepo.dart';
 import 'package:adva/ui/screens/accountsloginScreen.dart';
 import 'package:adva/ui/screens/verifyEmailScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
 import 'package:adva/ui/utils/toast.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -15,6 +17,7 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   String fName = '', lName = '', email = '', pass = '', phone = '', cPass = '';
+  String code = '+966';
   bool passH = true, cPassH = true;
   @override
   Widget build(BuildContext context) {
@@ -104,6 +107,33 @@ class _CreateAccountState extends State<CreateAccount> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
+                          suffix: InkWell(
+                            onTap: () {
+                              showCountryPicker(
+                                context: context,
+                                //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                                exclude: <String>['KN', 'MF'],
+                                //Optional. Shows phone code before the country name.
+                                showPhoneCode: true,
+                                onSelect: (Country country) {
+                                  print(
+                                      'Select country: ${country.displayName} $code');
+                                  setState(() {
+                                    code = country.phoneCode;
+                                  });
+                                },
+                              );
+                            },
+                            child: Container(
+                                width: 50,
+                                height: 25,
+                                color: primaryColor,
+                                child: Center(
+                                    child: Text(
+                                  "+$code",
+                                  style: TextStyle(color: Colors.white),
+                                ))),
+                          ),
                           hintText: 'Phone Number'.tr(),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
@@ -180,6 +210,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       style: TextStyle(color: Colors.white),
                     ).tr(),
                     onPressed: () async {
+                      showToast('Creating Account', primaryColor);
                       if (pass == cPass) {
                         if (fName == '' ||
                             lName == "" ||
@@ -188,21 +219,25 @@ class _CreateAccountState extends State<CreateAccount> {
                             phone == '') {
                           showToast("Please fill all fields", primaryColor);
                         } else {
-                          int created =
-                              await BlocProvider.of<UserCubit>(context)
-                                  .createUser(email ?? "", pass, cPass, phone,
-                                      fName, lName);
+                          int created = await UserRepositoryImpl()
+                              .createAccount(
+                                  email: email ?? "",
+                                  pass: pass,
+                                  cPass: cPass,
+                                  phone: phone,
+                                  fName: fName,
+                                  lName: lName);
                           if (created != null) {
                             showToast(
                                 'User created successfully', primaryColor);
-                            Navigator.push(
+                            await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (_) => VerifyEmailScreen(
                                         register: true, id: created)));
                             Navigator.pop(context);
                           } else {
-                            // showToast('Please try again later', primaryColor);
+                            showToast('Please try again later', primaryColor);
                           }
                         }
                       } else {

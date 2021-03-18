@@ -299,7 +299,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                           'Shop by brand',
                           style: TextStyle(fontSize: 16),
                         ).tr(),
-                        SizedBox(height: screenHeight * 0.015),
+                        SizedBox(height: 15),
                         Container(
                           height: screenHeight * 0.08,
                           width: screenWidth,
@@ -360,89 +360,80 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                         Divider(
                           thickness: 0.5,
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: screenHeight * 0.017, bottom: 15),
-                          child: Text(
-                            'Shop by category',
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 14.5),
-                          ).tr(),
-                        ),
-
+                        Text(
+                          'Shop by category',
+                          style: TextStyle(color: Colors.black, fontSize: 14.5),
+                        ).tr(),
+                        SizedBox(height: 15),
                         //CATEGORY
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          child: Container(
-                            height: 45,
-                            child: BlocBuilder<GetCategoryCubit, CategoryState>(
-                              builder: (context, state) {
-                                if (state is CategoryInitialState) {
-                                  return buildLoading();
-                                } else if (state is CategoryLoadingState) {
-                                  return buildLoading();
-                                } else if (state is CategoryLoadedState) {
-                                  if (state.category == null) {
-                                    return Center(
-                                        child: CircularProgressIndicator(
-                                      backgroundColor: primaryColor,
-                                    ));
-                                  } else {
-                                    var cats = state.category;
-                                    List<Widget> images = [];
-                                    for (Category cat in cats) {
-                                      images.add(Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 5),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              brand = false;
-                                              filter = false;
-                                            });
-                                            BlocProvider.of<
-                                                        GetCategoryProductsCubit>(
-                                                    context)
-                                                .getCategoryProducts(
-                                                    cat.id.toString());
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                border: Border.all(
-                                                  color: Colors.grey,
-                                                ),
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(20))),
-                                            height: 40,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Center(
-                                                child: Text(
-                                                  '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                ),
+                        Container(
+                          height: 45,
+                          child: BlocBuilder<GetCategoryCubit, CategoryState>(
+                            builder: (context, state) {
+                              if (state is CategoryInitialState) {
+                                return buildLoading();
+                              } else if (state is CategoryLoadingState) {
+                                return buildLoading();
+                              } else if (state is CategoryLoadedState) {
+                                if (state.category == null) {
+                                  return Center(
+                                      child: CircularProgressIndicator(
+                                    backgroundColor: primaryColor,
+                                  ));
+                                } else {
+                                  var cats = state.category;
+                                  List<Widget> images = [];
+                                  for (Category cat in cats) {
+                                    images.add(Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            brand = false;
+                                            filter = false;
+                                          });
+                                          BlocProvider.of<
+                                                      GetCategoryProductsCubit>(
+                                                  context)
+                                              .getCategoryProducts(
+                                                  cat.id.toString());
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: Colors.grey,
+                                              ),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(20))),
+                                          height: 40,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Center(
+                                              child: Text(
+                                                '${context.locale == Locale('en', '') ? cat.categoryName : cat.categoryArabicName}',
+                                                style: TextStyle(
+                                                    color: Colors.black),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ));
-                                    }
-
-                                    return ListView(
-                                      scrollDirection: Axis.horizontal,
-                                      children: images,
-                                    );
+                                      ),
+                                    ));
                                   }
-                                } else if (state is CategoryErrorState) {
-                                  return buildErrorUi(state.message);
-                                } else {
-                                  return buildErrorUi('Could not load data.');
+
+                                  return ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: images,
+                                  );
                                 }
-                              },
-                            ),
+                              } else if (state is CategoryErrorState) {
+                                return buildErrorUi(state.message);
+                              } else {
+                                return buildErrorUi('Could not load data.');
+                              }
+                            },
                           ),
                         ),
                       ],

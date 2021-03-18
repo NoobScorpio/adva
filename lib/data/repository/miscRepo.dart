@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class MiscRepository {
   Future<ShipRate> getShipRate();
+  Future<dynamic> getFreeShipRate();
   Future<CODRate> getCODRate();
   Future<TaxRate> getTaxRate();
   Future<Promo> getPromo({String promo});
@@ -157,6 +158,29 @@ class MiscRepositoryImpl extends MiscRepository {
       }
     } catch (e) {
       print(e);
+      return null;
+    }
+  }
+
+  @override
+  Future<dynamic> getFreeShipRate() async {
+    sp = await SharedPreferences.getInstance();
+    var response =
+        await http.get(Uri.parse(baseURL + "/setting/shippingrate/get"));
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      try {
+        var data = json.decode(response.body);
+        await sp.setString('freeShip', data['free_shipping'].toString());
+        return data['free_shipping'];
+      } catch (e) {
+        print(e);
+        return null;
+      }
+    } else if (response.statusCode == 400) {
+      return null;
+    } else if (response.statusCode == 500) {
+      return null;
+    } else {
       return null;
     }
   }

@@ -81,20 +81,24 @@ class UserRepositoryImpl implements UserRepository {
     print("createAccount : ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       SharedPreferences sp = await SharedPreferences.getInstance();
-
+      print("@USER ${response.body}");
       var data = json.decode(response.body);
-      User user = User.fromJson(data);
-      sp.setString('user', json.encode(user.toJson()));
-      return user.id;
+      // User user = User.fromJson(data);
+      // sp.setString('user', json.encode(user.toJson()));
+      print("@USER RETURNING ");
+      return data['customer_id'];
     } else if (response.statusCode == 400) {
       showToast("Email or phone already taken", primaryColor);
+      print(response.body);
       print('This data does not exist.');
       return null;
     } else if (response.statusCode == 500) {
+      print(response.body);
       showToast('Internal server error.', primaryColor);
       print('Internal server error.');
       return null;
     } else {
+      print(response.body);
       print('Something went wrong');
       showToast('Something went wrong', primaryColor);
       return null;
@@ -133,7 +137,9 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<bool> updateUser(User user) async {
-    // print("createAccount : INSIDE $email and $pass");
+    print("createAccount : INSIDE ${user.email} ${user.firstName} "
+        "${user.lastName} ${user.phone}  ${user.points} "
+        "${user.profileImage} ${user.name} ${user.id} ");
     var response = await http
         .post(Uri.parse(baseURL + "/customer/update/${user.id}"), body: {
       "email": user.email,
@@ -141,12 +147,12 @@ class UserRepositoryImpl implements UserRepository {
       "last_name": user.lastName,
       "phone": user.phone,
       "token": user.token,
-      "points": user.points,
-      "profile_image": user.profileImage,
+      "points": user.points.toString(),
+      "profile_image": user.profileImage ?? "",
       "name": user.name,
-      "id": user.id,
+      "id": user.id.toString(),
     });
-    // print("createAccount : ${response.body}");
+    print("createAccount : ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       SharedPreferences sp = await SharedPreferences.getInstance();
       sp.setString('user', json.encode(user.toJson()));

@@ -41,7 +41,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   void initState() {
     super.initState();
-    getSearch();
+
     getItems();
   }
 
@@ -59,6 +59,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => getSearch());
     List<Widget> _widgetOptions = <Widget>[
       HomeScreen(search: searches),
       ShopCategoryScreen(cid: "Makeup", brand: false, search: searches),

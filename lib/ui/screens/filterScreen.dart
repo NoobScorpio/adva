@@ -70,6 +70,7 @@ class _FilterScreenState extends State<FilterScreen> {
                           Padding(
                             padding: EdgeInsets.only(
                                 left: screenWidth * 0.07,
+                                right: screenWidth * 0.07,
                                 top: screenHeight * 0.02),
                             child: Text(
                               'Categories',
@@ -109,6 +110,7 @@ class _FilterScreenState extends State<FilterScreen> {
                           Padding(
                             padding: EdgeInsets.only(
                                 left: screenWidth * 0.07,
+                                right: screenWidth * 0.07,
                                 top: screenHeight * 0.02),
                             child: Text(
                               'Brands',
@@ -153,7 +155,10 @@ class _FilterScreenState extends State<FilterScreen> {
                                 borderColor: primaryColor,
                                 height: 52,
                                 // width: double.maxFinite,
-                                child: Text('Clear').tr(),
+                                child: Text(
+                                  'Clear',
+                                  style: TextStyle(color: primaryColor),
+                                ).tr(),
                                 onPressed: () {
                                   Navigator.pop(context, false);
                                 },
@@ -168,7 +173,10 @@ class _FilterScreenState extends State<FilterScreen> {
                                 borderColor: Colors.transparent,
                                 height: 55,
                                 // width: double.maxFinite,
-                                child: Text('Apply').tr(),
+                                child: Text(
+                                  'Apply',
+                                  style: TextStyle(color: Colors.white),
+                                ).tr(),
                                 onPressed: () {
                                   BlocProvider.of<GetFilterProductCubit>(
                                           context)

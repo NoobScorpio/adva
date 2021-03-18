@@ -37,9 +37,12 @@ class UserCubit extends Cubit<UserState> {
           phone: phone,
           fName: fName,
           lName: lName);
-      if (user != null) emit(UserCreatedState(created: true));
-      else emit(UserCreatedState(created: false));
+      if (user != null)
+        emit(UserCreatedState(created: true));
+      else
+        emit(UserCreatedState(created: false));
       setStatus(false);
+      print("@USER STATE RETURN $user");
       return user;
     } on Exception {
       emit(UserErrorState(message: "Could not get user"));
@@ -117,13 +120,11 @@ class UserCubit extends Cubit<UserState> {
     try {
       emit(UserLoadingState());
       User updated = await userRepository.updateUserProfile(user, image);
-      
-      if (user!=null)
-       {
-         emit(UserLoadedState(user: updated));
-          return user;
-       }
-      else
+
+      if (user != null) {
+        emit(UserLoadedState(user: updated));
+        return user;
+      } else
         return null;
     } on Exception {
       emit(UserErrorState(message: "Could not get user"));
