@@ -13,6 +13,7 @@ import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/cartRepo.dart';
 import 'package:adva/data/repository/orderRepo.dart';
+import 'package:adva/ui/screens/bottomNavBar.dart';
 import 'package:adva/ui/screens/cardPaymentScreen.dart';
 import 'package:adva/ui/screens/orderReturnScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
@@ -31,7 +32,13 @@ class OrderDetailsScreen extends StatefulWidget {
   final promoCode, discountCode;
   final int pointsDiscount;
   final CheckOutInfo personal;
-  final dynamic total, subTotal, shipRate;
+  final dynamic total,
+      subTotal,
+      shipRate,
+      codRate,
+      discountValue,
+      pointsValue,
+      promoValue;
   const OrderDetailsScreen(
       {Key key,
       this.oid,
@@ -44,7 +51,11 @@ class OrderDetailsScreen extends StatefulWidget {
       this.shipRate,
       this.promoCode,
       this.discountCode,
-      this.pointsDiscount})
+      this.pointsDiscount,
+      this.codRate,
+      this.discountValue,
+      this.pointsValue,
+      this.promoValue})
       : super(key: key);
   @override
   _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
@@ -100,10 +111,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     Align(
                       alignment:
                           english ? Alignment.topLeft : Alignment.topRight,
-                      child: Text(
-                        'Summary',
-                        style: TextStyle(color: primaryColor),
-                      ).tr(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          'Summary',
+                          style: TextStyle(color: primaryColor),
+                        ).tr(),
+                      ),
                     ),
                     //ORDER DETAILS
                     if (!(widget.cart))
@@ -158,10 +172,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       alignment: context.locale == Locale('en', '')
                           ? Alignment.topLeft
                           : Alignment.topRight,
-                      child: Text(
-                        'Personal Information',
-                        style: TextStyle(color: primaryColor),
-                      ).tr(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          'Personal Information',
+                          style: TextStyle(color: primaryColor),
+                        ).tr(),
+                      ),
                     ),
                     //PERSONAL INFORMATION
                     if (!(widget.cart))
@@ -193,10 +210,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       alignment: context.locale == Locale('en', '')
                           ? Alignment.topLeft
                           : Alignment.topRight,
-                      child: Text(
-                        'Shipping',
-                        style: TextStyle(color: primaryColor),
-                      ).tr(),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          'Shipping',
+                          style: TextStyle(color: primaryColor),
+                        ).tr(),
+                      ),
                     ),
                     if (!(widget.cart))
                       BlocBuilder<OrderCubit, OrderState>(
@@ -295,7 +315,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 paymentType: widget.personal.paymentMethod,
                                 promoCode: widget.promoCode,
                                 discountCode: widget.discountCode,
-                                pointsDiscount: widget.pointsDiscount ?? 0);
+                                pointsDiscount: widget.pointsDiscount);
                             print(
                                 "@ ORDER BOIS ${order.customerId} ${order.promoCode} ${order.discountCode} ${order.pointsDiscount}");
                             if (widget.personal.paymentMethod ==
@@ -319,8 +339,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 }
                               } else {
                                 Navigator.pop(context);
-                                showToast(
-                                    "Please try again later", primaryColor);
+                                showToast("Please try again", primaryColor);
                               }
                             } else {
                               String id = await Navigator.push(
@@ -407,10 +426,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       height: 50,
                       width: double.maxFinite,
                       onPressed: () {
-                        int count = 0;
-                        Navigator.popUntil(context, (route) {
-                          return count++ == 5;
-                        });
+                        // int count = 0;
+                        // Navigator.popUntil(context, (route) {
+                        //   return count++ == 5;
+                        // });
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (_) => BottomNavBar()),
+                            (route) => false);
                       },
                       child: Text(
                         'Go to Home',
@@ -457,8 +480,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${cart.pName ?? ""}').tr(),
-                  Text('${cart != null ? (cart.category) : "No Category"}',
+                  Text('${context.locale == Locale('en', '') ? cart.pName : cart.arabicName ?? ""}')
+                      .tr(),
+                  Text(
+                      '${cart != null ? (context.locale == Locale('en', '') ? cart.category : cart.arabicCategory ?? "") : "No Category"}',
                       style: TextStyle(
                         color: cartTextColor,
                       )).tr()
@@ -468,11 +493,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text('Sar ${cart.price ?? 0.0}',
+                Text("SAR".tr() + ' ${cart.price ?? 0.0}',
                     style: TextStyle(
                       color: cartTextColor,
                     )).tr(),
-                Text('Quantity: ${cart.qty ?? 1}',
+                Text("Quantity".tr() + ': ${cart.qty ?? 1}',
                     style: TextStyle(
                       color: cartTextColor,
                     )).tr()
@@ -778,14 +803,20 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   Divider(
                     color: Colors.grey,
                   ),
+                  // getPaymentColumn(
+                  //     tOTAL: widget.total,
+                  //     dISCOUNT: widget.discountCode,
+                  //     pROMO: widget.promoValue,
+                  //     sHIP: widget.shipRate,
+                  //     sUBTOTAL: widget.subTotal),
                   PaymentColumn(
-                    total: total != null
-                        ? total.toString()
-                        : orderDetail.total.toString(),
+                    total: widget.total,
+                    discount: widget.discountCode,
                     flatShippingRate: widget.shipRate ?? "1",
-                    subTotal: subTotal != null
-                        ? subTotal.toString()
-                        : orderDetail.total.toString(),
+                    subTotal: widget.subTotal,
+                    promo: widget.promoValue,
+                    codRate: widget.codRate,
+                    points: widget.pointsValue,
                   )
                 ],
               ),
@@ -901,9 +932,15 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       color: Colors.grey,
                     ),
                     PaymentColumn(
-                      total: widget.total.toString(),
-                      flatShippingRate: widget.shipRate ?? '1',
-                      subTotal: widget.subTotal.toString(),
+                      total: widget.total,
+                      discount: widget.discountValue,
+                      flatShippingRate: widget.shipRate ?? "1",
+                      subTotal: widget.subTotal,
+                      promo: widget.promoValue,
+                      codRate: widget.personal.paymentMethod == "CashonDelivery"
+                          ? widget.codRate
+                          : null,
+                      points: widget.pointsValue,
                     )
                   ],
                 ),

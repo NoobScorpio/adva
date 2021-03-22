@@ -3,7 +3,7 @@ import 'package:adva/data/model/products.dart';
 class Offer {
   int id;
   String name;
-  int discount;
+  dynamic discount;
   String fromDate;
   String toDate;
   String image;

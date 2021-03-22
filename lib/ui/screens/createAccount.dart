@@ -17,13 +17,15 @@ class CreateAccount extends StatefulWidget {
 
 class _CreateAccountState extends State<CreateAccount> {
   String fName = '', lName = '', email = '', pass = '', phone = '', cPass = '';
-  String code = '+966';
+  String code = "966";
+
   bool passH = true, cPassH = true;
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         leading: GestureDetector(
             onTap: () {
@@ -103,11 +105,19 @@ class _CreateAccountState extends State<CreateAccount> {
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          suffix: InkWell(
+                    Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            // color: Colors.white.withOpacity(0.5),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            border: Border.all(
+                              color: Colors.grey, // red as border color
+                            ),
+                          ),
+                          child: InkWell(
                             onTap: () {
                               showCountryPicker(
                                 context: context,
@@ -117,9 +127,10 @@ class _CreateAccountState extends State<CreateAccount> {
                                 showPhoneCode: true,
                                 onSelect: (Country country) {
                                   print(
-                                      'Select country: ${country.displayName} $code');
+                                      'Select country: ${country.displayName} ');
                                   setState(() {
                                     code = country.phoneCode;
+                                    print("@CODE $code");
                                   });
                                 },
                               );
@@ -127,21 +138,32 @@ class _CreateAccountState extends State<CreateAccount> {
                             child: Container(
                                 width: 50,
                                 height: 25,
-                                color: primaryColor,
+                                color: Colors.grey[50],
                                 child: Center(
                                     child: Text(
                                   "+$code",
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: primaryColor),
                                 ))),
                           ),
-                          hintText: 'Phone Number'.tr(),
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black)),
                         ),
-                        onChanged: (val) {
-                          phone = val;
-                        },
-                      ),
+                        Expanded(
+                          child: Container(
+                            // width: MediaQuery.of(context).size.width,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText:
+                                    "Phone Number".tr() + ' ( XXXXXXXXX )'.tr(),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                              ),
+                              onChanged: (val) {
+                                phone = val;
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -219,6 +241,17 @@ class _CreateAccountState extends State<CreateAccount> {
                             phone == '') {
                           showToast("Please fill all fields", primaryColor);
                         } else {
+                          if (phone[0] == '0') {
+                            phone = phone.substring(1, phone.length);
+                            phone = code + phone;
+                            print("@PHONEb $phone");
+                          } else if (phone.contains(code)) {
+                            print("@PHONEb $phone");
+                          } else {
+                            phone = code + phone;
+                            print("@PHONEb $phone");
+                          }
+
                           int created = await UserRepositoryImpl()
                               .createAccount(
                                   email: email ?? "",

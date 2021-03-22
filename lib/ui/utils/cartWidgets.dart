@@ -9,6 +9,7 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -19,10 +20,14 @@ Widget emptyCart() {
       SizedBox(
         height: 150,
       ),
-      Center(child: SvgPicture.asset(
-          "assets/images/emptyCart.svg",
-          semanticsLabel: 'Cart Logo'
-)),
+      Center(
+          child: Icon(
+        Icons.shopping_cart_outlined,
+        size: 60,
+      )
+          // SvgPicture.asset("assets/images/emptyCart.svg",
+          //     semanticsLabel: 'Cart Logo')
+          ),
       SizedBox(
         height: 15,
       ),
@@ -177,6 +182,9 @@ class ProductCartContainer extends StatelessWidget {
                 ),
                 SizedBox(
                   height: 5,
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

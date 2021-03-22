@@ -50,241 +50,256 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-            )),
-        title: Text(
-          'Check Out',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 22,
-            fontWeight: FontWeight.w400,
-          ),
-        ).tr(),
-      ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          automaticallyImplyLeading: false,
+          title: Text(
+            'Check Out',
+            style: TextStyle(color: Colors.black),
+          ).tr(),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'Personal Information',
-                    style: boldTextStyle,
-                  ).tr(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'Full Name',
-                    style: normalTextStyle,
-                  ).tr(),
-                ),
-                TextField(
-                  controller: name,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your full name'.tr(),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black)),
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Back to cart',
+                      style: boldTextStyle,
+                    ).tr(),
                   ),
-                  onChanged: (val) {
-                    // name = val;
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(
-                    'E-mail address',
-                    style: normalTextStyle,
-                  ).tr(),
-                ),
-                TextField(
-                  controller: email,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your email'.tr(),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black)),
-                  ),
-                  onChanged: (val) {
-                    // email = val;
-                  },
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                        value: checkBoxValue,
-                        activeColor: Colors.black,
-                        onChanged: (bool newValue) {
-                          setState(() {
-                            checkBoxValue = newValue;
-                          });
-                          Text('Remember me').tr();
-                        }),
-                    Text('Keep me up date with exclusive offers').tr(),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Text(
-                    'Phone no',
-                    style: normalTextStyle,
-                  ).tr(),
-                ),
-                TextField(
-                  controller: phone,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Phone no'.tr(),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black)),
-                  ),
-                  onChanged: (val) {
-                    // phone = val;
-                  },
                 ),
               ],
-            ),
-          ),
-          SizedBox(
-            height: screenHeight * 0.02,
-          ),
-          Container(
-            // height: screenHeight * 0.29,
-            width: screenWidth,
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: screenHeight * 0.017,
-                left: screenWidth * 0.03,
-              ),
+            )
+          ],
+        ),
+        body: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(15),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      'Shipping Address',
+                      'Personal Information',
+                      style: boldTextStyle,
                     ).tr(),
                   ),
-                  BlocConsumer<AddressCubit, AddressState>(
-                      listener: (context, state) {
-                    if (state is AddressLoadedState) {
-                      if (state.address != null && state.address.length != 0) {
-                        setState(() {
-                          groupValue = state.address[0].id;
-                        });
-                      }
-                    }
-                    if (state is AddressAddState) {
-                      if (state.address != null && state.address.length != 0) {
-                        setState(() {
-                          groupValue = state.address[0].id;
-                        });
-                      }
-                    }
-                    if (state is AddressDeleteState) {
-                      if (state.address != null && state.address.length != 0) {
-                        setState(() {
-                          groupValue = state.address[0].id;
-                        });
-                      }
-                    }
-                  }, builder: (context, state) {
-                    if (state is AddressLoadingState) return buildLoading();
-                    if (state is AddressLoadingState)
-                      return addresses(addresses: []);
-                    if (state is AddressLoadedState) {
-                      if (state.address != null) {
-                        return addresses(addresses: state.address);
-                      } else
-                        return addresses(addresses: []);
-                    }
-                    if (state is AddressAddState) {
-                      if (state.address != null) {
-                        return addresses(addresses: state.address);
-                      } else
-                        return addresses(addresses: []);
-                    }
-                    if (state is AddressDeleteState) {
-                      if (state.address != null) {
-                        return addresses(addresses: state.address);
-                      } else
-                        return addresses(addresses: []);
-                    }
-                    return addresses(addresses: []);
-                  }),
-                  Divider(
-                    color: cartTextColor,
-                    endIndent: screenWidth * 0.05,
-                    thickness: 1,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      'Full Name',
+                      style: normalTextStyle,
+                    ).tr(),
+                  ),
+                  TextField(
+                    controller: name,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your full name'.tr(),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                    ),
+                    onChanged: (val) {
+                      // name = val;
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      'E-mail address',
+                      style: normalTextStyle,
+                    ).tr(),
+                  ),
+                  TextField(
+                    controller: email,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your email'.tr(),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                    ),
+                    onChanged: (val) {
+                      // email = val;
+                    },
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                          value: checkBoxValue,
+                          activeColor: Colors.black,
+                          onChanged: (bool newValue) {
+                            setState(() {
+                              checkBoxValue = newValue;
+                            });
+                            Text('Remember me').tr();
+                          }),
+                      Text('Keep me up date with exclusive offers').tr(),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Text(
+                      'Phone no',
+                      style: normalTextStyle,
+                    ).tr(),
+                  ),
+                  TextField(
+                    controller: phone,
+                    decoration: InputDecoration(
+                      hintText: 'Enter Phone no'.tr(),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black)),
+                    ),
+                    onChanged: (val) {
+                      // phone = val;
+                    },
                   ),
                 ],
               ),
             ),
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => AddAddressScreen(
-                            user: widget.user,
-                          )));
-            },
-            child: Padding(
-              padding: EdgeInsets.all(15),
-              child: Material(
-                elevation: 4,
-                child: Container(
-                  height: 60,
-                  width: double.maxFinite,
-                  color: primaryColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Container(
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.location_history,
-                              color: primaryColor,
+            SizedBox(
+              height: screenHeight * 0.02,
+            ),
+            Container(
+              // height: screenHeight * 0.29,
+              width: screenWidth,
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.only(
+                  top: screenHeight * 0.017,
+                  left: screenWidth * 0.03,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Text(
+                        'Shipping Address',
+                      ).tr(),
+                    ),
+                    BlocConsumer<AddressCubit, AddressState>(
+                        listener: (context, state) {
+                      if (state is AddressLoadedState) {
+                        if (state.address != null &&
+                            state.address.length != 0) {
+                          setState(() {
+                            groupValue = state.address[0].id;
+                          });
+                        }
+                      }
+                      if (state is AddressAddState) {
+                        if (state.address != null &&
+                            state.address.length != 0) {
+                          setState(() {
+                            groupValue = state.address[0].id;
+                          });
+                        }
+                      }
+                      if (state is AddressDeleteState) {
+                        if (state.address != null &&
+                            state.address.length != 0) {
+                          setState(() {
+                            groupValue = state.address[0].id;
+                          });
+                        }
+                      }
+                    }, builder: (context, state) {
+                      if (state is AddressLoadingState) return buildLoading();
+                      if (state is AddressLoadingState)
+                        return addresses(addresses: []);
+                      if (state is AddressLoadedState) {
+                        if (state.address != null) {
+                          return addresses(addresses: state.address);
+                        } else
+                          return addresses(addresses: []);
+                      }
+                      if (state is AddressAddState) {
+                        if (state.address != null) {
+                          return addresses(addresses: state.address);
+                        } else
+                          return addresses(addresses: []);
+                      }
+                      if (state is AddressDeleteState) {
+                        if (state.address != null) {
+                          return addresses(addresses: state.address);
+                        } else
+                          return addresses(addresses: []);
+                      }
+                      return addresses(addresses: []);
+                    }),
+                    Divider(
+                      color: cartTextColor,
+                      endIndent: screenWidth * 0.05,
+                      thickness: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => AddAddressScreen(
+                              user: widget.user,
+                            )));
+              },
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Material(
+                  elevation: 4,
+                  child: Container(
+                    height: 60,
+                    width: double.maxFinite,
+                    color: Colors.grey[100],
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.location_history,
+                                color: primaryColor,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'Add Address',
-                            style: TextStyle(color: primaryColor),
-                          ).tr(),
-                        ],
+                            Text(
+                              'Add Address',
+                              style: TextStyle(color: primaryColor),
+                            ).tr(),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          BlocBuilder<CartCubit, CartState>(builder: (context, state) {
-            if (state is CartLoadedState) {
-              if (state.cartItems != null && state.cartItems.length != 0) {
-                return orderPrices(state.total, state.subTotal);
+            BlocBuilder<CartCubit, CartState>(builder: (context, state) {
+              if (state is CartLoadedState) {
+                if (state.cartItems != null && state.cartItems.length != 0) {
+                  return orderPrices(state.total, state.subTotal);
+                }
+                return orderPrices(0.0, 0.0);
               }
               return orderPrices(0.0, 0.0);
-            }
-            return orderPrices(0.0, 0.0);
-          })
-        ],
+            })
+          ],
+        ),
       ),
     );
   }
@@ -299,7 +314,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           children: [
             PaymentColumn(
               subTotal: subTotal.toString(),
-              total: (total).toString(),
+              total: (total + widget.shipRate).toString(),
               flatShippingRate: widget.shipRate.toString(),
             ),
             Padding(
@@ -325,7 +340,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   var misc = MiscRepositoryImpl();
                   ShipRate shipRate = await misc.getShipRate();
                   CODRate codRate = await misc.getCODRate();
-                  if (name.text != '' && email.text != '' && phone.text != '') {
+                  if (name.text != '' && phone.text != '') {
                     CheckOutInfo checkout = CheckOutInfo(
                         address: ads,
                         city: city,
@@ -335,6 +350,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         name: name.text,
                         postal: postal,
                         addressId: addressId);
+                    Navigator.pop(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -366,7 +382,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           country = addresses[0].country;
           postal = addresses[0].postalCode;
           addressId = addresses[0].id;
-          label = addresses[0].label;
+          label = addresses[0].label ?? "";
         }
         widgets.add(Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -383,13 +399,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                     Container(
                       height: 22,
-                      width: 50,
+                      width: 60,
                       color: Color(0xFF4369D3),
                       child: Center(
                         child: Text(
-                          addresses[i].label ?? "Home",
+                          addresses[i].label == null || addresses[i].label == ""
+                              ? "Home"
+                              : addresses[i].label,
+                          textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white, fontSize: 12),
-                        ),
+                        ).tr(),
                       ),
                     ),
                   ],
@@ -426,6 +445,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       return Container(
         height: widgets.length == 1 ? 120 : (widgets.length == 2 ? 220 : (300)),
         child: ListView(
+          physics: NeverScrollableScrollPhysics(),
           children: widgets,
         ),
       );

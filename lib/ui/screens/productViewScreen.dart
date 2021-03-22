@@ -11,6 +11,7 @@ import 'package:adva/data/model/relatedProduct.dart';
 import 'package:adva/data/model/review.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/productRepo.dart';
+import 'package:adva/ui/screens/accountsloginScreen.dart';
 import 'package:adva/ui/screens/productImageViewScreen.dart';
 import 'package:adva/ui/screens/questionsScreen.dart';
 import 'package:adva/ui/screens/reviewScreen.dart';
@@ -18,6 +19,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/imagesRow.dart';
 import 'package:adva/ui/utils/questionWidget.dart';
 import 'package:adva/ui/utils/reviewWidget.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,8 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
+
+import 'loginScreen.dart';
 
 class ProductViewScreen extends StatefulWidget {
   final int pid;
@@ -217,7 +221,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
     category =
         product.category == null ? "" : product.category.categoryName ?? "";
     categoryID = product.categoryId ?? 1;
-
+    print("@PRODUCTVIEW ${product.discountedAmount}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -234,7 +238,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
                 'Price',
@@ -243,37 +247,53 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                     fontWeight: FontWeight.w600,
                     fontSize: 14),
               ).tr(),
-              Text(
-                'SAR.'.tr() + ' ${product.price}',
-                style: TextStyle(
-                    decorationColor: Colors.red,
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14),
-              ).tr(),
-              Text(
-                '-${product.discountedAmount}%',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14),
+              if (product.discountedAmount != null &&
+                  product.discountedAmount != 0 &&
+                  product.discountedAmount != '0')
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'SAR.'.tr() + ' ${product.price}',
+                    style: TextStyle(
+                        decorationColor: Colors.red,
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14),
+                  ).tr(),
+                ),
+              if (product.discountedAmount != null &&
+                  product.discountedAmount != 0 &&
+                  product.discountedAmount != '0')
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '-${product.discountedAmount}%',
+                    style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 14),
+                  ),
+                ),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'SAR.'.tr() +
+                      ' ${(product.price ?? 0) - (product.discountedAmount ?? 0)}',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16),
+                ),
               ),
-              Text(
-                'SAR.'.tr() +
-                    ' ${(product.price ?? 0) - (product.discountedAmount ?? 0)}',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16),
-              ),
-              Text(
-                '(Ex Tax: SAR. '.tr() + '${product.tax})',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16),
-              ).tr(),
+              // Text(
+              //   '(Ex Tax: SAR. '.tr() + '${product.tax})',
+              //   style: TextStyle(
+              //       color: Colors.grey,
+              //       fontWeight: FontWeight.w400,
+              //       fontSize: 16),
+              // ).tr(),
             ],
           ),
         ),
@@ -664,6 +684,32 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: questions,
                       ),
+                      GestureDetector(
+                        onTap: () async {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => QuestionsScreen(
+                                        pid: product.id,
+                                        cid: 0,
+                                        questions: questionsNext,
+                                        appBar: true,
+                                      )));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Center(
+                            child: Text(
+                              'ViewAll',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                  decoration: TextDecoration.underline),
+                            ).tr(),
+                          ),
+                        ),
+                      ),
                       Container(
                         height: 160,
                         width: double.maxFinite,
@@ -738,32 +784,6 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                 ),
                               )
                             ],
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => QuestionsScreen(
-                                        pid: product.id,
-                                        cid: 0,
-                                        questions: questionsNext,
-                                        appBar: true,
-                                      )));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(15.0),
-                          child: Center(
-                            child: Text(
-                              'ViewAll',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: primaryColor,
-                                  decoration: TextDecoration.underline),
-                            ).tr(),
                           ),
                         ),
                       ),
@@ -850,11 +870,18 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-              width: 200,
-              height: 200,
-              child: FittedBox(
-                  fit: BoxFit.cover,
-                  child: Image.network(rp.productimages[0].pictureReference))),
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: NetworkImage(rp.productimages[0].pictureReference),
+                ),
+                border: Border.all(
+                  color: Colors.grey[300], // red as border color
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            width: 200,
+            height: 200,
+          ),
         ),
       ));
     }
@@ -972,7 +999,10 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                 items: qtyValue.map((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
-                                    child: new Text('$value'),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text('$value'),
+                                    ),
                                   );
                                 }).toList(),
                                 onChanged: (_) {
@@ -1003,6 +1033,13 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                 bool loggedIn = sp.getBool('loggedIn');
                                 if (loggedIn == null || loggedIn == false) {
                                   showToast("Not logged in", primaryColor);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => AccountsLoginScreen(
+                                                product: true,
+                                                view: true,
+                                              )));
                                 } else {
                                   var user = User.fromJson(
                                       json.decode(sp.getString('user')));
@@ -1060,9 +1097,7 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
             Padding(
               padding: const EdgeInsets.only(top: 158.0),
               child: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: primaryColor,
-                ),
+                child: buildLoading(),
               ),
             ),
         ],

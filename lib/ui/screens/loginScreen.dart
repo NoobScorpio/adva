@@ -5,6 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatefulWidget {
+  final bool product;
+
+  const LoginScreen({Key key, this.product}) : super(key: key);
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -150,8 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Text(
             'Create New Account',
             style: TextStyle(color: primaryColor),
-          ).tr()
-          ),
+          ).tr()),
         ],
       ),
     );

@@ -60,7 +60,7 @@ class _FilterScreenState extends State<FilterScreen> {
                   ),
                 ),
               ),
-              Flexible(
+              Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -145,56 +145,54 @@ class _FilterScreenState extends State<FilterScreen> {
                           }),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: MyButton(
-                                innerColor: Colors.white,
-                                borderColor: primaryColor,
-                                height: 52,
-                                // width: double.maxFinite,
-                                child: Text(
-                                  'Clear',
-                                  style: TextStyle(color: primaryColor),
-                                ).tr(),
-                                onPressed: () {
-                                  Navigator.pop(context, false);
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                              child: MyButton(
-                                innerColor: primaryColor,
-                                borderColor: Colors.transparent,
-                                height: 55,
-                                // width: double.maxFinite,
-                                child: Text(
-                                  'Apply',
-                                  style: TextStyle(color: Colors.white),
-                                ).tr(),
-                                onPressed: () {
-                                  BlocProvider.of<GetFilterProductCubit>(
-                                          context)
-                                      .getFilterProduct(
-                                          brandGroup, categoryGroup);
-                                  Navigator.pop(context, true);
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: screenHeight * 0.03,
-                      ),
                     ],
                   ),
                 ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: MyButton(
+                        innerColor: Colors.white,
+                        borderColor: primaryColor,
+                        height: 52,
+                        // width: double.maxFinite,
+                        child: Text(
+                          'Clear',
+                          style: TextStyle(color: primaryColor),
+                        ).tr(),
+                        onPressed: () {
+                          Navigator.pop(context, false);
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: MyButton(
+                        innerColor: primaryColor,
+                        borderColor: Colors.transparent,
+                        height: 55,
+                        // width: double.maxFinite,
+                        child: Text(
+                          'Apply',
+                          style: TextStyle(color: Colors.white),
+                        ).tr(),
+                        onPressed: () {
+                          BlocProvider.of<GetFilterProductCubit>(context)
+                              .getFilterProduct(brandGroup, categoryGroup);
+                          Navigator.pop(context, true);
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: screenHeight * 0.03,
               ),
             ],
           ),

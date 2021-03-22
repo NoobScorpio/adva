@@ -19,7 +19,7 @@ class CartCubit extends Cubit<CartState> {
           discount +=
               (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
         }
-        total = sub + vat - discount;
+        total = sub + vat;
       }
       emit(CartItemAddedState(
           added: added,
@@ -49,13 +49,23 @@ class CartCubit extends Cubit<CartState> {
         for (CartItem cartItem in removed) {
           sub += (cartItem.price ?? 0.0) * (cartItem.qty ?? 0);
           vat += cartItem.vat ?? 0.0;
-          discount +=
-              (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
+          // discount +=
+          //     (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
         }
-        total = sub + vat - discount;
+        total = sub + vat;
       }
-      emit(CartItemRemoveState(removed: removed, total: total, subTotal: sub));
-      emit(CartLoadedState(cartItems: removed, total: total, subTotal: sub));
+      emit(CartItemRemoveState(
+          removed: removed,
+          total: total,
+          subTotal: sub,
+          vat: vat,
+          discount: discount));
+      emit(CartLoadedState(
+          cartItems: removed,
+          total: total,
+          subTotal: sub,
+          vat: vat,
+          discount: discount));
       return removed == null ? false : true;
     } on Exception {
       emit(CartErrorState(message: "Could not add item"));
@@ -65,16 +75,16 @@ class CartCubit extends Cubit<CartState> {
 
   Future<List<CartItem>> getItems() async {
     try {
-      dynamic sub = 0.0, total = 0.0, vat = 0.0, discount = 0.0;
+      dynamic sub = 0.0, total = 0.0, vat = 0.0;
       List<CartItem> cartItems = await cartRepository.getItems();
       if (cartItems.length > 0) {
         for (CartItem cartItem in cartItems) {
           sub += (cartItem.price ?? 0.0) * (cartItem.qty ?? 0);
           vat += cartItem.vat ?? 0.0;
-          discount +=
-              (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
+          // discount +=
+          //     (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
         }
-        total = sub + vat - discount;
+        total = sub + vat;
       }
       emit(CartLoadedState(cartItems: cartItems, subTotal: sub, total: total));
       return cartItems;

@@ -204,6 +204,7 @@ class _PostsScreenState extends State<PostsScreen> {
                                                             .lastName));
                                         }
                                         showModalBottomSheet(
+                                            isScrollControlled: true,
                                             context: context,
                                             builder: (context) {
                                               return StatefulBuilder(builder:
@@ -428,7 +429,7 @@ class _PostsScreenState extends State<PostsScreen> {
           ),
         ],
         title: Center(
-          child: Text('Gallery', style: TextStyle(color: secondaryColor)),
+          child: Text('Gallery', style: TextStyle(color: secondaryColor)).tr(),
         ),
       ),
       backgroundColor: Colors.white,
@@ -459,7 +460,7 @@ class _PostsScreenState extends State<PostsScreen> {
                 options: CarouselOptions(
                     enlargeStrategy: CenterPageEnlargeStrategy.height,
                     enlargeCenterPage: true,
-                    enableInfiniteScroll: false,
+                    enableInfiniteScroll: true,
                     height: MediaQuery.of(context).size.height * .76,
                     initialPage: widget.selected),
               )),

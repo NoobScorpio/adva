@@ -138,7 +138,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   child: Row(
                 children: [
                   Text(
-                    'Didn\'t receive the code? ',
+                    'Did not receive the code? ',
                   ).tr(),
                   Text(
                     'Resend',

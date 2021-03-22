@@ -9,7 +9,7 @@ class Featured {
   int quantity;
   String productDescription;
   String productArabicDescription;
-  int price;
+  dynamic price;
   String rewardPoints;
   int discountedAmount;
   String relatedProducts;

@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:adva/bloc/product_bloc/getIDProductCubit.dart';
 import 'package:adva/bloc/product_bloc/postReviewCubit.dart';
 import 'package:adva/bloc/product_bloc/productState.dart';
+import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/imagesRow.dart';
 import 'package:adva/ui/utils/reviewWidget.dart';
@@ -11,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:images_picker/images_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ReviewScreen extends StatefulWidget {
   final bool appBar, addImage;
@@ -239,35 +242,35 @@ class _ReviewScreenState extends State<ReviewScreen> {
                       if (!imageAdded) imagesRow,
                       BlocListener<PostReviewCubit, ProductState>(
                         listener: (context, state) {
-                          if (state is ProductPostReviewScreenState) {
-                            dynamic val = state.posted;
-                            if (val.runtimeType == bool) {
-                              if (val) {
-                                showToast('Review posted', primaryColor);
-                                setState(() {
-                                  reviews.add(ReviewWidget(
-                                    screenwidth: screenWidth,
-                                    firstName: widget.first ?? 'Anon',
-                                    lastName: widget.last ?? 'Anon',
-                                    rating: _rating,
-                                    network: false,
-                                    message: message,
-                                    images: files,
-                                  ));
-
-                                  imageAdded = false;
-                                });
-                                files = [];
-                                BlocProvider.of<GetIDProductCubit>(context)
-                                    .getProduct(widget.pid);
-                              } else {
-                                showToast(
-                                    'Could not post review', primaryColor);
-                              }
-                            } else {
-                              showToast(val, primaryColor);
-                            }
-                          }
+                          // if (state is ProductPostReviewScreenState) {
+                          //   dynamic val = state.posted;
+                          //   if (val.runtimeType == bool) {
+                          //     if (val) {
+                          //       showToast('Review posted', primaryColor);
+                          //       setState(() {
+                          //         reviews.add(ReviewWidget(
+                          //           screenwidth: screenWidth,
+                          //           firstName: widget.first ?? 'Anon',
+                          //           lastName: widget.last ?? 'Anon',
+                          //           rating: _rating,
+                          //           network: false,
+                          //           message: message,
+                          //           images: files,
+                          //         ));
+                          //
+                          //         imageAdded = false;
+                          //       });
+                          //       files = [];
+                          //       BlocProvider.of<GetIDProductCubit>(context)
+                          //           .getProduct(widget.pid);
+                          //     } else {
+                          //       showToast(
+                          //           'Could not post review', primaryColor);
+                          //     }
+                          //   } else {
+                          //     showToast(val, primaryColor);
+                          //   }
+                          // }
                         },
                         child: Container(
                           height: 55,
@@ -280,22 +283,50 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                   showToast(
                                       'Attach at least 1 image.', primaryColor);
                                 } else {
-                                  message = controller.text;
-                                  String posted =
-                                      await BlocProvider.of<PostReviewCubit>(
-                                              context)
-                                          .postReviewScreen(message, widget.pid,
-                                              0, _rating.toInt(), files);
-                                  if (posted != null) {
-                                    controller.text = '';
-                                    if (posted ==
-                                        "You have to purchase this product.") {
-                                      showToast(
-                                          'You have to purchase this product.',
-                                          primaryColor);
-                                    } else if (posted == "Success") {
-                                      showToast('Success', primaryColor);
+                                  SharedPreferences sp =
+                                      await SharedPreferences.getInstance();
+                                  String usr = sp.getString('user');
+                                  User user;
+                                  if (usr != null) {
+                                    user = User.fromJson(json.decode(usr));
+                                    message = controller.text;
+                                    String posted =
+                                        await BlocProvider.of<PostReviewCubit>(
+                                                context)
+                                            .postReviewScreen(
+                                                message,
+                                                widget.pid,
+                                                user.id,
+                                                _rating.toInt(),
+                                                files);
+                                    if (posted != null) {
+                                      controller.text = '';
+                                      if (posted ==
+                                          "You have to purchase this product.") {
+                                        showToast(
+                                            'You have to purchase this product.',
+                                            primaryColor);
+                                      } else if (posted == "Success") {
+                                        showToast(
+                                            'Review Posted', primaryColor);
+                                        setState(() {
+                                          reviews.add(ReviewWidget(
+                                            screenwidth: screenWidth,
+                                            firstName: widget.first ?? 'Anon',
+                                            lastName: widget.last ?? 'Anon',
+                                            rating: _rating,
+                                            network: false,
+                                            message: message,
+                                            images: files,
+                                          ));
+
+                                          imageAdded = false;
+                                        });
+                                      }
                                     }
+                                  } else {
+                                    showToast(
+                                        'User not logged in', primaryColor);
                                   }
                                 }
                               } else {

@@ -3,17 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class PaymentColumn extends StatelessWidget {
-  const PaymentColumn({
-    Key key,
-    this.flatShippingRate,
-    this.subTotal,
-    this.total,
-    this.promo,
-    this.discount,
-    this.points,
-  }) : super(key: key);
+  const PaymentColumn(
+      {Key key,
+      this.flatShippingRate,
+      this.subTotal,
+      this.total,
+      this.promo,
+      this.discount,
+      this.points,
+      this.codRate})
+      : super(key: key);
 
-  final dynamic flatShippingRate, subTotal, total, promo, discount, points;
+  final dynamic flatShippingRate,
+      subTotal,
+      total,
+      promo,
+      discount,
+      points,
+      codRate;
   @override
   Widget build(BuildContext context) {
     print("@PAYMENT  TYPE ${total.runtimeType}");
@@ -96,6 +103,32 @@ class PaymentColumn extends StatelessWidget {
               ],
             ),
           ),
+        //PROMO RATE
+        if (codRate != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Cash On Delivery',
+                        style: TextStyle(fontSize: 15, color: primaryColor))
+                    .tr(),
+                Row(
+                  children: [
+                    Text('SAR',
+                        style: TextStyle(
+                          fontSize: 15,
+                        )).tr(),
+                    Text(
+                        '. ${codRate.runtimeType == String ? double.parse(codRate).toStringAsPrecision(3).toString() : codRate.toStringAsPrecision(3).toString()}',
+                        style: TextStyle(
+                          fontSize: 15,
+                        )),
+                  ],
+                ),
+              ],
+            ),
+          ),
         //DISCOUNT RATE
         if (discount != null)
           Padding(
@@ -153,8 +186,7 @@ class PaymentColumn extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Total (Inc VAT)',
-                      style: TextStyle(fontSize: 15, color: primaryColor))
+              Text('Total', style: TextStyle(fontSize: 15, color: primaryColor))
                   .tr(),
               Row(
                 children: [

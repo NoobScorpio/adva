@@ -57,72 +57,91 @@ class _WishListScreenState extends State<WishListScreen> {
                   for (WishList wish in state.wishLists) {
                     widgets.add(
                       Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Column(
                           children: [
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(wish.product !=
-                                                  null
-                                              ? wish.product.productimages[0]
-                                                  .pictureReference
-                                              : "https://i.stack.imgur.com/y9DpT.jpg")),
-                                    ),
-                                    height: 70,
-                                    width: 70,
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Row(
                                   children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Card(
+                                        elevation: 6,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(wish
+                                                            .product !=
+                                                        null
+                                                    ? wish
+                                                        .product
+                                                        .productimages[0]
+                                                        .pictureReference
+                                                    : "https://i.stack.imgur.com/y9DpT.jpg")),
+                                          ),
+                                          height: 70,
+                                          width: 70,
+                                        ),
+                                      ),
+                                    ),
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          '${wish.product == null ? (english ? "Name" : "") : (english ? wish.product.productName : wish.product.productArabicName)}',
-                                          style: boldTextStyle,
-                                        ).tr(),
-                                        Text('Price'.tr() +
-                                            ': ' +
-                                            'SAR'.tr() +
-                                            '. ${wish.product == null ? "??" : wish.product.price}'),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              '${wish.product == null ? (english ? "Name" : "") : (english ? wish.product.productName : wish.product.productArabicName)}',
+                                              style: boldTextStyle,
+                                            ).tr(),
+                                            Text('Price'.tr() +
+                                                ': ' +
+                                                'SAR'.tr() +
+                                                '. ${wish.product == null ? "??" : wish.product.price}'),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Text(wish.product == null
+                                                ? "Stock"
+                                                : wish.product.quantity > 0
+                                                    ? 'In Stock'
+                                                    : "Out of stock")
+                                            .tr()
                                       ],
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Text(wish.product == null
-                                            ? "Stock"
-                                            : wish.product.quantity > 0
-                                                ? 'In Stock'
-                                                : "Out of stock")
-                                        .tr()
+                                    )
                                   ],
-                                )
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    showToast('Removing', primaryColor);
+                                    var sp =
+                                        await SharedPreferences.getInstance();
+                                    var id = User.fromJson(
+                                            json.decode(sp.getString('user')))
+                                        .id;
+                                    BlocProvider.of<WishCubit>(context)
+                                        .removeWishListItem(id, wish.id);
+                                  },
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Colors.redAccent,
+                                  ),
+                                ),
                               ],
                             ),
-                            GestureDetector(
-                              onTap: () async {
-                                showToast('Removing', primaryColor);
-                                var sp = await SharedPreferences.getInstance();
-                                var id = User.fromJson(
-                                        json.decode(sp.getString('user')))
-                                    .id;
-                                BlocProvider.of<WishCubit>(context)
-                                    .removeWishListItem(id, wish.id);
-                              },
-                              child: Icon(
-                                Icons.cancel,
-                                color: Colors.redAccent,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Divider(
+                                color: Colors.grey,
+                                height: 0.5,
                               ),
                             ),
                           ],

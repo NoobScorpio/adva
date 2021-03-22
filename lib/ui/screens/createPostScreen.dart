@@ -66,12 +66,18 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     height: 30,
                   ),
                   Container(
-                      width: screenWidth,
-                      height: screenHeight * 0.5,
-                      child: FittedBox(
-                        fit: BoxFit.cover,
-                        child: Image.file(widget.image),
-                      )),
+                    width: screenWidth,
+                    height: screenHeight * 0.45,
+                    decoration: BoxDecoration(
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: FileImage(widget.image),
+                        ),
+                        border: Border.all(
+                          color: Colors.grey[300], // red as border color
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                  ),
                   SizedBox(
                     height: screenHeight * 0.025,
                   ),

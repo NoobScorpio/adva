@@ -32,18 +32,22 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset('assets/images/advalogo.png',scale: 2,),
+        title: Align(
+            alignment: context.locale == Locale('en', '')
+                ? Alignment.centerLeft
+                : Alignment.centerRight,
+            child: Image.asset(
+              'assets/images/advalogo.png',
+              scale: 2.5,
+            )),
         leading: GestureDetector(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-              ),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
             ),
           ),
         ),
@@ -248,7 +252,7 @@ class _ADVAPointsScreenState extends State<ADVAPointsScreen> {
           padding: const EdgeInsets.symmetric(vertical: 5.0),
           child: Container(
               width: double.maxFinite,
-              height: 60,
+              height: 80,
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),

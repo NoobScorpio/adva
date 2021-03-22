@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adva/ui/screens/accountsloginScreen.dart';
 import 'package:adva/ui/screens/chatbotScreen.dart';
 import 'package:adva/ui/screens/createAccount.dart';
@@ -196,6 +198,7 @@ class _SignInSignUpState extends State<SignInSignUp> {
                   });
                   await sp.setBool('lang', english);
                 }
+                Timer(Duration(seconds: 1), () => Navigator.pop(context));
               },
               child: ListTile(
                 tileColor: Colors.white,

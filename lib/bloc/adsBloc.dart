@@ -1,6 +1,5 @@
 import 'package:adva/data/model/ads.dart';
 import 'package:adva/data/repository/adsRepo.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 

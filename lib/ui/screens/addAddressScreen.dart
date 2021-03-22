@@ -65,192 +65,215 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          title: Text(
-            '${widget.edit == null || widget.edit == false ? "Add" : "Edit"} address',
-            style: TextStyle(color: Colors.black),
-          ).tr(),
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            leading: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset("assets/images/advalogo.png"),
             ),
-          ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  'Address',
-                  style: normalTextStyle,
-                ).tr(),
-              ),
-              TextField(
-                controller: adCont,
-                decoration: InputDecoration(
-                  hintText: 'Enter full address'.tr(),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                ),
-                onChanged: (val) {
-                  address = val;
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  'City',
-                  style: normalTextStyle,
-                ).tr(),
-              ),
-              TextField(
-                controller: cityCont,
-                decoration: InputDecoration(
-                  hintText: 'Enter city name'.tr(),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                ),
-                onChanged: (val) {
-                  city = val;
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  'Country',
-                  style: normalTextStyle,
-                ).tr(),
-              ),
-              TextField(
-                controller: countCont,
-                decoration: InputDecoration(
-                  hintText: 'Enter country name'.tr(),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                ),
-                onChanged: (val) {
-                  country = val;
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  'Postal Code',
-                  style: normalTextStyle,
-                ).tr(),
-              ),
-              TextField(
-                controller: postalCont,
-                decoration: InputDecoration(
-                  hintText: 'Enter postal code'.tr(),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
-                ),
-                onChanged: (val) {
-                  postal = val;
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: Text(
-                  'Label',
-                  style: normalTextStyle,
-                ).tr(),
-              ),
+            actions: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Radio(
-                    value: 1,
-                    activeColor: primaryColor,
-                    groupValue: group,
-                    onChanged: (val) {
-                      setState(() {
-                        group = val;
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: boldTextStyle,
+                      ).tr(),
+                    ),
                   ),
-                  Text('Home'),
-                  Radio(
-                    value: 2,
-                    activeColor: primaryColor,
-                    groupValue: group,
-                    onChanged: (val) {
-                      setState(() {
-                        group = val;
-                      });
-                    },
-                  ),
-                  Text('Office'),
                 ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                child: MyButton(
-                  height: 55,
-                  innerColor: primaryColor,
-                  borderColor: Colors.transparent,
-                  onPressed: () async {
-                    if (postal != '' &&
-                        city != '' &&
-                        country != "" &&
-                        address != '') {
-                      Address addressObj = Address();
-                      addressObj.address =
-                          address == '' ? widget.address.address : address;
-                      addressObj.city = city == '' ? widget.address.city : city;
-                      addressObj.country =
-                          country == '' ? widget.address.country : country;
-                      addressObj.postalCode =
-                          postal == '' ? widget.address.postalCode : postal;
-                      addressObj.customerId = widget.user.id;
-                      addressObj.label = group == 1 ? "Home" : "Office";
-                      if (widget.edit != null && widget.edit != false) {
-                        addressObj.id = widget.address.id;
-                      }
-                      if (widget.edit != null && widget.edit != false) {
-                        print('INSIDE EDIT ADDRESS');
-                        bool updated =
-                            await BlocProvider.of<AddressCubit>(context)
-                                .updateAddress(addressObj);
-                        if (updated) {
-                          showToast("Address Updated", primaryColor);
-                          Navigator.pop(context);
-                        } else {
-                          showToast("Address not updated", primaryColor);
-                        }
-                      } else {
-                        bool added =
-                            await BlocProvider.of<AddressCubit>(context)
-                                .addAddress(addressObj);
-                        if (added) {
-                          showToast("Address Added", primaryColor);
-                          Navigator.pop(context);
-                        } else {
-                          showToast("Address not added", primaryColor);
-                        }
-                      }
-                    } else {
-                      showToast("Please fill all fields", primaryColor);
-                    }
-                  },
-                  child: Text(
-                    '${widget.edit == null || widget.edit == false ? "Add" : "Edit"} Address',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ).tr(),
-                ),
               )
             ],
           ),
-        ));
+          body: Padding(
+            padding: const EdgeInsets.all(15),
+            child: ListView(
+              children: [
+                if (widget.edit == null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                      "Add new Address",
+                      style: boldTextStyle,
+                    ).tr(),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Address',
+                    style: boldTextStyle,
+                  ).tr(),
+                ),
+                TextField(
+                  controller: adCont,
+                  decoration: InputDecoration(
+                    hintText: 'Enter full address'.tr(),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                  onChanged: (val) {
+                    address = val;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'City',
+                    style: boldTextStyle,
+                  ).tr(),
+                ),
+                TextField(
+                  controller: cityCont,
+                  decoration: InputDecoration(
+                    hintText: 'Enter city name'.tr(),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                  onChanged: (val) {
+                    city = val;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Country',
+                    style: boldTextStyle,
+                  ).tr(),
+                ),
+                TextField(
+                  controller: countCont,
+                  decoration: InputDecoration(
+                    hintText: 'Enter country name'.tr(),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                  onChanged: (val) {
+                    country = val;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Postal Code',
+                    style: boldTextStyle,
+                  ).tr(),
+                ),
+                TextField(
+                  controller: postalCont,
+                  decoration: InputDecoration(
+                    hintText: 'Enter postal code'.tr(),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black)),
+                  ),
+                  onChanged: (val) {
+                    postal = val;
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    'Label',
+                    style: boldTextStyle,
+                  ).tr(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Radio(
+                      value: 1,
+                      activeColor: primaryColor,
+                      groupValue: group,
+                      onChanged: (val) {
+                        setState(() {
+                          group = val;
+                        });
+                      },
+                    ),
+                    Text('Home').tr(),
+                    Radio(
+                      value: 2,
+                      activeColor: primaryColor,
+                      groupValue: group,
+                      onChanged: (val) {
+                        setState(() {
+                          group = val;
+                        });
+                      },
+                    ),
+                    Text('Office').tr(),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: MyButton(
+                    height: 55,
+                    innerColor: primaryColor,
+                    borderColor: Colors.transparent,
+                    onPressed: () async {
+                      if (postal != '' &&
+                          city != '' &&
+                          country != "" &&
+                          address != '') {
+                        Address addressObj = Address();
+                        addressObj.address =
+                            address == '' ? widget.address.address : address;
+                        addressObj.city =
+                            city == '' ? widget.address.city : city;
+                        addressObj.country =
+                            country == '' ? widget.address.country : country;
+                        addressObj.postalCode =
+                            postal == '' ? widget.address.postalCode : postal;
+                        addressObj.customerId = widget.user.id;
+                        addressObj.label = group == 1 ? "Home" : "Office";
+                        if (widget.edit != null && widget.edit != false) {
+                          addressObj.id = widget.address.id;
+                        }
+                        if (widget.edit != null && widget.edit != false) {
+                          print('INSIDE EDIT ADDRESS');
+                          bool updated =
+                              await BlocProvider.of<AddressCubit>(context)
+                                  .updateAddress(addressObj);
+                          if (updated) {
+                            showToast("Address Updated", primaryColor);
+                            Navigator.pop(context);
+                          } else {
+                            showToast("Address not updated", primaryColor);
+                          }
+                        } else {
+                          bool added =
+                              await BlocProvider.of<AddressCubit>(context)
+                                  .addAddress(addressObj);
+                          if (added) {
+                            showToast("Address Added", primaryColor);
+                            Navigator.pop(context);
+                          } else {
+                            showToast("Address not added", primaryColor);
+                          }
+                        }
+                      } else {
+                        showToast("Please fill all fields", primaryColor);
+                      }
+                    },
+                    child: Text(
+                      widget.edit == null ? "Add address" : "Save",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ).tr(),
+                  ),
+                )
+              ],
+            ),
+          )),
+    );
   }
 
   Widget old() {

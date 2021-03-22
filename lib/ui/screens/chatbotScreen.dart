@@ -34,7 +34,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   void initState() {
     super.initState();
 
-    widgets.add(listViewItem("How can I help you?", right: false));
+    widgets.add(listViewItem("How can I help you?".tr(), right: false));
   }
 
   @override
@@ -81,7 +81,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                           .getAnswer(question: question.text);
                       if (answer == "" || answer == null || answer == '""') {
                         setState(() {
-                          widgets.add(listViewItem("No related query available",
+                          widgets.add(listViewItem(
+                              "No related query available".tr(),
                               right: false));
                         });
                       } else {

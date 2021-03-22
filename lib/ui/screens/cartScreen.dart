@@ -139,7 +139,7 @@ class _CartScreenState extends State<CartScreen> {
                                       style: TextStyle(
                                         fontSize: 18,
                                       )).tr(),
-                                  Text('. ${state.vat}',
+                                  Text('. ${state.vat ?? "0.0"}',
                                       style: TextStyle(
                                         fontSize: 18,
                                       ))
@@ -148,33 +148,36 @@ class _CartScreenState extends State<CartScreen> {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: screenHeight * 0.025,
-                              left: screenWidth * 0.032,
-                              right: screenWidth * 0.032),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Discount',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  )).tr(),
-                              Row(
-                                children: [
-                                  Text("-" + 'SAR'.tr(),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      )).tr(),
-                                  Text('. ${state.discount}',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ))
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(
+                        //       top: screenHeight * 0.025,
+                        //       left: screenWidth * 0.032,
+                        //       right: screenWidth * 0.032),
+                        //   child: Row(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //     children: [
+                        //       Text('Discount',
+                        //           style: TextStyle(
+                        //             fontSize: 18,
+                        //           )).tr(),
+                        //       Row(
+                        //         children: [
+                        //           Text("-" + 'SAR'.tr(),
+                        //               style: TextStyle(
+                        //                 fontSize: 18,
+                        //               )).tr(),
+                        //           Text(
+                        //               state.discount != null
+                        //                   ? '. ${state.discount.runtimeType == String ? double.parse(state.discount).toStringAsPrecision(5).toString() : state.discount.toStringAsPrecision(5).toString()}'
+                        //                   : ". 0.0",
+                        //               style: TextStyle(
+                        //                 fontSize: 18,
+                        //               ))
+                        //         ],
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         Padding(
                           padding: EdgeInsets.only(
                               top: screenHeight * 0.025,

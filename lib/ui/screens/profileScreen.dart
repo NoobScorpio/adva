@@ -146,16 +146,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   child: GestureDetector(
                                     onTap: () async {
-                                      
                                       try {
                                         List<Media> res =
                                             await ImagesPicker.pick(
                                           count: 1,
                                           pickType: PickType.image,
-                                            cropOpt: CropOption(
-                                              aspectRatio: CropAspectRatio.custom,
-                                              cropType: CropType.rect, // currently for android
-                                            ),
+                                          cropOpt: CropOption(
+                                            aspectRatio: CropAspectRatio.custom,
+                                            cropType: CropType
+                                                .rect, // currently for android
+                                          ),
                                         );
                                         if (res != null && res.length > 0) {
                                           File image = File(res[0].path);
@@ -205,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       'First Name',
                       style: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.black54,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
                     ).tr(),
@@ -223,7 +223,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       'Last Name',
                       style: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.black54,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
                     ).tr(),
@@ -241,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Text(
                       'Receiver Communication in',
                       style: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.black54,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
                     ).tr(),
@@ -259,23 +259,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: MyButton(
-                width: double.maxFinite,
-                height: 55,
-                borderColor: primaryColor,
-                innerColor: Colors.white,
-                child: Text(
-                  'Change Password',
-                  style: TextStyle(color: primaryColor),
-                ).tr(),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ChangePasswordScreen(user: widget.user)));
-                }),
+            padding: EdgeInsets.only(
+                top: 25.0,
+                bottom: 25.0,
+                left: 25.0,
+                right: MediaQuery.of(context).size.width / 2.65),
+            child: Container(
+              // width: MediaQuery.of(context).size.width / 2,
+              child: MyButton(
+                  // width: MediaQuery.of(context).size.width / 2,
+                  height: 55,
+                  borderColor: primaryColor,
+                  innerColor: Colors.white,
+                  child: Text(
+                    'Change Password',
+                    style: TextStyle(color: primaryColor),
+                  ).tr(),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ChangePasswordScreen(user: widget.user)));
+                  }),
+            ),
           ),
         ],
       ),

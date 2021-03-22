@@ -4,6 +4,7 @@ import 'package:adva/bloc/ads_bloc/getAdsCubit.dart';
 import 'package:adva/bloc/brand_bloc/getBrandsCubit.dart';
 import 'package:adva/bloc/category_bloc/getCategoryCubit.dart';
 import 'package:adva/bloc/category_bloc/getCategoryProductsCubit.dart';
+import 'package:adva/bloc/gallery_bloc/postCubit.dart';
 import 'package:adva/bloc/offer_bloc/getOffersCubit.dart';
 import 'package:adva/bloc/seller_bloc/getSellerCubit.dart';
 import 'package:adva/bloc/user_bloc/userLogInCubit.dart';
@@ -34,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
     BlocProvider.of<GetFeaturedCubit>(context).getSellers();
     BlocProvider.of<GetOfferCubit>(context).getOffers();
     BlocProvider.of<GetSellerCubit>(context).getSellers();
-
+    BlocProvider.of<PostsCubit>(context).getPosts('');
     BlocProvider.of<GetBrandsCubit>(context).getBrands();
     BlocProvider.of<GetCategoryProductsCubit>(context)
         .getCategoryProducts("Makeup");
@@ -81,7 +82,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     Timer(
-        Duration(seconds: 7),
+        Duration(milliseconds: 8000),
         () => Navigator.of(context).pushAndRemoveUntil(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
@@ -102,32 +103,12 @@ class _SplashScreenState extends State<SplashScreen> {
               },
             ),
             (route) => false));
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   setState(() {
-    //     height = 100;
-    //     width = 100;
-    //   });
-    //   Timer(
-    //       Duration(seconds: 3),
-    //       () => setState(() {
-    //         height = 100;
-    //         width = 100;
-    //             show = true;
-    //           }));
-    // });
 
-    // Timer(
-    //     Duration(seconds: 3),
-    //     () => setState(() {
-    //           height = 100;
-    //           width = 100;
-    //           show = true;
-    //         }));
     return Scaffold(
       backgroundColor: bg,
       body: Center(
         child: Image.asset(
-          'assets/images/intro_black.gif',
+          'assets/images/new-intro.gif',
           scale: 2,
         ),
       ),

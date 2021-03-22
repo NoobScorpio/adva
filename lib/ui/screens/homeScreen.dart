@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Stack(
                 children: [
                   SizedBox(
-                    height: screenHeight * 0.365,
+                    height: screenHeight * 0.30,
                     width: screenWidth,
                     child: BlocBuilder<GetAdsCubit, AdsState>(
                       builder: (context, state) {
@@ -204,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             for (Ads ad in ads) {
                               images.add(Container(
                                 width: double.maxFinite,
-                                height: screenHeight * 0.365,
+                                height: screenHeight * 0.30,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     fit: BoxFit.fill,
@@ -238,8 +238,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       bottom: 0,
                       left: 0,
                       child: Container(
-                        height: 80,
-                        width: 200,
+                        height: 60,
+                        width: screenWidth * 0.68,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.5),
                           borderRadius: BorderRadius.only(
@@ -252,19 +252,22 @@ class _HomeScreenState extends State<HomeScreen> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "Free Shipping",
+                                "Free Shipping".tr() +
+                                    " " +
+                                    "above".tr() +
+                                    " $shipRate",
                                 style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 2.0),
-                              ).tr(),
-                              Text(
-                                "above".tr() + " $shipRate",
-                                style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w500,
                                     letterSpacing: 2.0),
-                              ),
+                              ).tr(),
+                              // Text(
+                              //   "above".tr() + " $shipRate",
+                              //   style: TextStyle(
+                              //       fontSize: 14,
+                              //       fontWeight: FontWeight.w500,
+                              //       letterSpacing: 2.0),
+                              // ),
                             ],
                           ),
                         ),
@@ -275,8 +278,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       bottom: 0,
                       right: 0,
                       child: Container(
-                        height: 80,
-                        width: 200,
+                        height: 60,
+                        width: screenWidth * 0.65,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.5),
                           borderRadius: BorderRadius.only(
@@ -286,17 +289,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                "Free Shipping",
+                                "شحن مجاني للطلبات الاكثر",
                                 style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 2.0),
                               ).tr(),
                               Text(
-                                "above".tr() + " $shipRate",
+                                " من $shipRate ريال ",
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,

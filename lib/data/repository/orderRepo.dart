@@ -4,10 +4,11 @@ import 'package:adva/data/model/order.dart';
 import 'package:adva/data/model/orderDetails.dart';
 import 'package:adva/data/model/orderDetail.dart';
 import 'package:adva/data/model/orderProduct.dart';
-import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/return.dart';
 import 'package:adva/data/model/returnOrderProduct.dart';
 import 'package:adva/res/appStrings.dart';
+import 'package:adva/ui/utils/constants.dart';
+import 'package:adva/ui/utils/toast.dart';
 import 'package:http/http.dart' as http;
 
 abstract class OrderRepository {
@@ -141,6 +142,9 @@ class OrderRepositoryImpl extends OrderRepository {
         return data['points'];
       } else if (response.statusCode == 400) {
         print('Response 400:${response.body}');
+        if (response.body.toString().contains('Promo')) {
+          showToast("Invalid promo code", primaryColor);
+        }
         return null;
       } else if (response.statusCode == 500) {
         print('Response 500:${response.body}');
@@ -164,16 +168,21 @@ class OrderRepositoryImpl extends OrderRepository {
     try {
       var response = await http
           .post(Uri.parse(baseURL + "/customer/payment/confirm"), body: {
-        "id": order.id,
+        "id": order.id ?? "",
         "customer_id": order.customerId.toString(),
         "total": order.total.toString(),
         "phone": order.phone.toString(),
         "email": order.email.toString(),
         "address_id": order.addressId.toString(),
         "payment_type": order.paymentType.toString(),
-        "promo_code": order.promoCode,
-        "discount_code": order.discountCode,
-        "points_discount": order.pointsDiscount.toString(),
+        "promo_code":
+            order.promoCode == null ? 0.toString() : order.promoCode.toString(),
+        "discount_code": order.discountCode == null
+            ? 0.toString()
+            : order.discountCode.toString(),
+        "points_discount": order.pointsDiscount == null
+            ? 0.toString()
+            : order.pointsDiscount.toString(),
         "products": json.encode(order.products),
         "is_mobile": true.toString(),
       });
@@ -188,9 +197,12 @@ class OrderRepositoryImpl extends OrderRepository {
         // print("@ORDER CREATE $data");
         // print("@ORDER CREATE ${data['result']['code']}");
         if (match) {
+          print('Response 200:MATCH ${response.body}');
           return true;
+        } else {
+          print('Response 200:NO MATCH ${response.body}');
+          return null;
         }
-        return null;
       } else if (response.statusCode == 400) {
         print('Response 400:${response.body}');
         return null;

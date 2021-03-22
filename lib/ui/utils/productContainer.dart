@@ -7,6 +7,8 @@ import 'package:adva/data/model/product.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/model/wishlist.dart';
 import 'package:adva/data/repository/productRepo.dart';
+import 'package:adva/ui/screens/accountsloginScreen.dart';
+import 'package:adva/ui/screens/loginScreen.dart';
 import 'package:adva/ui/screens/productViewScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/toast.dart';
@@ -153,6 +155,12 @@ class _ProductContainerState extends State<ProductContainer> {
 
                               if (loggedIn == null || loggedIn == false) {
                                 showToast('Not Logged In', primaryColor);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => AccountsLoginScreen(
+                                              product: true,
+                                            )));
                               } else {
                                 String userString = sp.getString('user');
 
@@ -173,7 +181,10 @@ class _ProductContainerState extends State<ProductContainer> {
                                     cartItem.pName = product.productName;
                                     cartItem.arabicName =
                                         product.productArabicName;
-                                    cartItem.price = product.price;
+                                    cartItem.price = product.timer == 1
+                                        ? product.price -
+                                            product.discountedAmount
+                                        : product.price;
                                     cartItem.image =
                                         product.productimages == null
                                             ? null
@@ -256,6 +267,12 @@ class _ProductContainerState extends State<ProductContainer> {
                                     sp.getBool('loggedIn') == false) {
                                   showToast(
                                       "You are not logged in", primaryColor);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => AccountsLoginScreen(
+                                                product: true,
+                                              )));
                                 } else {
                                   int response =
                                       await BlocProvider.of<WishCubit>(context)
@@ -437,6 +454,13 @@ class _ProductContainerState extends State<ProductContainer> {
                                           loggedIn == false) {
                                         showToast(
                                             'Not Logged In', primaryColor);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    AccountsLoginScreen(
+                                                      product: true,
+                                                    )));
                                       } else {
                                         String userString =
                                             sp.getString('user');
@@ -464,7 +488,10 @@ class _ProductContainerState extends State<ProductContainer> {
                                                 product.productName;
                                             cartItem.arabicName =
                                                 product.productArabicName;
-                                            cartItem.price = product.price;
+                                            cartItem.price = product.timer == 1
+                                                ? product.price -
+                                                    product.discountedAmount
+                                                : product.price;
                                             cartItem.image =
                                                 product.productimages == null
                                                     ? null
@@ -561,6 +588,13 @@ class _ProductContainerState extends State<ProductContainer> {
                                           sp.getBool('loggedIn') == false) {
                                         showToast("You are not logged in",
                                             primaryColor);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (_) =>
+                                                    AccountsLoginScreen(
+                                                      product: true,
+                                                    )));
                                       } else {
                                         int response = await BlocProvider.of<
                                                 WishCubit>(context)

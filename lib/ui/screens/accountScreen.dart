@@ -341,23 +341,23 @@ class _AccountScreenState extends State<AccountScreen> {
           Divider(
             height: 1,
           ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MyPaymentScreen()));
-            },
-            child: ListTile(
-              tileColor: Colors.white,
-              leading: Icon(
-                Icons.credit_card,
-                color: secondaryColor,
-              ),
-              title: Text('Payment').tr(),
-            ),
-          ),
-          Divider(
-            height: 1,
-          ),
+          // GestureDetector(
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => MyPaymentScreen()));
+          //   },
+          //   child: ListTile(
+          //     tileColor: Colors.white,
+          //     leading: Icon(
+          //       Icons.credit_card,
+          //       color: secondaryColor,
+          //     ),
+          //     title: Text('Payment').tr(),
+          //   ),
+          // ),
+          // Divider(
+          //   height: 1,
+          // ),
           GestureDetector(
             onTap: () {
               Navigator.push(context,
@@ -417,23 +417,23 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
             ),
           ),
-          Divider(
-            height: 1,
-          ),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RefundScreen()));
-            },
-            child: ListTile(
-              tileColor: Colors.white,
-              leading: Icon(
-                Icons.settings_outlined,
-                color: secondaryColor,
-              ),
-              title: Text('Preferences').tr(),
-            ),
-          ),
+          // Divider(
+          //   height: 1,
+          // ),
+          // GestureDetector(
+          //   onTap: () {
+          //     Navigator.push(context,
+          //         MaterialPageRoute(builder: (context) => RefundScreen()));
+          //   },
+          //   child: ListTile(
+          //     tileColor: Colors.white,
+          //     leading: Icon(
+          //       Icons.settings_outlined,
+          //       color: secondaryColor,
+          //     ),
+          //     title: Text('Preferences').tr(),
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(15),
             child: Text(
@@ -558,7 +558,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Copyrights',
+                      'Copyrights ©',
                       style: TextStyle(fontSize: 12),
                     ).tr(),
                   ),
@@ -661,11 +661,15 @@ class _AccountScreenState extends State<AccountScreen> {
                               ),
                             ),
                           );
-                          context.locale = Locale('ar', 'AE');
-                          await BlocProvider.of<GetCategoryCubit>(context)
-                              .getCategories();
-                          await BlocProvider.of<GetFeaturedCubit>(context)
-                              .getSellers();
+                          if (mounted) {
+                            context.locale = Locale('ar', 'AE');
+                            await BlocProvider.of<GetCategoryCubit>(context)
+                                .getCategories();
+                            await BlocProvider.of<GetFeaturedCubit>(context)
+                                .getSellers();
+                          } else {
+                            print("NOT MOUNTED");
+                          }
                           Navigator.pop(context);
                           Navigator.pop(context);
                         },

@@ -61,8 +61,13 @@ class CartItemAddedState extends CartState {
 
 class CartItemRemoveState extends CartState {
   final List<CartItem> removed;
-  final total, subTotal;
-  CartItemRemoveState({this.total, this.subTotal, @required this.removed});
+  final total, subTotal, vat, discount;
+  CartItemRemoveState(
+      {this.vat,
+      this.discount,
+      this.total,
+      this.subTotal,
+      @required this.removed});
 
   @override
   // TODO: implement props

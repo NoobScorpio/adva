@@ -115,7 +115,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
         images.add({"image": baseImage, "filetype": ext});
       }
-
+      print("@ REVIEW %$pid $cid ");
       var response = await http.post(
         Uri.parse(baseURL + "/review/basedecode/create"),
         body: {

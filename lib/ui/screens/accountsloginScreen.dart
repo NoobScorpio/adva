@@ -12,10 +12,15 @@ import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class AccountsLoginScreen extends StatefulWidget {
+  final bool product, view;
+
+  const AccountsLoginScreen({Key key, this.product, this.view})
+      : super(key: key);
   @override
   _AccountsLoginScreenState createState() => _AccountsLoginScreenState();
 }
@@ -165,6 +170,17 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                               .getWishLists(User.fromJson(json.decode(
                                       sharedPreferences.getString('user')))
                                   .id);
+                          // if (widget.product == null) {
+                          //   Navigator.pop(context);
+                          //   Navigator.pop(context);
+                          // } else {
+                          //   if (widget.view == null) {
+                          //     Navigator.pop(context);
+                          //   } else {
+                          //     Navigator.pop(context);
+                          //     Navigator.pop(context);
+                          //   }
+                          // }
                           Navigator.pop(context);
                           Navigator.pop(context);
                         } else {
@@ -196,13 +212,23 @@ class _AccountsLoginScreenState extends State<AccountsLoginScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset("assets/images/facebook.svg",
-                          semanticsLabel: 'facebook Logo'),
+                      // SvgPicture.asset("assets/images/facebook.svg",
+                      //     semanticsLabel: 'facebook Logo'),
+                      Icon(
+                        FontAwesomeIcons.facebook,
+                        size: 30,
+                        color: Colors.blueAccent,
+                      ),
                       SizedBox(
                         width: 15,
                       ),
-                      SvgPicture.asset("assets/images/google-symbol.svg",
-                          semanticsLabel: 'google logo'),
+                      Icon(
+                        FontAwesomeIcons.google,
+                        size: 30,
+                        color: Colors.redAccent,
+                      ),
+                      // SvgPicture.asset("assets/images/google-symbol.svg",
+                      //     semanticsLabel: 'google logo'),
                     ],
                   ),
                 ),

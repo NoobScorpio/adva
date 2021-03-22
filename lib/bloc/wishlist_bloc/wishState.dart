@@ -1,6 +1,5 @@
 import 'package:adva/data/model/wishlist.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 abstract class WishListState extends Equatable {}
 

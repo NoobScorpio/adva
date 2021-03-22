@@ -23,7 +23,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<PostsCubit>(context).getPosts('');
   }
 
   @override
@@ -126,30 +125,78 @@ class _GalleryScreenState extends State<GalleryScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: primaryColor,
         onPressed: () async {
-          try {
-            List<Media> res = await ImagesPicker.pick(
-              count: 1,
-              pickType: PickType.image,
-              cropOpt: CropOption(
-                aspectRatio: CropAspectRatio.custom,
-                cropType: CropType.rect, // currently for android
-              ),
-            );
-            if (res != null && res.length > 0) {
-              File image = File(res[0].path);
-              SharedPreferences sp = await SharedPreferences.getInstance();
-              User user = User.fromJson(json.decode(sp.getString('user')));
-              await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) =>
-                          CreatePostScreen(image: image, user: user)));
+          bool yes = await showDialog(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                  title: Text("Agreement").tr(),
+                  content: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "I have no objection to publishing my photos on the ADVA Beauty website, and "
+                      "this is my acknowledgment of that, as there is absolutely no responsibility on the company.",
+                      textAlign: TextAlign.justify,
+                    ).tr(),
+                  ),
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: Text(
+                            "No".tr(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                            ),
+                          )),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: Text(
+                            "Yes".tr(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: primaryColor),
+                          )),
+                    ),
+                  ],
+                );
+              });
+          print("@AGREEMENT $yes");
+          if (yes) {
+            try {
+              List<Media> res = await ImagesPicker.pick(
+                count: 1,
+                pickType: PickType.image,
+                cropOpt: CropOption(
+                  aspectRatio: CropAspectRatio.custom,
+                  cropType: CropType.rect, // currently for android
+                ),
+              );
+              if (res != null && res.length > 0) {
+                File image = File(res[0].path);
+                SharedPreferences sp = await SharedPreferences.getInstance();
+                User user = User.fromJson(json.decode(sp.getString('user')));
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) =>
+                            CreatePostScreen(image: image, user: user)));
+              }
+            } catch (e) {
+              print(e);
+              showToast("Something went wrong", primaryColor);
             }
-          } catch (e) {
-            print(e);
-            showToast("Something went wrong", primaryColor);
+            BlocProvider.of<PostsCubit>(context).getPosts('');
           }
-          BlocProvider.of<PostsCubit>(context).getPosts('');
         },
         child: Icon(Icons.add, color: Colors.white),
       ),

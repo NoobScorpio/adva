@@ -1,5 +1,4 @@
 import 'package:adva/data/model/orderProduct.dart';
-import 'package:adva/data/model/product.dart';
 
 class Order {
   int customerId;

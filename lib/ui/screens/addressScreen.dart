@@ -6,6 +6,7 @@ import 'package:adva/data/model/user.dart';
 import 'package:adva/ui/screens/addAddressScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +25,7 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
@@ -51,9 +52,7 @@ class _AddressScreenState extends State<AddressScreen> {
             builder: (context, state) {
               if (state is AddressLoadingState)
                 return Center(
-                  child: CircularProgressIndicator(
-                    backgroundColor: primaryColor,
-                  ),
+                  child: buildLoading(),
                 );
               if (state is AddressLoadingState)
                 return makeAddresses(addresses: []);
@@ -124,19 +123,11 @@ class _AddressScreenState extends State<AddressScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Text('Details').tr(),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          '${address.label ?? "Home"}',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600, fontSize: 12),
-                        ).tr(),
-                      ],
-                    ),
+                    Text(
+                      '${address.label ?? "Home"}',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                    ).tr(),
                     Row(
                       children: [
                         GestureDetector(

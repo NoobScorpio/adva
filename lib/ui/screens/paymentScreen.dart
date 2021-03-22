@@ -116,8 +116,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             Radio(
                               value: 1,
                               groupValue: groupValue1,
-                              onChanged: (newValue) =>
-                                  setState(() => groupValue1 = newValue),
+                              onChanged: (newValue) {
+                                setState(() => groupValue1 = newValue);
+                              },
                               activeColor: primaryColor,
                             )
                           ],
@@ -211,6 +212,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             promoCode = promoCont.text;
                             promoCont.text = '';
                           });
+                          showToast('Applied', primaryColor);
                         } else {
                           showToast('Promo not valid', primaryColor);
                         }
@@ -286,6 +288,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             discountCode = discountCont.text;
                             discountCont.text = '';
                           });
+                          showToast('Applied', primaryColor);
                         } else {
                           showToast('Discount not valid', primaryColor);
                         }
@@ -389,10 +392,19 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                           discountCode: discountApplied
                                               ? discountCode
                                               : null,
+                                          discountValue: discountValue ?? null,
+                                          promoValue: promoValue ?? null,
+                                          pointsValue: pointsGroup > 0
+                                              ? widget.total *
+                                                  ((pointsGroup * 10) / 100)
+                                              : null,
                                           pointsDiscount: pointsGroup != 0
                                               ? pointsGroup
                                               : null,
                                           total: overAllTotal,
+                                          codRate: groupValue1 == 2
+                                              ? widget.codRate
+                                              : null,
                                           shipRate: widget.shipRate,
                                           subTotal: widget.subTotal,
                                           user: widget.user)));
@@ -572,6 +584,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       discount: dISCOUNT,
       flatShippingRate: sHIP,
       points: points,
+      codRate: groupValue1 == 2 ? widget.codRate : null,
     );
   }
 
