@@ -219,7 +219,10 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                         children: [
                           Text(
                             "${context.locale == Locale('en', '') ? orderDetail.cart[i].product.productName : orderDetail.cart[i].product.productArabicName}",
-                            style: boldTextStyle,
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black),
                           ).tr(),
                           SizedBox(
                             height: 5,
@@ -236,7 +239,10 @@ class _OrderReturnScreenState extends State<OrderReturnScreen> {
                         children: [
                           Text(
                             "SAR".tr() + ". ${orderDetail.cart[i].total}",
-                            style: boldTextStyle,
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black),
                           ),
                           SizedBox(
                             height: 5,

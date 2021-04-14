@@ -39,6 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
     BlocProvider.of<GetBrandsCubit>(context).getBrands();
     BlocProvider.of<GetCategoryProductsCubit>(context)
         .getCategoryProducts("Makeup");
+    BlocProvider.of<UserCubit>(context).getUser();
+    BlocProvider.of<PostsCubit>(context).getPosts('');
     getPrefs();
   }
 
@@ -83,7 +85,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     Timer(
         Duration(milliseconds: 8000),
-        () => Navigator.of(context).pushAndRemoveUntil(
+        () => Navigator.pushAndRemoveUntil(
+            context,
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   BottomNavBar(),

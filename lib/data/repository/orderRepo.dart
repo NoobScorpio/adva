@@ -9,6 +9,7 @@ import 'package:adva/data/model/returnOrderProduct.dart';
 import 'package:adva/res/appStrings.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/toast.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 abstract class OrderRepository {
@@ -24,6 +25,7 @@ class OrderRepositoryImpl extends OrderRepository {
   @override
   Future<List<OrderDetails>> getOrders(int cid) async {
     try {
+      print("@ORDER $cid");
       var response = await http.get(Uri.parse(baseURL + "/order/$cid"));
       if (response.statusCode == 200 || response.statusCode == 201) {
         print("OrderDetails  ${response.statusCode}");
@@ -50,6 +52,7 @@ class OrderRepositoryImpl extends OrderRepository {
   @override
   Future<OrderDetail> getOrderDetail(int cid, int oid) async {
     try {
+      print("@ORDER $cid $oid");
       var response =
           await http.get(Uri.parse(baseURL + "/order/details/$cid/$oid"));
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -115,6 +118,24 @@ class OrderRepositoryImpl extends OrderRepository {
       });
     }
     try {
+      print({
+        "customer_id": order.customerId.toString(),
+        "total": order.total.toString(),
+        "phone": order.phone.toString(),
+        "email": order.email.toString(),
+        "address_id": order.addressId.toString(),
+        "payment_type": order.paymentType.toString(),
+        "promo_code":
+            order.promoCode == null ? 0.toString() : order.promoCode.toString(),
+        "discount_code": order.discountCode == null
+            ? 0.toString()
+            : order.discountCode.toString(),
+        "points_discount": order.pointsDiscount == null
+            ? 0.toString()
+            : order.pointsDiscount.toString(),
+        "products": json.encode(order.products),
+        "is_mobile": true.toString(),
+      });
       var response =
           await http.post(Uri.parse(baseURL + "/order/create"), body: {
         "customer_id": order.customerId.toString(),
@@ -145,6 +166,9 @@ class OrderRepositoryImpl extends OrderRepository {
         if (response.body.toString().contains('Promo')) {
           showToast("Invalid promo code", primaryColor);
         }
+        var data = json.decode(response.body);
+        print('Response 400:${response.body}');
+        showToast(data['error'], Colors.red);
         return null;
       } else if (response.statusCode == 500) {
         print('Response 500:${response.body}');
@@ -188,23 +212,25 @@ class OrderRepositoryImpl extends OrderRepository {
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        RegExp exp = new RegExp(r"/^(000\.000\.|000\.100\.1|000\.[36])/");
+        // RegExp exp = new RegExp(r"/^(000\.000\.|000\.100\.1|000\.[36])/");
         var data = json.decode(response.body);
-        String code = data['result']['code'];
-        print("@CODE $code");
-
-        bool match = exp.hasMatch(code);
+        // String code = data['result']['code'];
+        print("@CODE $data");
+        //
+        // bool match = exp.hasMatch(code);
         // print("@ORDER CREATE $data");
         // print("@ORDER CREATE ${data['result']['code']}");
-        if (match) {
-          print('Response 200:MATCH ${response.body}');
-          return true;
-        } else {
-          print('Response 200:NO MATCH ${response.body}');
-          return null;
-        }
+        // if (match) {
+        print('Response 200:MATCH ${response.body}');
+        return true;
+        // } else {
+        //   print('Response 200:NO MATCH ${response.body}');
+        //   return null;
+        // }
       } else if (response.statusCode == 400) {
+        var data = json.decode(response.body);
         print('Response 400:${response.body}');
+        showToast(data['error'], Colors.red);
         return null;
       } else if (response.statusCode == 500) {
         print('Response 500:${response.body}');

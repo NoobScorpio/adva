@@ -141,7 +141,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                 ),
                               ),
                               Text(
-                                '${state.user.email}',
+                                '${state.user.email ?? ""}',
                                 style: normalTextStyle,
                               ),
                             ],

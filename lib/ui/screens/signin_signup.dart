@@ -17,7 +17,7 @@ class SignInSignUp extends StatefulWidget {
 }
 
 class _SignInSignUpState extends State<SignInSignUp> {
-  bool english = true;
+  bool english = false;
   SharedPreferences sp;
   @override
   void initState() {
@@ -30,11 +30,11 @@ class _SignInSignUpState extends State<SignInSignUp> {
     bool lang = sp.getBool('lang');
     if (lang == null || lang == true) {
       setState(() {
-        english = true;
+        english = false;
       });
     } else {
       setState(() {
-        english = false;
+        english = true;
       });
     }
   }
@@ -71,14 +71,14 @@ class _SignInSignUpState extends State<SignInSignUp> {
                         color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w500),
-                  ),
+                  ).tr(),
                   Text(
                     'Own your makeup',
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 12,
                         fontWeight: FontWeight.w400),
-                  )
+                  ).tr()
                 ],
               ),
             ],

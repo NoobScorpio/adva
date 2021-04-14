@@ -67,7 +67,8 @@ class PaymentColumn extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 15,
                       )).tr(),
-                  Text('. ${subTotal.toString() ?? ""}',
+                  Text(
+                      '. ${subTotal == null ? 0.0 : subTotal.toString() ?? ""}',
                       style: TextStyle(
                         fontSize: 15,
                       )),
@@ -94,7 +95,7 @@ class PaymentColumn extends StatelessWidget {
                           fontSize: 15,
                         )).tr(),
                     Text(
-                        '. ${promo.runtimeType == String ? double.parse(promo).toStringAsPrecision(5).toString() : promo.toStringAsPrecision(5).toString()}',
+                        '. ${promo.runtimeType == String ? double.parse(promo).toStringAsPrecision(5).toString() : (promo.runtimeType == int ? promo : promo.toStringAsPrecision(5).toString())}',
                         style: TextStyle(
                           fontSize: 15,
                         )),
@@ -120,7 +121,7 @@ class PaymentColumn extends StatelessWidget {
                           fontSize: 15,
                         )).tr(),
                     Text(
-                        '. ${codRate.runtimeType == String ? double.parse(codRate).toStringAsPrecision(3).toString() : codRate.toStringAsPrecision(3).toString()}',
+                        '. ${codRate.runtimeType == String ? double.parse(codRate).toStringAsPrecision(3).toString() : (codRate.runtimeType == int ? codRate : codRate.toStringAsPrecision(3).toString())}',
                         style: TextStyle(
                           fontSize: 15,
                         )),
@@ -146,7 +147,7 @@ class PaymentColumn extends StatelessWidget {
                           fontSize: 15,
                         )).tr(),
                     Text(
-                        '. ${discount.runtimeType == String ? double.parse(discount).toStringAsPrecision(5).toString() : discount.toStringAsPrecision(5).toString()}',
+                        '. ${discount.runtimeType == String ? double.parse(discount).toStringAsPrecision(5).toString() : (discount.runtimeType == int ? discount : discount.toStringAsPrecision(5).toString())}',
                         style: TextStyle(
                           fontSize: 15,
                         )),
@@ -171,7 +172,7 @@ class PaymentColumn extends StatelessWidget {
                           fontSize: 15,
                         )).tr(),
                     Text(
-                        '. ${points.runtimeType == String ? double.parse(points).toStringAsPrecision(5).toString() : points.toStringAsPrecision(5).toString()}',
+                        '. ${points.runtimeType == String ? double.parse(points).toStringAsPrecision(5).toString() : (points.runtimeType == int ? points : points.toStringAsPrecision(5).toString())}',
                         style: TextStyle(
                           fontSize: 15,
                         )),
@@ -195,7 +196,7 @@ class PaymentColumn extends StatelessWidget {
                         fontSize: 15,
                       )).tr(),
                   Text(
-                      '. ${total.runtimeType == String ? double.parse(total).toStringAsPrecision(5).toString() : total.toStringAsPrecision(5).toString()}',
+                      '. ${total.runtimeType == String ? (total == null ? 0.0 : double.parse(total).toStringAsPrecision(5).toString()) : (total == null ? 0.0 : (total.runtimeType == int ? total : total.toStringAsPrecision(5).toString()))}',
                       style: TextStyle(
                         fontSize: 15,
                       )),

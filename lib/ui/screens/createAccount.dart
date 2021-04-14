@@ -96,7 +96,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Email'.tr() + " (Optional)",
+                          hintText: 'Email'.tr(),
                           border: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black)),
                         ),
@@ -105,66 +105,130 @@ class _CreateAccountState extends State<CreateAccount> {
                         },
                       ),
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            // color: Colors.white.withOpacity(0.5),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
-                            border: Border.all(
-                              color: Colors.grey, // red as border color
-                            ),
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              showCountryPicker(
-                                context: context,
-                                //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                                exclude: <String>['KN', 'MF'],
-                                //Optional. Shows phone code before the country name.
-                                showPhoneCode: true,
-                                onSelect: (Country country) {
-                                  print(
-                                      'Select country: ${country.displayName} ');
-                                  setState(() {
-                                    code = country.phoneCode;
-                                    print("@CODE $code");
-                                  });
-                                },
-                              );
-                            },
-                            child: Container(
-                                width: 50,
-                                height: 25,
-                                color: Colors.grey[50],
-                                child: Center(
-                                    child: Text(
-                                  "+$code",
-                                  style: TextStyle(color: primaryColor),
-                                ))),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            // width: MediaQuery.of(context).size.width,
-                            child: TextField(
-                              decoration: InputDecoration(
-                                hintText:
-                                    "Phone Number".tr() + ' ( XXXXXXXXX )'.tr(),
-                                border: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black)),
+                    if (context.locale == Locale('en', ''))
+                      Row(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 65,
+                            decoration: BoxDecoration(
+                              // color: Colors.white.withOpacity(0.5),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              border: Border.all(
+                                color: Colors.grey, // red as border color
                               ),
-                              onChanged: (val) {
-                                phone = val;
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                showCountryPicker(
+                                  context: context,
+                                  //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                                  exclude: <String>['KN', 'MF'],
+                                  //Optional. Shows phone code before the country name.
+                                  showPhoneCode: true,
+                                  onSelect: (Country country) {
+                                    print(
+                                        'Select country: ${country.displayName} ');
+                                    setState(() {
+                                      code = country.phoneCode;
+                                      print("@CODE $code");
+                                    });
+                                  },
+                                );
                               },
+                              child: Container(
+                                  width: 50,
+                                  height: 25,
+                                  color: Colors.grey[50],
+                                  child: Center(
+                                      child: Text(
+                                    "+$code",
+                                    style: TextStyle(color: primaryColor),
+                                  ))),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                          Expanded(
+                            child: Container(
+                              // width: MediaQuery.of(context).size.width,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: "Phone Number".tr() +
+                                      ' ( 5x xxx xxxx )'.tr(),
+                                  border: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black)),
+                                ),
+                                onChanged: (val) {
+                                  phone = val;
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (!(context.locale == Locale('en', '')))
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              // width: MediaQuery.of(context).size.width,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: "Phone Number".tr() +
+                                      ' ( 5x xxx xxxx )'.tr(),
+                                  border: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black)),
+                                ),
+                                onChanged: (val) {
+                                  phone = val;
+                                },
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 50,
+                            height: 65,
+                            decoration: BoxDecoration(
+                              // color: Colors.white.withOpacity(0.5),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              border: Border.all(
+                                color: Colors.grey, // red as border color
+                              ),
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                showCountryPicker(
+                                  context: context,
+                                  //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                                  exclude: <String>['KN', 'MF'],
+                                  //Optional. Shows phone code before the country name.
+                                  showPhoneCode: true,
+                                  onSelect: (Country country) {
+                                    print(
+                                        'Select country: ${country.displayName} ');
+                                    setState(() {
+                                      code = country.phoneCode;
+                                      print("@CODE $code");
+                                    });
+                                  },
+                                );
+                              },
+                              child: Container(
+                                  width: 50,
+                                  height: 25,
+                                  color: Colors.grey[50],
+                                  child: Center(
+                                      child: Text(
+                                    "$code+",
+                                    style: TextStyle(color: primaryColor),
+                                  ))),
+                            ),
+                          ),
+                        ],
+                      ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: Container(

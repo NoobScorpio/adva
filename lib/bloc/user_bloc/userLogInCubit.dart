@@ -58,11 +58,13 @@ class UserCubit extends Cubit<UserState> {
     try {
       // emit(UserLoadingState());
       User user = await userRepository.getUser();
-      emit(GetUserLoggedInState(user: user));
+
       if (user == null)
         return User();
-      else
+      else {
+        emit(GetUserLoggedInState(user: user));
         return user;
+      }
     } on Exception {
       emit(UserErrorState(message: "Could not get user"));
       return User();

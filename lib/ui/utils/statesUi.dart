@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 Widget buildErrorUi(String message) {
   return Center(
@@ -7,7 +8,7 @@ Widget buildErrorUi(String message) {
       child: Text(
         message,
         style: TextStyle(color: Colors.red),
-      ),
+      ).tr(),
     ),
   );
 }

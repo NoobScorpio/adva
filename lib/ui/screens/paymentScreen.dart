@@ -4,6 +4,7 @@ import 'package:adva/data/model/checkOut.dart';
 import 'package:adva/data/model/discountRate.dart';
 import 'package:adva/data/model/payment.dart';
 import 'package:adva/data/model/promo.dart';
+import 'package:adva/data/model/shipRate.dart';
 import 'package:adva/data/model/user.dart';
 import 'package:adva/data/repository/miscRepo.dart';
 import 'package:adva/ui/screens/orderDetailsScreen.dart';
@@ -17,7 +18,8 @@ import 'package:easy_localization/easy_localization.dart';
 class PaymentScreen extends StatefulWidget {
   final User user;
   final CheckOutInfo checkout;
-  final dynamic total, subTotal, shipRate, codRate;
+  final dynamic shipRate;
+  final dynamic total, subTotal, codRate, vat;
   const PaymentScreen(
       {Key key,
       this.user,
@@ -25,7 +27,8 @@ class PaymentScreen extends StatefulWidget {
       this.total,
       this.subTotal,
       this.shipRate,
-      this.codRate})
+      this.codRate,
+      this.vat})
       : super(key: key);
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
@@ -206,8 +209,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             await miscRepo.getPromo(promo: promoCont.text);
                         if (promo != null) {
                           setState(() {
-                            promoValue =
-                                widget.total * (promo.pointsForCustomer / 100);
+                            promoValue = widget.subTotal *
+                                (promo.pointsForCustomer / 100);
                             promoApplied = true;
                             promoCode = promoCont.text;
                             promoCont.text = '';
@@ -280,7 +283,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         DiscountRate discount = await miscRepo.getDiscount(
                             discount: discountCont.text);
                         if (discount != null) {
-                          var total = widget.total;
+                          var total = widget.subTotal;
                           setState(() {
                             discountValue = (total *
                                 (double.parse(discount.discountPercent) / 100));
@@ -353,11 +356,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
               child: Column(
                 children: [
                   getPaymentColumn(
-                      tOTAL: widget.total,
+                      tOTAL: widget.total.runtimeType == String
+                          ? double.parse(widget.total)
+                          : widget.total,
                       dISCOUNT: discountValue,
                       pROMO: promoValue,
-                      sHIP: widget.shipRate,
-                      sUBTOTAL: widget.subTotal),
+                      sHIP: widget.shipRate.runtimeType == String
+                          ? double.parse(widget.shipRate)
+                          : widget.shipRate,
+                      sUBTOTAL: widget.subTotal.runtimeType == String
+                          ? double.parse(widget.subTotal)
+                          : widget.subTotal),
                   Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: screenWidth * 0.05,
@@ -551,7 +560,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget getPaymentColumn({tOTAL, sUBTOTAL, dISCOUNT, pROMO, sHIP}) {
-    print("@PAY START $tOTAL");
+    print("@PAY INTERNATIONAL $sHIP");
     if (pROMO != null && dISCOUNT != null) {
       print("@PAY PROMO--DISCOUNT $pROMO--$dISCOUNT--$tOTAL");
       tOTAL = tOTAL - pROMO - dISCOUNT + sHIP;
@@ -569,13 +578,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if (pointsGroup > 0) {
       dynamic total = widget.total;
       setState(() {
-        points = total * ((pointsGroup * 10) / 100);
+        points = sUBTOTAL * (pointsGroup / 10);
+
         tOTAL = tOTAL - points;
       });
     }
     if (groupValue1 == 2) {
       tOTAL = tOTAL + widget.codRate;
     }
+    print("@POINTS SUB $sUBTOTAL points ${pointsGroup / 10} = $points");
     overAllTotal = tOTAL;
     return PaymentColumn(
       subTotal: sUBTOTAL,

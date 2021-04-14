@@ -1,21 +1,31 @@
+import 'dart:convert';
+
 import 'package:adva/bloc/cart_bloc/cartState.dart';
 import 'package:adva/data/model/cartItem.dart';
+import 'package:adva/data/model/taxRate.dart';
 import 'package:adva/data/repository/cartRepo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CartCubit extends Cubit<CartState> {
   final CartRepository cartRepository;
-
+  SharedPreferences sp;
+  TaxRate tax;
   CartCubit({this.cartRepository}) : super(CartInitialState([]));
 
   Future<bool> addItem(CartItem cartItem) async {
     try {
       dynamic sub = 0.0, total = 0.0, vat = 0.0, discount = 0.0;
       List<CartItem> added = await cartRepository.addItem(cartItem);
+      sp = await SharedPreferences.getInstance();
+      tax = TaxRate.fromJson(jsonDecode(sp.getString('taxRate')));
+
       if (added.length > 0) {
         for (CartItem cartItem in added) {
           sub += (cartItem.price ?? 0.0) * (cartItem.qty ?? 0);
-          vat += cartItem.vat ?? 0.0;
+          vat += cartItem.vat *
+                  ((cartItem.price * (tax.taxValue / 100)) * cartItem.qty) ??
+              0.0;
           discount +=
               (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
         }
@@ -45,10 +55,15 @@ class CartCubit extends Cubit<CartState> {
       dynamic sub = 0.0, total = 0.0, vat = 0.0, discount = 0.0;
       List<CartItem> removed =
           await cartRepository.removeItem(cartItem, remove);
+      sp = await SharedPreferences.getInstance();
+      tax = TaxRate.fromJson(jsonDecode(sp.getString('taxRate')));
+
       if (removed.length > 0) {
         for (CartItem cartItem in removed) {
           sub += (cartItem.price ?? 0.0) * (cartItem.qty ?? 0);
-          vat += cartItem.vat ?? 0.0;
+          vat += cartItem.vat *
+                  ((cartItem.price * (tax.taxValue / 100)) * cartItem.qty) ??
+              0.0;
           // discount +=
           //     (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
         }
@@ -77,10 +92,15 @@ class CartCubit extends Cubit<CartState> {
     try {
       dynamic sub = 0.0, total = 0.0, vat = 0.0;
       List<CartItem> cartItems = await cartRepository.getItems();
+      sp = await SharedPreferences.getInstance();
+      tax = TaxRate.fromJson(jsonDecode(sp.getString('taxRate')));
+
       if (cartItems.length > 0) {
         for (CartItem cartItem in cartItems) {
           sub += (cartItem.price ?? 0.0) * (cartItem.qty ?? 0);
-          vat += cartItem.vat ?? 0.0;
+          vat += cartItem.vat *
+                  ((cartItem.price * (tax.taxValue / 100)) * cartItem.qty) ??
+              0.0;
           // discount +=
           //     (cartItem.discount ?? 0.0) / 100 * (cartItem.price ?? 0.0);
         }

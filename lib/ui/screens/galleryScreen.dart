@@ -8,6 +8,7 @@ import 'package:adva/ui/screens/postsScreen.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/statesUi.dart';
 import 'package:adva/ui/utils/toast.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:images_picker/images_picker.dart';
@@ -53,16 +54,21 @@ class _GalleryScreenState extends State<GalleryScreen> {
             child: BlocBuilder<PostsCubit, GalleryState>(
                 builder: (context, state) {
               if (state is GalleryInitialState) {
+                print("GalleryInitialState");
                 return buildLoading();
               } else if (state is GalleryLoadingState) {
+                print("GalleryLoadingState");
                 return buildLoading();
               } else if (state is GalleryLoadedState) {
+                print("GalleryLoadedState");
                 if (state.posts == null) {
+                  print("GalleryLoadedState POSTS NULL");
                   return Center(
                       child: CircularProgressIndicator(
                     backgroundColor: primaryColor,
                   ));
                 } else {
+                  print("GalleryLoadedState POSTS ${state.posts}");
                   var posts = state.posts;
                   List<Widget> widgets = [];
 
@@ -92,13 +98,24 @@ class _GalleryScreenState extends State<GalleryScreen> {
                                       posts: posts, selected: i, user: null)));
                         }
                       },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(posts[i].image),
-                            )),
+                      child: CachedNetworkImage(
+                        imageUrl: posts[i].image,
+                        imageBuilder: (context, imageProvider) => Container(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageProvider,
+                              )),
+                        ),
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => buildLoading(),
+                        errorWidget: (context, url, error) => Center(
+                            child: Icon(
+                          Icons.error,
+                          color: primaryColor,
+                        )),
                       ),
                     ));
                   }
@@ -114,8 +131,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   );
                 }
               } else if (state is GalleryErrorState) {
+                print("GalleryErrorState");
                 return buildErrorUi(state.message ?? "");
               } else {
+                print("GALLERY ERROR");
                 return buildErrorUi('Could not load data.');
               }
             }),

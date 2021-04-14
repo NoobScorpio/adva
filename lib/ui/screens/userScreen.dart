@@ -32,7 +32,10 @@ class _UserScreenState extends State<UserScreen> {
           return SignInSignUp();
       } else if (state is GetUserLoggedInState) {
         // if (state.user != null)
-        return AccountScreen();
+        if (state.user == null || state.user.id == null)
+          return SignInSignUp();
+        else
+          return AccountScreen();
         // else
         //   return AccountsLoginScreen();
       } else if (state is UserLoggedInState) {

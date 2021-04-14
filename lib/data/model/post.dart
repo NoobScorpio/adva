@@ -35,8 +35,8 @@ class PostModel {
     image = json['image'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
-    likesCount = json['likes_count'];
-    commentsCount = json['comments_count'];
+    likesCount = int.parse(json['likes_count']);
+    commentsCount = int.parse(json['comments_count']);
     customer = json['customer'] != null
         ? new Customer.fromJson(json['customer'])
         : null;

@@ -2,6 +2,7 @@ import 'package:adva/data/model/product.dart';
 import 'package:adva/data/repository/offerRepo.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/makeProducts.dart';
+import 'package:adva/ui/utils/statesUi.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
@@ -55,16 +56,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
         children: [
           if (isLoading)
             Padding(
-              padding: const EdgeInsets.only(top: 150.0),
-              child: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: primaryColor,
-                ),
-              ),
-            ),
+                padding: const EdgeInsets.only(top: 150.0),
+                child: buildLoading()),
           if (!isLoading)
-            makeProducts(
-                MediaQuery.of(context).size.height, products, true, context,
+            makeProducts(MediaQuery.of(context).size.height,
+                MediaQuery.of(context).size.width, products, true, context,
                 message: "No products in this offer".tr()),
         ],
       ),

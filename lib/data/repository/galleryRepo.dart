@@ -22,7 +22,7 @@ class GalleryRepositoryImpl implements GalleryRepository {
         List<PostModel> posts = PostResultModel.fromJson(data).posts;
         return posts;
       } catch (e) {
-        // print(e);
+        print("GALEERY $e");
         return [];
       }
     } else if (response.statusCode == 400) {

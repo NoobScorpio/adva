@@ -95,24 +95,31 @@ class MiscRepositoryImpl extends MiscRepository {
 
   @override
   Future<ShipRate> getShipRate() async {
-    sp = await SharedPreferences.getInstance();
-    var response =
-        await http.get(Uri.parse(baseURL + "/setting/shippingrate/get"));
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      try {
-        var data = json.decode(response.body);
-        ShipRate ship = ShipRate.fromJson(data);
-        await sp.setString('shipRate', json.encode(ship.toJson()));
-        return ship;
-      } catch (e) {
-        print(e);
+    try {
+      sp = await SharedPreferences.getInstance();
+      var response =
+          await http.get(Uri.parse(baseURL + "/setting/shippingrate/get"));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        try {
+          var data = json.decode(response.body);
+          print("SHIP $data");
+          ShipRate ship = ShipRate.fromJson(data);
+          print("SHIP ${ship.toJson()}");
+          await sp.setString('shipRate', json.encode(ship.toJson()));
+          return ship;
+        } catch (e) {
+          print(e);
+          return null;
+        }
+      } else if (response.statusCode == 400) {
+        return null;
+      } else if (response.statusCode == 500) {
+        return null;
+      } else {
         return null;
       }
-    } else if (response.statusCode == 400) {
-      return null;
-    } else if (response.statusCode == 500) {
-      return null;
-    } else {
+    } catch (e) {
+      print("SHIP $e");
       return null;
     }
   }

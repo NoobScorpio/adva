@@ -1,4 +1,5 @@
 import 'package:adva/data/repository/userRepo.dart';
+import 'package:adva/ui/screens/accountsloginScreen.dart';
 import 'package:adva/ui/screens/changeRequestPass.dart';
 import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/myButton.dart';
@@ -167,7 +168,11 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       email, verificationCode, widget.id, widget.register);
 
                   if (verify != null) {
-                    showToast("Verified", primaryColor);
+                    // showToast("Verified", primaryColor);
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => AccountsLoginScreen()));
                     Navigator.pop(context);
                   } else {
                     showToast("Please try again", primaryColor);

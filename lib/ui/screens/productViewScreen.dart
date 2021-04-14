@@ -229,7 +229,9 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            product.productName ?? "",
+            context.locale == Locale('en', '')
+                ? product.productName ?? ""
+                : product.productArabicName ?? "",
             style: TextStyle(
                 color: Colors.black, fontWeight: FontWeight.w600, fontSize: 20),
           ),
@@ -262,19 +264,19 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                         fontSize: 14),
                   ).tr(),
                 ),
-              if (product.discountedAmount != null &&
-                  product.discountedAmount != 0 &&
-                  product.discountedAmount != '0')
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '-${product.discountedAmount}%',
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14),
-                  ),
-                ),
+              // if (product.discountedAmount != null &&
+              //     product.discountedAmount != 0 &&
+              //     product.discountedAmount != '0')
+              //   Padding(
+              //     padding: const EdgeInsets.all(8.0),
+              //     child: Text(
+              //       '-${product.discountedAmount}%',
+              //       style: TextStyle(
+              //           color: Colors.grey,
+              //           fontWeight: FontWeight.w400,
+              //           fontSize: 14),
+              //     ),
+              //   ),
 
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -441,11 +443,11 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
         if (!(questions.length > 0)) {
           questions.add(Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text('No Questions available').tr(),
+            child: Text('Be first to ask a question.').tr(),
           ));
           questionsNext.add(Padding(
             padding: const EdgeInsets.all(15.0),
-            child: Text('No Questions available').tr(),
+            child: Text('Be first to ask a question.').tr(),
           ));
         }
       }
@@ -501,10 +503,16 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: reviews,
-                      ),
+                      if (reviews.length > 0)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: reviews,
+                        ),
+                      if (reviews.length == 0)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('Be first to leave a review').tr(),
+                        ),
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -1044,35 +1052,43 @@ class _ProductViewScreenState extends State<ProductViewScreen> {
                                   var user = User.fromJson(
                                       json.decode(sp.getString('user')));
                                   if (user != null && user.id != null) {
-                                    print(qtySelected.split(' ')[1]);
-                                    CartItem cartItem = CartItem();
-                                    cartItem.pName = pName;
-                                    cartItem.arabicName = arabicName;
-                                    cartItem.arabicDesc = arabicDesc;
-                                    cartItem.price = price;
-                                    cartItem.image = image;
-                                    cartItem.desc = desc;
-                                    cartItem.pid = product.id;
-                                    cartItem.discount = discount;
-                                    cartItem.vat = vat;
-                                    // cartItem.size = size;
-                                    // cartItem.sizeID = sizeValue;
-                                    cartItem.categoryID = categoryID;
-                                    cartItem.category = category;
-                                    cartItem.qty =
-                                        int.parse(qtySelected.split(' ')[1]);
-                                    // cartItem.color = colorValue;
+                                    if (int.parse(qtySelected.split(' ')[1]) >
+                                        product.quantity) {
+                                      showToast(
+                                          'Product quantity not available',
+                                          Colors.red);
+                                    } else {
+                                      print(qtySelected.split(' ')[1]);
+                                      CartItem cartItem = CartItem();
+                                      cartItem.pName = pName;
+                                      cartItem.arabicName = arabicName;
+                                      cartItem.arabicDesc = arabicDesc;
+                                      cartItem.price = price;
+                                      cartItem.image = image;
+                                      cartItem.desc = desc;
+                                      cartItem.pid = product.id;
+                                      cartItem.discount = discount;
+                                      cartItem.vat = vat;
+                                      // cartItem.size = size;
+                                      // cartItem.sizeID = sizeValue;
+                                      cartItem.categoryID = categoryID;
+                                      cartItem.oldPrice = product.price;
+                                      cartItem.category = category;
+                                      cartItem.qty =
+                                          int.parse(qtySelected.split(' ')[1]);
+                                      // cartItem.color = colorValue;
 
-                                    bool added =
-                                        await BlocProvider.of<CartCubit>(
-                                                context)
-                                            .addItem(cartItem);
-                                    if (added)
-                                      showToast("Product Added to cart",
-                                          primaryColor);
-                                    else
-                                      showToast('Could not add to cart',
-                                          primaryColor);
+                                      bool added =
+                                          await BlocProvider.of<CartCubit>(
+                                                  context)
+                                              .addItem(cartItem);
+                                      if (added)
+                                        showToast("Product Added to cart",
+                                            primaryColor);
+                                      else
+                                        showToast('Could not add to cart',
+                                            primaryColor);
+                                    }
                                   } else {
                                     showToast(
                                         "You are not logged in", primaryColor);

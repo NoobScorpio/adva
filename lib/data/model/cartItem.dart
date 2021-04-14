@@ -6,6 +6,7 @@ class CartItem extends Equatable {
   String pName;
   String arabicName;
   dynamic price;
+  dynamic oldPrice;
   int color;
   dynamic vat;
   String category;
@@ -24,6 +25,7 @@ class CartItem extends Equatable {
       this.pName,
       this.arabicCategory,
       this.pid,
+      this.oldPrice,
       this.color,
       this.category,
       this.categoryID,
@@ -51,6 +53,7 @@ class CartItem extends Equatable {
     pName = json['pName'];
     size = json['size'];
     price = json['price'];
+    oldPrice = json['oldPrice'];
     image = json['image'];
     desc = json['desc'];
     wishList = json['wishList'];
@@ -75,6 +78,7 @@ class CartItem extends Equatable {
     data['pName'] = this.pName;
     data['size'] = this.size;
     data['price'] = this.price;
+    data['oldPrice'] = this.oldPrice;
     data['image'] = this.image;
     data['desc'] = this.desc;
     data['wishList'] = this.wishList;

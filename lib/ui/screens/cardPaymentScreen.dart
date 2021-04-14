@@ -1,6 +1,7 @@
 import 'package:adva/res/appStrings.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 class CardPaymentScreen extends StatefulWidget {
@@ -44,7 +45,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
     return Scaffold(
       key: globKeyPay,
       appBar: AppBar(
-        title: Text('Payment'),
+        title: Text('Payment').tr(),
       ),
       body: WebView(
         onPageFinished: (page) async {

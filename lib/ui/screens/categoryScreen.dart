@@ -22,9 +22,10 @@ import 'package:easy_localization/easy_localization.dart';
 
 class ShopCategoryScreen extends StatefulWidget {
   final cid;
-  final bool brand;
+  final bool brand, home;
   final search;
-  const ShopCategoryScreen({Key key, this.cid, this.brand, this.search})
+  const ShopCategoryScreen(
+      {Key key, this.cid, this.brand, this.search, this.home})
       : super(key: key);
   @override
   _ShopCategoryScreenState createState() => _ShopCategoryScreenState(brand);
@@ -66,10 +67,20 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    Image.asset(
-                      'assets/images/advalogo.png',
-                      scale: 3,
-                    ),
+                    if (widget.home == null)
+                      Image.asset(
+                        'assets/images/advalogo.png',
+                        scale: 3,
+                      ),
+                    if (widget.home != null)
+                      InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.black,
+                          )),
                     SizedBox(
                       width: screenWidth * 0.03,
                     ),
@@ -465,6 +476,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                               } else
                                 return makeProducts(
                                   screenHeight,
+                                  screenWidth,
                                   state.products,
                                   box,
                                   context,
@@ -497,6 +509,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                   } else
                                     return makeProducts(
                                       screenHeight,
+                                      screenWidth,
                                       state.products,
                                       box,
                                       context,
@@ -535,6 +548,7 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                     } else
                                       return makeProducts(
                                         screenHeight,
+                                        screenWidth,
                                         state.products,
                                         box,
                                         context,
@@ -573,12 +587,13 @@ class _ShopCategoryScreenState extends State<ShopCategoryScreen> {
                                     } else
                                       return makeProducts(
                                         screenHeight,
+                                        screenWidth,
                                         state.products,
                                         box,
                                         context,
                                       );
                                   } else if (state is CategoryErrorState) {
-                                    return buildErrorUi(state.message);
+                                    return buildErrorUi('Could not load data.');
                                   } else {
                                     return buildErrorUi('Could not load data.');
                                   }

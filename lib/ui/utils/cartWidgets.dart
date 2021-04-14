@@ -8,7 +8,7 @@ import 'package:adva/ui/utils/constants.dart';
 import 'package:adva/ui/utils/toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -136,10 +136,15 @@ class ProductCartContainer extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              '${context.locale == Locale('en', '') ? cartItem.pName : cartItem.arabicName}',
-                              style: TextStyle(
-                                fontSize: 20,
+                            Container(
+                              width: MediaQuery.of(context).size.width / 3,
+                              child: Text(
+                                '${context.locale == Locale('en', '') ? cartItem.pName : cartItem.arabicName}',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
                               ),
                             ),
                             Container(

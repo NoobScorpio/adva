@@ -4,7 +4,9 @@ class ShipRate {
   int status;
   String createdAt;
   String updatedAt;
-  int freeShipping;
+  dynamic freeShipping;
+  dynamic internationalCharges;
+  dynamic freeInternationalShipping;
 
   ShipRate(
       {this.id,
@@ -12,7 +14,9 @@ class ShipRate {
       this.status,
       this.createdAt,
       this.updatedAt,
-      this.freeShipping});
+      this.freeShipping,
+      this.internationalCharges,
+      this.freeInternationalShipping});
 
   ShipRate.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -21,6 +25,8 @@ class ShipRate {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     freeShipping = json['free_shipping'];
+    internationalCharges = json['international_charges'];
+    freeInternationalShipping = json['free_international_shipping'];
   }
 
   Map<String, dynamic> toJson() {
@@ -31,6 +37,8 @@ class ShipRate {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['free_shipping'] = this.freeShipping;
+    data['international_charges'] = this.internationalCharges;
+    data['free_international_shipping'] = this.freeInternationalShipping;
     return data;
   }
 }

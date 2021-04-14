@@ -30,41 +30,42 @@ class Products {
   String createdAt;
   String updatedAt;
   int isBundle;
-  Pivot pivot;
+  // Pivot pivot;
 
-  Products(
-      {this.id,
-      this.productName,
-      this.productArabicName,
-      this.categoryId,
-      this.brandId,
-      this.quantity,
-      this.productDescription,
-      this.productArabicDescription,
-      this.price,
-      this.rewardPoints,
-      this.discountedAmount,
-      this.relatedProducts,
-      this.costPrice,
-      this.tax,
-      this.vat,
-      this.sku,
-      this.model,
-      this.barcode,
-      this.timer,
-      this.timerFrom,
-      this.timerTo,
-      this.featured,
-      this.shipping,
-      this.weight,
-      this.length,
-      this.width,
-      this.height,
-      this.deletedAt,
-      this.createdAt,
-      this.updatedAt,
-      this.isBundle,
-      this.pivot});
+  Products({
+    this.id,
+    this.productName,
+    this.productArabicName,
+    this.categoryId,
+    this.brandId,
+    this.quantity,
+    this.productDescription,
+    this.productArabicDescription,
+    this.price,
+    this.rewardPoints,
+    this.discountedAmount,
+    this.relatedProducts,
+    this.costPrice,
+    this.tax,
+    this.vat,
+    this.sku,
+    this.model,
+    this.barcode,
+    this.timer,
+    this.timerFrom,
+    this.timerTo,
+    this.featured,
+    this.shipping,
+    this.weight,
+    this.length,
+    this.width,
+    this.height,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.isBundle,
+    // this.pivot
+  });
 
   Products.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -98,7 +99,7 @@ class Products {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     isBundle = json['is_bundle'];
-    pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
+    // pivot = json['pivot'] != null ? new Pivot.fromJson(json['pivot']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -134,9 +135,9 @@ class Products {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['is_bundle'] = this.isBundle;
-    if (this.pivot != null) {
-      data['pivot'] = this.pivot.toJson();
-    }
+    // if (this.pivot != null) {
+    //   data['pivot'] = this.pivot.toJson();
+    // }
     return data;
   }
 }

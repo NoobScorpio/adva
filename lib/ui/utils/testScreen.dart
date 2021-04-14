@@ -12,56 +12,25 @@ class TestScreen extends StatefulWidget {
 }
 
 class _TestScreenState extends State<TestScreen> {
-  AdsBloc adsBloc;
-
   @override
   void initState() {
     super.initState();
-    adsBloc = BlocProvider.of<AdsBloc>(context);
-    adsBloc.add(FetchAdsEvent());
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Builder(
-        builder: (context) {
-          return Material(
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text("Cricket"),
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.refresh),
-                    onPressed: () {
-                      adsBloc.add(FetchAdsEvent());
-                    },
-                  ),
-                ],
-              ),
-              body: Container(
-                child: BlocBuilder<AdsBloc, AdsState>(
-                  builder: (context, state) {
-                    if (state is AdsInitialState) {
-                      return buildLoading();
-                    } else if (state is AdsLoadingState) {
-                      return buildLoading();
-                    } else if (state is AdsLoadedState) {
-                      // return buildAds(state.ads);
-                      return Text('');
-                    } else if (state is AdsErrorState) {
-                      return buildErrorUi(state.message);
-                    } else {
-                      return buildErrorUi('LAST ELSE');
-                    }
-                  },
-                ),
-              ),
-            ),
-          );
-        },
+    return Scaffold(
+        body: Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 150.0),
+        child: Column(
+          children: [
+            Text("HEIGHT: ${MediaQuery.of(context).size.height}"),
+            Text("WIDTH: ${MediaQuery.of(context).size.width}"),
+          ],
+        ),
       ),
-    );
+    ));
   }
 
   Widget buildLoading() {

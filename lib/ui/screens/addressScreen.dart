@@ -124,7 +124,7 @@ class _AddressScreenState extends State<AddressScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${address.label ?? "Home"}',
+                      '${address.label ?? "Home"} ',
                       style:
                           TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
                     ).tr(),
@@ -201,6 +201,10 @@ class _AddressScreenState extends State<AddressScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text('${address.address}'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text('${address.city}, ${address.country}'),
                 ),
               ],
             ),

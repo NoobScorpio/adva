@@ -1,3 +1,4 @@
+import 'package:adva/data/model/category.dart';
 import 'package:adva/data/model/productImage.dart';
 
 class Featured {
@@ -33,9 +34,11 @@ class Featured {
   String createdAt;
   String updatedAt;
   List<Productimages> productimages;
+  Category category;
 
   Featured(
       {this.id,
+      this.category,
       this.productName,
       this.productArabicName,
       this.categoryId,
@@ -69,6 +72,9 @@ class Featured {
       this.productimages});
 
   Featured.fromJson(Map<String, dynamic> json) {
+    category = json['category'] != null
+        ? new Category.fromJson(json['category'])
+        : null;
     id = json['id'];
     productName = json['product_name'];
     productArabicName = json['product_arabic_name'];
@@ -145,6 +151,10 @@ class Featured {
       data['productimages'] =
           this.productimages.map((v) => v.toJson()).toList();
     }
+    if (this.category != null) {
+      data['category'] = this.category.toJson();
+    } else
+      data['category'] = [];
     return data;
   }
 }

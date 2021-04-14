@@ -24,7 +24,7 @@ class AddAddressScreen extends StatefulWidget {
 
 class _AddAddressScreenState extends State<AddAddressScreen> {
   TextEditingController adCont, cityCont, countCont, postalCont;
-  String address = '', country = '', city = '', postal = '';
+  String address = '', country = 'Saudi Arabia', city = '', postal = '';
   int group = 1;
   @override
   void initState() {
@@ -32,18 +32,16 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     super.initState();
     adCont = TextEditingController();
     cityCont = TextEditingController();
-    countCont = TextEditingController();
     postalCont = TextEditingController();
 
     if (widget.edit != null && widget.edit != false) {
       adCont.text = widget.address.address;
       cityCont.text = widget.address.city;
-      countCont.text = widget.address.country;
       postalCont.text = widget.address.postalCode;
 
       address = adCont.text;
-      country = cityCont.text;
-      city = countCont.text;
+      country = widget.address.country;
+      city = cityCont.text;
       postal = postalCont.text;
       if (widget.address.label == null || widget.address.label == 'Home') {
         group = 1;
@@ -150,16 +148,42 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     style: boldTextStyle,
                   ).tr(),
                 ),
-                TextField(
-                  controller: countCont,
-                  decoration: InputDecoration(
-                    hintText: 'Enter country name'.tr(),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    children: [
+                      Text(
+                        'Select Country',
+                        style: boldTextStyle,
+                      ).tr(),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      DropdownButton<String>(
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          color: primaryColor,
+                        ),
+                        iconSize: 42,
+                        value: country,
+                        underline: SizedBox(),
+                        items: countries.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              '$value',
+                              style: TextStyle(color: primaryColor),
+                            ).tr(),
+                          );
+                        }).toList(),
+                        onChanged: (_) {
+                          setState(() {
+                            country = _;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  onChanged: (val) {
-                    country = val;
-                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
@@ -199,7 +223,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         });
                       },
                     ),
-                    Text('Home').tr(),
+                    Text('Home ').tr(),
                     Radio(
                       value: 2,
                       activeColor: primaryColor,
@@ -210,7 +234,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                         });
                       },
                     ),
-                    Text('Office').tr(),
+                    Text('Office ').tr(),
                   ],
                 ),
                 Padding(
@@ -224,6 +248,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                           city != '' &&
                           country != "" &&
                           address != '') {
+                        showToast("Adding address", primaryColor);
                         Address addressObj = Address();
                         addressObj.address =
                             address == '' ? widget.address.address : address;

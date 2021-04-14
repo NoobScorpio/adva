@@ -3,7 +3,7 @@ class Customer {
   String firstName;
   String lastName;
   String email;
-  String taxCard;
+  dynamic taxCard;
   String dob;
   String phone;
   String confirmationCode;
@@ -15,6 +15,7 @@ class Customer {
   String deletedAt;
   String createdAt;
   String updatedAt;
+  int verified;
 
   Customer(
       {this.id,
@@ -32,7 +33,8 @@ class Customer {
       this.points,
       this.deletedAt,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.verified});
 
   Customer.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -51,6 +53,7 @@ class Customer {
     deletedAt = json['deleted_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    verified = json['verified'];
   }
 
   Map<String, dynamic> toJson() {
@@ -71,6 +74,7 @@ class Customer {
     data['deleted_at'] = this.deletedAt;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['verified'] = this.verified;
     return data;
   }
 }

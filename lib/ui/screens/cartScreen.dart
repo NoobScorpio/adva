@@ -87,6 +87,7 @@ class _CartScreenState extends State<CartScreen> {
                 }
                 print("@CART subTotal: ${state.subTotal}");
                 dynamic total = state.total, subTotal = state.subTotal;
+
                 widgets.add(Padding(
                   padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
                   child: Container(
@@ -139,7 +140,10 @@ class _CartScreenState extends State<CartScreen> {
                                       style: TextStyle(
                                         fontSize: 18,
                                       )).tr(),
-                                  Text('. ${state.vat ?? "0.0"}',
+                                  Text(
+                                      state.vat != null
+                                          ? '. ${state.vat.runtimeType == String ? double.parse(state.vat).toStringAsPrecision(3).toString() : (state.vat.runtimeType == int ? state.vat : state.vat.toStringAsPrecision(3).toString())}'
+                                          : "0.0",
                                       style: TextStyle(
                                         fontSize: 18,
                                       ))
@@ -186,7 +190,7 @@ class _CartScreenState extends State<CartScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Total (Inc VAT)',
+                              Text('Total',
                                   style: TextStyle(
                                     fontSize: 18,
                                   )).tr(),
@@ -271,8 +275,9 @@ class _CartScreenState extends State<CartScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => CheckoutScreen(
+                                        vat: vat,
                                         user: user,
-                                        shipRate: shipRate.shippingRate)));
+                                        shipRate: shipRate)));
                           },
                         ),
                       );

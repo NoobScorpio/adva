@@ -108,7 +108,9 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<User> getUser() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    return User.fromJson(json.decode(sharedPreferences.getString('user')));
+    String user = sharedPreferences.getString('user');
+    if (user == null) return null;
+    return User.fromJson(json.decode(user));
   }
 
   @override

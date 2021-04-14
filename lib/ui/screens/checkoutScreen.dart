@@ -21,17 +21,20 @@ import 'package:easy_localization/easy_localization.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final User user;
-  final shipRate;
-  const CheckoutScreen({Key key, this.user, this.shipRate}) : super(key: key);
+  final ShipRate shipRate;
+  final vat;
+  const CheckoutScreen({Key key, this.user, this.shipRate, this.vat})
+      : super(key: key);
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
-  bool checkBoxValue = false;
+  bool checkBoxValue = false, international = false;
   TextEditingController name, email, phone;
   String ads = '', country = '', city = '', postal = '', label = '';
   int groupValue = 0, addressId;
+  dynamic shipping = 0.0;
   @override
   void initState() {
     super.initState();
@@ -43,6 +46,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     name.text = widget.user.name;
     email.text = widget.user.email;
     phone.text = widget.user.phone;
+    // shipping = widget.shipRate.shippingRate.runtimeType == String
+    //     ? double.parse(widget.shipRate.shippingRate)
+    //     : widget.shipRate.shippingRate;
   }
 
   @override
@@ -192,25 +198,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       if (state is AddressLoadedState) {
                         if (state.address != null &&
                             state.address.length != 0) {
-                          setState(() {
-                            groupValue = state.address[0].id;
-                          });
+                          // setState(() {
+                          //   groupValue = state.address[0].id;
+                          // });
                         }
                       }
                       if (state is AddressAddState) {
                         if (state.address != null &&
                             state.address.length != 0) {
-                          setState(() {
-                            groupValue = state.address[0].id;
-                          });
+                          // setState(() {
+                          //   groupValue = state.address[0].id;
+                          // });
                         }
                       }
                       if (state is AddressDeleteState) {
                         if (state.address != null &&
                             state.address.length != 0) {
-                          setState(() {
-                            groupValue = state.address[0].id;
-                          });
+                          // setState(() {
+                          //   groupValue = state.address[0].id;
+                          // });
                         }
                       }
                     }, builder: (context, state) {
@@ -305,6 +311,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Widget orderPrices(total, subTotal) {
+    print(
+        "CHECKOUT ${total.runtimeType}  ${subTotal.runtimeType} ${widget.shipRate.shippingRate.runtimeType}");
+
     return Container(
       width: double.maxFinite,
       color: Colors.white,
@@ -313,9 +322,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         child: Column(
           children: [
             PaymentColumn(
-              subTotal: subTotal.toString(),
-              total: (total + widget.shipRate).toString(),
-              flatShippingRate: widget.shipRate.toString(),
+              subTotal: subTotal,
+              total: total + shipping,
+              flatShippingRate: international ? shipping : shipping,
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -328,39 +337,49 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 borderColor: Colors.transparent,
                 innerColor: primaryColor,
                 onPressed: () async {
-                  showDialog(
-                    context: context,
-                    builder: (_) => Center(
-                      child: Image.asset(
-                        'assets/images/loader.gif',
-                        scale: 3,
-                      ),
-                    ),
-                  );
-                  var misc = MiscRepositoryImpl();
-                  ShipRate shipRate = await misc.getShipRate();
-                  CODRate codRate = await misc.getCODRate();
                   if (name.text != '' && phone.text != '') {
-                    CheckOutInfo checkout = CheckOutInfo(
-                        address: ads,
-                        city: city,
-                        country: country,
-                        phone: phone.text,
-                        email: email.text,
-                        name: name.text,
-                        postal: postal,
-                        addressId: addressId);
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PaymentScreen(
-                                user: widget.user,
-                                checkout: checkout,
-                                codRate: codRate.charges,
-                                shipRate: shipRate.shippingRate,
-                                total: total,
-                                subTotal: subTotal)));
+                    if (ads == '' || ads == null) {
+                      showToast("Please select an address", primaryColor);
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (_) => Center(
+                          child: Image.asset(
+                            'assets/images/loader.gif',
+                            scale: 3,
+                          ),
+                        ),
+                      );
+                      var misc = MiscRepositoryImpl();
+                      ShipRate shipRate = await misc.getShipRate();
+                      CODRate codRate = await misc.getCODRate();
+                      CheckOutInfo checkout = CheckOutInfo(
+                          address: ads,
+                          city: city,
+                          country: country,
+                          phone: phone.text,
+                          email: email.text,
+                          name: name.text,
+                          postal: postal,
+                          addressId: addressId);
+                      Navigator.pop(context);
+                      print(
+                          "@SHIP ${international ? shipRate.internationalCharges : shipRate.shippingRate}");
+                      print("@VAT ${widget.vat} ${widget.vat.runtimeType}");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => PaymentScreen(
+                                  vat: widget.vat,
+                                  user: widget.user,
+                                  checkout: checkout,
+                                  codRate: codRate.charges,
+                                  shipRate: international
+                                      ? shipRate.internationalCharges
+                                      : shipRate.shippingRate,
+                                  total: total,
+                                  subTotal: subTotal)));
+                    }
                   } else
                     showToast("Please fill all fields", primaryColor);
                 },
@@ -376,14 +395,17 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     if (addresses.length > 0) {
       List<Widget> widgets = [];
       for (int i = 0; i < addresses.length; i++) {
-        if (i == 0) {
-          ads = addresses[0].address;
-          city = addresses[0].city;
-          country = addresses[0].country;
-          postal = addresses[0].postalCode;
-          addressId = addresses[0].id;
-          label = addresses[0].label ?? "";
-        }
+        // if (i == 0) {
+        //   ads = addresses[0].address;
+        //   city = addresses[0].city;
+        //   country = addresses[0].country;
+        //   // setState(() {
+        //   international = country == countries[0] ? false : true;
+        //   // });
+        //   postal = addresses[0].postalCode;
+        //   addressId = addresses[0].id;
+        //   label = "${addresses[0].label} " ?? "Home ";
+        // }
         widgets.add(Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: ListTile(
@@ -404,8 +426,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       child: Center(
                         child: Text(
                           addresses[i].label == null || addresses[i].label == ""
-                              ? "Home"
-                              : addresses[i].label,
+                              ? "Home "
+                              : "${addresses[i].label} ",
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white, fontSize: 12),
                         ).tr(),
@@ -432,7 +454,31 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   groupValue = val;
                   ads = addresses[i].address;
                   city = addresses[i].city;
+
                   country = addresses[i].country;
+                  print(country);
+                  if (country != countries[0]) {
+                    setState(() {
+                      international = true;
+                      shipping = widget
+                                  .shipRate.internationalCharges.runtimeType ==
+                              String
+                          ? double.parse(widget.shipRate.internationalCharges)
+                          : widget.shipRate.internationalCharges;
+                      print("@INTERNATIONAL $international");
+                    });
+                  } else {
+                    setState(() {
+                      international = false;
+                      shipping =
+                          widget.shipRate.shippingRate.runtimeType == String
+                              ? double.parse(widget.shipRate.shippingRate)
+                              : widget.shipRate.shippingRate;
+                      print("@INTERNATIONAL $international");
+                    });
+                  }
+                  // print(widget.shipRate.internationalCharges);
+                  // print(widget.shipRate.shippingRate);
                   postal = addresses[i].postalCode;
                   addressId = addresses[i].id;
                   print(ads);

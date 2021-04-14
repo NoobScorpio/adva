@@ -301,10 +301,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             for (var item in cartItems) {
                               products.add(OrderProduct(
                                   id: item.pid,
-                                  price: item.price,
+                                  price: item.oldPrice,
                                   newQuantity: item.qty));
                             }
                             print("@PAYMENT ${widget.personal.paymentMethod}");
+                            print("@PAYMENT TOTAL ${widget.total}");
+                            print("@PAYMENT POINTS ${widget.pointsDiscount}");
+                            print("@PAYMENT DISCOUNT ${widget.discountCode}");
                             Order order = Order(
                                 customerId: widget.user.id,
                                 total: widget.total,
@@ -385,67 +388,70 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   successDialog({screenWidth, screenHeight}) {
     return showDialog<void>(
         context: context,
-        barrierDismissible: true,
+        barrierDismissible: false,
         builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: Colors.black87,
-            actions: [
-              Container(
-                // height: screenHeight * 0.2,
-                width: screenWidth,
-                child: Column(
-                  children: [
-                    Center(
-                      child: Text(
-                        'Success',
-                        style: TextStyle(color: Colors.white),
-                      ).tr(),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Container(
-                        height: screenHeight * 0.033,
-                        width: screenWidth * 0.065,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.white,
-                        ),
-                        child: Icon(
-                          Icons.done,
-                          color: Colors.black,
-                          size: 25,
+          return WillPopScope(
+            onWillPop: () async => false,
+            child: AlertDialog(
+              backgroundColor: Colors.black87,
+              actions: [
+                Container(
+                  // height: screenHeight * 0.2,
+                  width: screenWidth,
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          'Success',
+                          style: TextStyle(color: Colors.white),
+                        ).tr(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Container(
+                          height: screenHeight * 0.033,
+                          width: screenWidth * 0.065,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white,
+                          ),
+                          child: Icon(
+                            Icons.done,
+                            color: Colors.black,
+                            size: 25,
+                          ),
                         ),
                       ),
-                    ),
-                    Text(
-                      'Your order is on your way',
-                      style: TextStyle(color: Colors.white),
-                    ).tr(),
-                    SizedBox(height: screenHeight * 0.04),
-                    MyButton(
-                      height: 50,
-                      width: double.maxFinite,
-                      onPressed: () {
-                        // int count = 0;
-                        // Navigator.popUntil(context, (route) {
-                        //   return count++ == 5;
-                        // });
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (_) => BottomNavBar()),
-                            (route) => false);
-                      },
-                      child: Text(
-                        'Go to Home',
+                      Text(
+                        'Your order is on your way',
                         style: TextStyle(color: Colors.white),
                       ).tr(),
-                      innerColor: primaryColor,
-                      borderColor: Colors.transparent,
-                    )
-                  ],
+                      SizedBox(height: screenHeight * 0.04),
+                      MyButton(
+                        height: 50,
+                        width: double.maxFinite,
+                        onPressed: () {
+                          // int count = 0;
+                          // Navigator.popUntil(context, (route) {
+                          //   return count++ == 5;
+                          // });
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (_) => BottomNavBar()),
+                              (route) => false);
+                        },
+                        child: Text(
+                          'Go to Home',
+                          style: TextStyle(color: Colors.white),
+                        ).tr(),
+                        innerColor: primaryColor,
+                        borderColor: Colors.transparent,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         });
   }
@@ -483,7 +489,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   Text('${context.locale == Locale('en', '') ? cart.pName : cart.arabicName ?? ""}')
                       .tr(),
                   Text(
-                      '${cart != null ? (context.locale == Locale('en', '') ? cart.category : cart.arabicCategory ?? "") : "No Category"}',
+                      '${cart != null ? (context.locale == Locale('en', '') ? (cart.category ?? "") : (cart.arabicCategory ?? "") ?? "") : "No Category"}',
                       style: TextStyle(
                         color: cartTextColor,
                       )).tr()
@@ -550,7 +556,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   Text(
                       '${english ? cart.product.productName : cart.product.productArabicName}'),
                   Text(
-                      '${cart.product.category != null ? (english ? cart.product.category.categoryName : cart.product.category.categoryArabicName) : "No Category".tr()}',
+                      '${cart.product.category != null ? (english ? (cart.product.category.categoryName ?? "") : (cart.product.category.categoryArabicName ?? "")) : "No Category".tr()}',
                       style: TextStyle(
                         color: cartTextColor,
                       )).tr()
@@ -596,7 +602,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ),
                 Text('Full Name').tr(),
                 Text(
-                  '${orderDetail.firstName ?? "Unknown".tr()} ${orderDetail.lastName ?? ""}',
+                  '${orderDetail.customer.firstName ?? "Unknown".tr()} ${orderDetail.customer.firstName ?? ""}',
                   style: TextStyle(color: cartTextColor),
                 ).tr(),
                 SizedBox(
@@ -609,7 +615,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       children: [
                         Text('E-mail address').tr(),
                         Text(
-                          '${orderDetail.email ?? "No email".tr()}',
+                          '${orderDetail.customer.email ?? "No email".tr()}',
                           style: TextStyle(color: cartTextColor),
                         ).tr(),
                       ],
@@ -701,13 +707,15 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   Widget getShippingAndRate({OrderDetail orderDetail}) {
     if (orderDetail != null) {
       dynamic subTotal;
-      dynamic total;
+      dynamic discount;
       if (orderDetail.cart.length > 0) {
         subTotal = 0.0;
-        total = 0.0;
+        discount = 0.0;
         for (Cart cart in orderDetail.cart) {
           subTotal += cart.subTotal;
-          total += cart.total;
+          discount += cart.product.price *
+              cart.product.quantity *
+              (cart.product.discountedAmount / 100);
         }
       }
 
@@ -778,10 +786,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               alignment: context.locale == Locale('en', '')
                   ? Alignment.topLeft
                   : Alignment.topRight,
-              child: Text(
-                'Payment',
-                style: TextStyle(color: primaryColor),
-              ).tr(),
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  'Payment',
+                  style: TextStyle(color: primaryColor),
+                ).tr(),
+              ),
             ),
             Card(
                 child: Padding(
@@ -810,13 +821,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   //     sHIP: widget.shipRate,
                   //     sUBTOTAL: widget.subTotal),
                   PaymentColumn(
-                    total: widget.total,
-                    discount: widget.discountCode,
-                    flatShippingRate: widget.shipRate ?? "1",
-                    subTotal: widget.subTotal,
-                    promo: widget.promoValue,
-                    codRate: widget.codRate,
-                    points: widget.pointsValue,
+                    total: orderDetail.total,
+                    discount: orderDetail.discount,
+                    flatShippingRate: orderDetail.shipping,
+                    subTotal: orderDetail.subTotal,
+                    promo: orderDetail.promoDiscount,
+                    codRate: orderDetail.cod,
+                    points: orderDetail.pointsDiscount,
                   )
                 ],
               ),
@@ -914,7 +925,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       color: Colors.grey,
                     ),
                     Align(
-                      alignment: Alignment.topLeft,
+                      alignment: context.locale == Locale('en', '')
+                          ? Alignment.topLeft
+                          : Alignment.topRight,
                       child: Text(
                         'Payment',
                         style: TextStyle(color: primaryColor),

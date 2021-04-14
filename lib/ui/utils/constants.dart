@@ -21,3 +21,15 @@ const List<String> categoryListStrings = [
   'Gifts',
   'Fashion',
 ];
+const countries = [
+  'Saudi Arabia',
+  'Kuwait',
+  'Emirates',
+  'Qatar',
+  'Bahrain',
+  'Oman',
+  'Egypt',
+  'Jordan',
+  'Yamen',
+  'Iraq'
+];

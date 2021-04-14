@@ -6,19 +6,30 @@ class OrderDetails {
   String city;
   int postalCode;
   String paymentMethod;
-  int couponCode;
+  String couponCode;
   String giftVoucher;
+  String comments;
   String firstName;
   String lastName;
   String email;
   String phone;
-  dynamic total;
+  int total;
   String orderFrom;
-  int gift;
-  int staffId;
+  String gift;
+  String staffId;
   String createdAt;
   String updatedAt;
   String status;
+  String discount;
+  String promoDiscount;
+  String vat;
+  String subTotal;
+  String shipping;
+  String discountCode;
+  String promoCode;
+  String isSeen;
+  String pointsDiscount;
+  String cod;
 
   OrderDetails(
       {this.id,
@@ -30,6 +41,7 @@ class OrderDetails {
       this.paymentMethod,
       this.couponCode,
       this.giftVoucher,
+      this.comments,
       this.firstName,
       this.lastName,
       this.email,
@@ -40,7 +52,17 @@ class OrderDetails {
       this.staffId,
       this.createdAt,
       this.updatedAt,
-      this.status});
+      this.status,
+      this.discount,
+      this.promoDiscount,
+      this.vat,
+      this.subTotal,
+      this.shipping,
+      this.discountCode,
+      this.promoCode,
+      this.isSeen,
+      this.pointsDiscount,
+      this.cod});
 
   OrderDetails.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -52,6 +74,7 @@ class OrderDetails {
     paymentMethod = json['payment_method'];
     couponCode = json['coupon_code'];
     giftVoucher = json['gift_voucher'];
+    comments = json['comments'];
     firstName = json['first_name'];
     lastName = json['last_name'];
     email = json['email'];
@@ -63,6 +86,16 @@ class OrderDetails {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     status = json['status'];
+    discount = json['discount'];
+    promoDiscount = json['promo_discount'];
+    vat = json['vat'];
+    subTotal = json['sub_total'];
+    shipping = json['shipping'];
+    discountCode = json['discount_code'];
+    promoCode = json['promo_code'];
+    isSeen = json['is_seen'];
+    pointsDiscount = json['points_discount'];
+    cod = json['cod'];
   }
 
   Map<String, dynamic> toJson() {
@@ -76,6 +109,7 @@ class OrderDetails {
     data['payment_method'] = this.paymentMethod;
     data['coupon_code'] = this.couponCode;
     data['gift_voucher'] = this.giftVoucher;
+    data['comments'] = this.comments;
     data['first_name'] = this.firstName;
     data['last_name'] = this.lastName;
     data['email'] = this.email;
@@ -87,6 +121,16 @@ class OrderDetails {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['status'] = this.status;
+    data['discount'] = this.discount;
+    data['promo_discount'] = this.promoDiscount;
+    data['vat'] = this.vat;
+    data['sub_total'] = this.subTotal;
+    data['shipping'] = this.shipping;
+    data['discount_code'] = this.discountCode;
+    data['promo_code'] = this.promoCode;
+    data['is_seen'] = this.isSeen;
+    data['points_discount'] = this.pointsDiscount;
+    data['cod'] = this.cod;
     return data;
   }
 }
